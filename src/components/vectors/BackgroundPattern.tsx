@@ -11,7 +11,7 @@ export default function BackgroundPattern({ className = '' }: { className?: stri
       <defs>
         <pattern id="bg-lotus" width="120" height="120" patternUnits="userSpaceOnUse">
           {/* Subtle background motif */}
-          <g stroke="var(--charcoal-ink)" strokeWidth="0.5" fill="none" opacity="0.07">
+          <g stroke="var(--peacock-blue)" strokeWidth="0.8" fill="none" opacity="0.15">
             {/* Lotus */}
             <path d="M60,40 C70,20 80,40 60,60 C40,40 50,20 60,40 Z" />
             <path d="M60,60 C80,50 90,70 60,80 C30,70 40,50 60,60 Z" />

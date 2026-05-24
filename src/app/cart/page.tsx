@@ -20,13 +20,13 @@ export default function CartFallbackPage() {
 
   return (
     <main className="flex-grow max-w-4xl mx-auto px-4 py-16 w-full">
-      <h1 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)] mb-8">Your Cart</h1>
+      <h1 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)] mb-8">Your Registry</h1>
       
       {items.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed border-[var(--charcoal-ink)] opacity-50 relative">
           <div className="w-16 h-16 kachni-border bg-[var(--charcoal-ink)] opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-          <p className="font-sans mb-4 relative z-10">Your cart is empty.</p>
-          <Link href="/shop" className="relative z-10 text-[var(--madder-red)] font-bold underline underline-offset-4">Continue Shopping</Link>
+          <p className="font-sans mb-4 relative z-10">Your registry is currently empty.</p>
+          <Link href="/shop" className="relative z-10 text-[var(--madder-red)] font-bold underline underline-offset-4">Explore Collections</Link>
         </div>
       ) : (
         <div className="space-y-6">
@@ -44,7 +44,7 @@ export default function CartFallbackPage() {
             <span className="font-sans font-bold text-[var(--madder-red)]">₹{total.toFixed(2)}</span>
           </div>
           <Link href="/checkout" className="block pt-8">
-            <Button className="w-full">Proceed to Checkout</Button>
+            <Button className="w-full">Secure Procurement</Button>
           </Link>
         </div>
       )}

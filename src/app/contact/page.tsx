@@ -19,7 +19,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="flex-grow w-full bg-[#fafafa] text-zinc-900 pt-32 pb-24 font-sans">
+    <main className="flex-grow w-full bg-[var(--unbleached-cotton)] text-[var(--charcoal-ink)] pt-32 pb-24 font-sans relative">
       <div className="container mx-auto px-6 max-w-6xl">
         
         {/* Page Header */}
@@ -27,7 +27,7 @@ export default function ContactPage() {
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-purple-600 font-sans text-xs uppercase tracking-wider font-semibold"
+            className="text-[var(--madder-red)] font-sans text-xs uppercase tracking-wider font-semibold"
           >
             Connect With Us
           </motion.span>
@@ -57,11 +57,11 @@ export default function ContactPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="sonic-bento-card p-8 md:p-12 flex flex-col justify-between bg-white"
+            className="sonic-bento-card p-8 md:p-12 flex flex-col justify-between bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/10 backdrop-blur-sm"
           >
             <div className="space-y-8">
               <div>
-                <span className="text-purple-600 font-sans uppercase text-[10px] tracking-wider font-bold">Inquiries</span>
+                <span className="text-[var(--madder-red)] font-sans uppercase text-[10px] tracking-wider font-bold">Inquiries</span>
                 <h3 className="font-serif text-2xl italic font-bold mt-2 text-zinc-950">Write Us</h3>
                 <p className="font-sans text-xs text-zinc-500 leading-relaxed mt-2">
                   Have questions about fabric weights, bulk orders, or custom loom settings? Our textile experts are here to assist.
@@ -71,13 +71,13 @@ export default function ContactPage() {
               <div className="space-y-4 font-sans text-sm">
                 <div>
                   <span className="block font-bold text-[10px] uppercase opacity-40">Email Address</span>
-                  <a href="mailto:arpan@mithilaent.com" className="text-base text-zinc-900 hover:text-purple-600 transition-colors font-medium">
+                  <a href="mailto:arpan@mithilaent.com" className="text-base text-[var(--charcoal-ink)] hover:text-[var(--turmeric)] transition-colors font-medium">
                     arpan@mithilaent.com
                   </a>
                 </div>
                 <div>
                   <span className="block font-bold text-[10px] uppercase opacity-40">Call / WhatsApp</span>
-                  <a href="tel:+919999988888" className="text-base text-zinc-900 hover:text-purple-600 transition-colors font-medium">
+                  <a href="tel:+919999988888" className="text-base text-[var(--charcoal-ink)] hover:text-[var(--turmeric)] transition-colors font-medium">
                     +91-99999-88888
                   </a>
                 </div>
@@ -98,8 +98,8 @@ export default function ContactPage() {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            className="sonic-bento-card p-8 md:p-12 bg-white flex flex-col justify-between"
+            transition={{ delay: 0.3 }}
+            className="sonic-bento-card p-8 md:p-12 bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/10 backdrop-blur-sm flex flex-col justify-between"
           >
             <div className="space-y-6 w-full">
               <h3 className="font-serif text-2xl italic font-bold text-zinc-950">We’d love to hear from you!</h3>
@@ -190,6 +190,61 @@ export default function ContactPage() {
             </div>
           </motion.div>
 
+        </div>
+
+        {/* FAQ Section (AEO Optimized) */}
+        <div className="mt-32 max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-[var(--madder-red)] font-sans text-xs uppercase tracking-wider font-semibold">Knowledge Base</span>
+            <h2 className="font-serif italic text-3xl font-bold mt-2">Frequently Asked Questions</h2>
+          </div>
+          <div className="space-y-4">
+            <details className="group border border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 p-6 rounded-xl cursor-pointer sonic-bento-card">
+              <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center outline-none">
+                How do I tell if linen is 100% pure?
+                <span className="group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="pt-4 font-sans text-sm opacity-80 leading-relaxed text-justify">
+                Pure linen possesses a distinct, cool touch and a slightly stiff initial drape. Look closely at the surface for "slubs"—small, natural knots or thicker threads running through the weave. When crushed in your hand, genuine linen will crease sharply and retain the fold, whereas synthetic blends will bounce back smoothly.
+              </div>
+            </details>
+            <details className="group border border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 p-6 rounded-xl cursor-pointer sonic-bento-card">
+              <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center outline-none">
+                Does handloom cotton shrink?
+                <span className="group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="pt-4 font-sans text-sm opacity-80 leading-relaxed text-justify">
+                Yes. Authentic handloom cotton fabric will typically shrink between 3% to 5% during the first wash. This occurs because the natural fibers, which are kept under tension on the loom, relax and contract when exposed to water. Always pre-wash your yardage in cold water before cutting or tailoring.
+              </div>
+            </details>
+            <details className="group border border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 p-6 rounded-xl cursor-pointer sonic-bento-card">
+              <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center outline-none">
+                Why do botanical dyes bleed initially?
+                <span className="group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="pt-4 font-sans text-sm opacity-80 leading-relaxed text-justify">
+                Natural botanical dyes, such as pure indigo and madder root, do not use chemical mordants to force the color into the fiber. During the first two to three washes, excess pigment resting on the surface of the yarn will wash away. This is a natural stabilization process. Wash dark handloomed fabrics separately in cold water.
+              </div>
+            </details>
+            <details className="group border border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 p-6 rounded-xl cursor-pointer sonic-bento-card">
+              <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center outline-none">
+                Do you sell artisanal textile wholesale for designers?
+                <span className="group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="pt-4 font-sans text-sm opacity-80 leading-relaxed text-justify">
+                Yes. We supply authentic Indian handloom linen and cotton yardage directly to boutique designers, tailoring houses, and sustainable fashion labels globally. We require a minimum order quantity (MOQ) of 20 meters per colorway for wholesale pricing. Contact us directly to request swatch books and wholesale rate cards.
+              </div>
+            </details>
+            <details className="group border border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 p-6 rounded-xl cursor-pointer sonic-bento-card">
+              <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center outline-none">
+                What makes handloomed fabric more breathable than machine-made fabric?
+                <span className="group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="pt-4 font-sans text-sm opacity-80 leading-relaxed text-justify">
+                Machine looms apply extreme, uniform tension to yarns, packing them tightly together. Handlooms operate at a lower, variable tension controlled by the artisan's physical strength. This manual process leaves microscopic spaces between the warp and weft threads, allowing air to circulate freely through the fabric.
+              </div>
+            </details>
+          </div>
         </div>
 
       </div>

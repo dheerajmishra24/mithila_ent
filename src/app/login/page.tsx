@@ -17,12 +17,12 @@ export default function LoginPage() {
 
   return (
     <main className="flex-grow bg-[var(--unbleached-cotton)] py-24 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white border-2 border-[var(--charcoal-ink)] p-8 rounded-sm shadow-2xl relative">
+      <div className="w-full max-w-md bg-[var(--charcoal-ink)]/5 backdrop-blur-sm border-2 border-[var(--charcoal-ink)] p-8 rounded-sm shadow-2xl relative">
         {/* Decorative corner */}
         <div className="absolute top-0 left-0 w-8 h-8 bg-[var(--madder-red)] border-b-2 border-r-2 border-[var(--charcoal-ink)]"></div>
         
-        <h1 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)] mb-2 mt-4 text-center">Welcome Back</h1>
-        <p className="font-sans text-sm opacity-70 text-center mb-8">Enter your details to access your portal.</p>
+        <h1 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)] mb-2 mt-4 text-center">Artisan Portal</h1>
+        <p className="font-sans text-sm opacity-70 text-center mb-8">Enter your credentials to manage your fabric registry and procurement history.</p>
         
         <form onSubmit={handleLogin} className="space-y-6">
           <div>

@@ -17,11 +17,11 @@ export default function SignupPage() {
 
   return (
     <main className="flex-grow bg-[var(--unbleached-cotton)] py-24 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white border-2 border-[var(--charcoal-ink)] p-8 rounded-sm shadow-2xl relative">
+      <div className="w-full max-w-md bg-[var(--charcoal-ink)]/5 backdrop-blur-sm border-2 border-[var(--charcoal-ink)] p-8 rounded-sm shadow-2xl relative">
         <div className="absolute top-0 right-0 w-8 h-8 bg-[var(--turmeric)] border-b-2 border-l-2 border-[var(--charcoal-ink)]"></div>
         
-        <h1 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)] mb-2 mt-4 text-center">Join Mithila</h1>
-        <p className="font-sans text-sm opacity-70 text-center mb-8">Create an account to track orders and save details.</p>
+        <h1 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)] mb-2 mt-4 text-center">Join the Guild</h1>
+        <p className="font-sans text-sm opacity-70 text-center mb-8 px-2">Register to secure early access to limited loom runs and manage your artisan procurements.</p>
         
         <form onSubmit={handleSignup} className="space-y-6">
           <div>

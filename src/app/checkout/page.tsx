@@ -1,15 +1,14 @@
 "use client";
 
 import { useCart } from '@/store/useCart';
-import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import BackgroundPattern from '@/components/vectors/BackgroundPattern';
+import { Button } from '@/components/ui/Button';
 
 export default function CheckoutPage() {
-  const { items, total } = useCart((state) => ({
-    items: state.items,
-    total: state.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-  }));
+  const items = useCart((state) => state.items);
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -29,15 +28,16 @@ export default function CheckoutPage() {
   };
 
   return (
-    <main className="flex-grow bg-[var(--unbleached-cotton)] py-16">
-      <div className="container mx-auto px-4 md:px-8 max-w-6xl">
-        <h1 className="font-serif text-4xl font-bold text-[var(--charcoal-ink)] mb-12">Secure Checkout</h1>
+    <main className="flex-grow bg-[var(--unbleached-cotton)] py-16 relative overflow-hidden">
+      <BackgroundPattern className="opacity-40" />
+      <div className="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
+        <h1 className="font-serif text-4xl font-bold text-[var(--charcoal-ink)] mb-12">Finalize Procurement</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Form */}
           <form onSubmit={handleCheckout} className="space-y-8">
             <div className="space-y-4">
-              <h2 className="font-sans font-bold uppercase tracking-widest text-[var(--madder-red)]">Shipping Details</h2>
+              <h2 className="font-sans font-bold uppercase tracking-widest text-[var(--madder-red)]">Shipping Provenance</h2>
               <div className="grid grid-cols-2 gap-4">
                 <input type="text" placeholder="First Name" required className="w-full border-2 border-[var(--charcoal-ink)] bg-transparent p-3 font-sans focus:outline-none focus:border-[var(--madder-red)] transition-colors" />
                 <input type="text" placeholder="Last Name" required className="w-full border-2 border-[var(--charcoal-ink)] bg-transparent p-3 font-sans focus:outline-none focus:border-[var(--madder-red)] transition-colors" />
@@ -69,7 +69,7 @@ export default function CheckoutPage() {
           </form>
 
           {/* Order Summary */}
-          <div className="bg-white border-2 border-[var(--charcoal-ink)] p-8 h-fit sticky top-24">
+          <div className="bg-white/60 backdrop-blur-sm border-2 border-[var(--charcoal-ink)] p-8 h-fit sticky top-24">
             <h2 className="font-serif text-2xl font-bold text-[var(--charcoal-ink)] mb-6">Order Summary</h2>
             <div className="space-y-4 mb-6 border-b-2 border-[var(--charcoal-ink)]/20 pb-6">
               {items.map((item) => (

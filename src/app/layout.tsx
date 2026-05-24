@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import StructuredData from "@/components/StructuredData";
+import MadhubaniFrame from "@/components/vectors/MadhubaniFrame";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair-display",
@@ -34,7 +35,8 @@ export default function RootLayout({
       <head>
         <StructuredData />
       </head>
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans md:px-6 md:py-6 relative">
+        <MadhubaniFrame />
         <Header />
         {children}
         <Footer />

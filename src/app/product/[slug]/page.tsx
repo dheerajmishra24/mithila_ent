@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import AddToCartButton from './AddToCartButton';
 import { Metadata } from 'next';
 import { MOCK_PRODUCTS } from '@/lib/mock-data';
+import BackgroundPattern from '@/components/vectors/BackgroundPattern';
 
 export const revalidate = 3600;
 
@@ -61,6 +62,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <main className="flex-grow bg-[var(--unbleached-cotton)] pt-32 pb-24 relative overflow-hidden">
+      <BackgroundPattern className="opacity-40" />
       <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
         {/* Breadcrumb */}
         <div className="font-sans text-xs opacity-70 mb-12 tracking-widest font-bold text-[var(--madder-red)]">
@@ -70,11 +72,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Images */}
           <div className="space-y-4 sticky top-32">
-            <div className="aspect-[3/4] bg-neutral-100 rounded-lg overflow-hidden relative shadow-sm border border-zinc-100">
+            <div className="aspect-[3/4] bg-white/60 backdrop-blur-sm rounded-lg overflow-hidden relative shadow-sm border border-[var(--charcoal-ink)]/10">
                {defaultVariant.images[0] ? (
                   <img src={defaultVariant.images[0]} alt={product.title} className="w-full h-full object-cover" />
                ) : (
-                  <div className="w-full h-full bg-neutral-200"></div>
+                  <div className="w-full h-full bg-[var(--unbleached-cotton)]"></div>
                )}
             </div>
             {/* Thumbnail Gallery Placeholder */}
@@ -100,25 +102,25 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
             <div className="space-y-8 text-[var(--charcoal-ink)] opacity-90 font-sans">
               <p className="leading-relaxed text-sm opacity-80">
-                {product.description || 'Premium heritage fabric, woven with ancestral techniques and inspired by Mithila artwork.'}
+                {product.description || 'This fabric commands attention through its sheer structural grace. Woven from high-twist yarns, the surface offers a tactile, granular grip that softens into a fluid drape over time. The rich, earthy pigment is fixed deep within the core of the raw fiber, ensuring the color matures rather than washes out. It carries the distinct signature of the human hand—minor variations in the tension of the weave that prove its authenticity and provenance.'}
               </p>
 
-              <div className="grid grid-cols-2 gap-y-8 gap-x-4 py-8 border-y border-zinc-200">
+              <div className="grid grid-cols-2 gap-y-8 gap-x-4 py-8 border-y border-[var(--charcoal-ink)]/10">
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 mb-1">Weave</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Weave</p>
                   <p className="font-bold text-sm">{product.weave || 'Standard'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 mb-1">Color</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Color</p>
                   <p className="font-bold text-sm">{defaultVariant.color}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 mb-1">GSM</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">GSM</p>
                   <p className="font-bold text-sm">{product.gsm ? `${product.gsm} g/m²` : 'Medium Weight'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 mb-1">Availability</p>
-                  <p className="font-bold text-sm text-green-700">{defaultVariant.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Availability</p>
+                  <p className="font-bold text-sm text-[var(--indigo-dye)]">{defaultVariant.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}</p>
                 </div>
               </div>
             </div>
@@ -129,17 +131,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
             {/* Accordion Placeholders for Details */}
             <div className="mt-12">
-              <details className="group border-b border-zinc-200 py-5 cursor-pointer">
-                <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center text-zinc-800 outline-none">
+              <details className="group border-b border-[var(--charcoal-ink)]/10 py-5 cursor-pointer">
+                <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center text-[var(--charcoal-ink)] outline-none">
                   Care Instructions
                   <span className="group-open:rotate-180 transition-transform">▼</span>
                 </summary>
                 <div className="pt-4 font-sans text-xs opacity-70 leading-relaxed text-justify">
-                  Gentle hand wash in cold water. Do not bleach. Dry in shade to maintain the vibrancy of natural dyes. Iron on reverse. Handloom fabrics soften naturally with every wash.
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li>Wash gently by hand in cold water using a mild, pH-neutral detergent.</li>
+                    <li>Do not wring or twist the wet fabric.</li>
+                    <li>Dry flat in the shade to preserve the integrity of the natural dyes.</li>
+                    <li>Iron on the reverse side while slightly damp for a crisp finish.</li>
+                  </ul>
                 </div>
               </details>
-              <details className="group border-b border-zinc-200 py-5 cursor-pointer">
-                <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center text-zinc-800 outline-none">
+              <details className="group border-b border-[var(--charcoal-ink)]/10 py-5 cursor-pointer">
+                <summary className="font-sans text-sm font-bold uppercase tracking-wider flex justify-between items-center text-[var(--charcoal-ink)] outline-none">
                   Shipping & Returns
                   <span className="group-open:rotate-180 transition-transform">▼</span>
                 </summary>

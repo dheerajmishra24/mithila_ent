@@ -2,17 +2,23 @@
 
 :root {
   /* Sonic Inspired Modern Palette & Mithila Accents */
-  --bg-color: #fafafa;
-  --card-bg: #ffffff;
+  --bg-color: var(--unbleached-cotton);
+  --card-bg: #eae3ce; /* Visibly elegant darker shade of the background */
   --text-primary: #18181b;
   --text-secondary: #52525b;
   
-  --madder-red: #a21caf; /* Modern Magenta-rose / Deep red */
-  --indigo-dye: #0f172a; /* Deep charcoal blue */
-  --turmeric: #eab308;   /* Bright gold */
-  --peacock-blue: #0284c7; /* Sky peacock blue */
+  --madder-red: #dc2626; /* Vibrant Traditional Red */
+  --indigo-dye: #1e3a8a; /* Rich Madhubani Blue */
+  --turmeric: #f59e0b;   /* Bright Sunshine Yellow */
+  --peacock-blue: #0ea5e9; /* Cerulean Blue */
+  --madhubani-green: #16a34a; /* Vibrant Leaf Green */
   
-  --border-color: #e4e4e7;
+  --charcoal-ink: #1c1917; /* Deep, slightly warm black for fine lines */
+  --unbleached-cotton: #fefce8; /* Warm, natural canvas off-white */
+  --lotus-pink: #f472b6; /* Vibrant pink for floral accents */
+  --parrot-green: #4ade80; /* Bright green for peacock feathers */
+  
+  --border-color: #d5cbb1; /* Warm, organic earthy border instead of generic gray */
   --border-radius-lg: 12px;
   --border-radius-md: 8px;
   
@@ -56,7 +62,7 @@ html {
 .sonic-bento-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  border-color: #d4d4d8;
+  border-color: #c4b99d; /* Slightly darker organic border on hover */
 }
 
 /* Modern Polaroid Card */
@@ -78,7 +84,7 @@ html {
 .sonic-input {
   width: 100%;
   padding: 12px 16px;
-  background-color: #ffffff;
+  background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   font-family: var(--font-sans);
