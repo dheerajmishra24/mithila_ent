@@ -45,7 +45,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--unbleached-cotton)]">Connect</h4>
             <div className="space-y-1 text-sm text-[var(--unbleached-cotton)]/70">
-              <p>arpan@mithilaent.com</p>
+              <p>dheeraj.mishra02@gmail.com</p>
               <p>+91-99999-88888</p>
             </div>
             <div className="flex gap-4 text-sm mt-3">

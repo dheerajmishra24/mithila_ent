@@ -71,8 +71,8 @@ export default function ContactPage() {
               <div className="space-y-4 font-sans text-sm">
                 <div>
                   <span className="block font-bold text-[10px] uppercase opacity-40">Email Address</span>
-                  <a href="mailto:arpan@mithilaent.com" className="text-base text-[var(--charcoal-ink)] hover:text-[var(--turmeric)] transition-colors font-medium">
-                    arpan@mithilaent.com
+                  <a href="mailto:dheeraj.mishra02@gmail.com" className="text-base text-[var(--charcoal-ink)] hover:text-[var(--turmeric)] transition-colors font-medium">
+                    dheeraj.mishra02@gmail.com
                   </a>
                 </div>
                 <div>

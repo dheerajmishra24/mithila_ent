@@ -116,7 +116,7 @@ const legalDocuments: Record<string, LegalDoc> = {
       {
         title: "3. Return Shipments",
         paragraphs: [
-          "To request a return, email us at arpan@mithilaent.com. Once approved, you will ship the fabric back to our workshop. Upon inspection, we will issue a full refund to your original payment method."
+          "To request a return, email us at dheeraj.mishra02@gmail.com. Once approved, you will ship the fabric back to our workshop. Upon inspection, we will issue a full refund to your original payment method."
         ]
       }
     ]
@@ -161,7 +161,7 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
         {/* Document Footer */}
         <div className="border-t border-zinc-100 pt-8 mt-12 text-center">
           <p className="font-sans text-xs text-zinc-400">
-            For further clarifications regarding our policies, please write to arpan@mithilaent.com.
+            For further clarifications regarding our policies, please write to dheeraj.mishra02@gmail.com.
           </p>
         </div>
 

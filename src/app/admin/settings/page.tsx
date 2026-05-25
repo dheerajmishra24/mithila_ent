@@ -13,7 +13,7 @@ export default function AdminSettings() {
         </div>
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest mb-1">Support Email</label>
-          <input type="email" defaultValue="support@mithilaenterprises.com" className="w-full border-2 border-[var(--charcoal-ink)] p-2 focus:outline-none" />
+          <input type="email" defaultValue="dheeraj.mishra02@gmail.com" className="w-full border-2 border-[var(--charcoal-ink)] p-2 focus:outline-none" />
         </div>
         <Button>Save Changes</Button>
       </section>
