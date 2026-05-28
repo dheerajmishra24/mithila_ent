@@ -77,8 +77,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <span className="block font-bold text-[10px] uppercase opacity-40">Call / WhatsApp</span>
-                  <a href="tel:+919999988888" className="text-base text-[var(--charcoal-ink)] hover:text-[var(--turmeric)] transition-colors font-medium">
-                    +91-99999-88888
+                  <a href="tel:+919818555220" className="text-base text-[var(--charcoal-ink)] hover:text-[var(--turmeric)] transition-colors font-medium">
+                    +91 9818555220
                   </a>
                 </div>
                 <div>

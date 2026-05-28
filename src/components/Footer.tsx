@@ -46,7 +46,7 @@ export default function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--unbleached-cotton)]">Connect</h4>
             <div className="space-y-1 text-sm text-[var(--unbleached-cotton)]/70">
               <p>dheeraj.mishra02@gmail.com</p>
-              <p>+91-99999-88888</p>
+              <p>+91 9818555220</p>
             </div>
             <div className="flex gap-4 text-sm mt-3">
               <a href="#" className="hover:text-[var(--turmeric)]">Instagram</a>
