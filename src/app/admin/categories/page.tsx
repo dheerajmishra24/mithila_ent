@@ -16,7 +16,7 @@ export default function CategoriesPage() {
     fetchCategories();
   }, []);
 
-  const fetchCategories = async () => {
+  async function fetchCategories() {
     const { data } = await supabase.from('categories').select('*').order('name');
     if (data) setCategories(data);
     setLoading(false);

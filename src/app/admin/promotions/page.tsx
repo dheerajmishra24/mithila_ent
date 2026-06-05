@@ -21,7 +21,7 @@ export default function AdminPromotions() {
     fetchDiscounts();
   }, []);
 
-  const fetchDiscounts = async () => {
+  async function fetchDiscounts() {
     const { data } = await supabase.from('discounts').select('*').order('created_at', { ascending: false });
     if (data) setDiscounts(data);
     setLoading(false);

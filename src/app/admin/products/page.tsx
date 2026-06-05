@@ -15,7 +15,7 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
+  async function fetchProducts() {
     const { data } = await supabase
       .from('products')
       .select('*, categories(name), product_variants(id, stock_quantity, price)')

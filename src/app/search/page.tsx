@@ -13,7 +13,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     .ilike('title', `%${query}%`)
     .eq('status', 'active');
 
-  let products = dbProducts || [];
+  const products = dbProducts || [];
 
   return (
     <main className="flex-grow max-w-7xl mx-auto px-4 py-32 w-full min-h-screen">
