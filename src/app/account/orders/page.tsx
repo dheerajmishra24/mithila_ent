@@ -1,75 +1,103 @@
-import { createClient } from '@/lib/supabase/server';
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 
-export default async function OrdersPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  // If no actual user during this scaffold, we'll simulate an empty state or fetch generally
-  // In production, we'd filter by user.id
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let orders: any[] = [];
-  if (user) {
-    const { data } = await supabase
-      .from('orders')
-      .select('*, order_items(*, product_variants(*, products(title)))')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-    if (data) orders = data;
+export default async function AccountOrdersPage() {
+  const supabase = await createClient()
+  
+  const { data: userData } = await supabase.auth.getUser()
+  if (!userData?.user) {
+    redirect('/login')
   }
 
+  // Fetch only the authenticated user's orders
+  const { data: orders } = await supabase
+    .from('orders')
+    .select(`
+      id,
+      status,
+      total_amount,
+      tracking_status,
+      created_at,
+      order_items(
+        quantity,
+        unit_price,
+        product_variants(color, products(title))
+      )
+    `)
+    .eq('user_id', userData.user.id)
+    .order('created_at', { ascending: false })
+
   return (
-    <div className="space-y-8">
-      <h2 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)]">Order History</h2>
-      
-      {orders.length === 0 ? (
-        <div className="py-12 border-2 border-[var(--charcoal-ink)]/20 text-center">
-          <p className="font-sans opacity-70 mb-4">You haven&apos;t placed any orders yet.</p>
-          <Link href="/shop">
-            <Button>Start Exploring</Button>
-          </Link>
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {orders.map((order) => (
-             <div key={order.id} className="border-2 border-[var(--charcoal-ink)] bg-white p-6">
-                <div className="flex flex-wrap justify-between items-start mb-6 pb-6 border-b-2 border-[var(--charcoal-ink)]/20">
-                  <div>
-                    <p className="font-sans text-sm opacity-70 uppercase tracking-widest mb-1">Order #{order.id.split('-')[0]}</p>
-                    <p className="font-sans font-bold text-[var(--charcoal-ink)]">{new Date(order.created_at).toLocaleDateString()}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-sans text-sm opacity-70 uppercase tracking-widest mb-1">Total</p>
-                    <p className="font-sans font-bold text-[var(--madder-red)]">₹{order.total_amount}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-sans text-sm opacity-70 uppercase tracking-widest mb-1">Status</p>
-                    <span className="bg-[var(--turmeric)] text-[var(--charcoal-ink)] px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-sm">
-                      {order.status}
-                    </span>
-                  </div>
+    <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-8">
+      <div className="border-b-2 border-[var(--charcoal-ink)]/20 pb-4">
+        <h1 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)]">Your Orders</h1>
+        <p className="font-sans text-sm opacity-70 mt-1 uppercase tracking-widest">Order History & Tracking</p>
+      </div>
+
+      <div className="space-y-8">
+        {orders?.map((order) => (
+          <div key={order.id} className="border-4 border-double border-[var(--charcoal-ink)] p-6 bg-white shadow-[4px_4px_0_var(--turmeric)]">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-[var(--charcoal-ink)]/10 pb-4">
+              <div>
+                <div className="font-mono text-xs opacity-50 mb-1">ORDER #{order.id.split('-')[0].toUpperCase()}</div>
+                <div className="font-bold">{new Date(order.created_at).toLocaleDateString()}</div>
+              </div>
+              <div className="mt-2 md:mt-0 text-right">
+                <div className="font-serif text-xl font-bold text-[var(--madder-red)]">₹{order.total_amount.toFixed(2)}</div>
+                {order.tracking_status && (
+                  <div className="font-mono text-xs uppercase tracking-widest opacity-70">TRK: {order.tracking_status}</div>
+                )}
+              </div>
+            </div>
+
+            {/* Visual Timeline Component */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between relative">
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-[var(--charcoal-ink)]/10 z-0"></div>
+                <div className={`absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-[var(--indigo-dye)] z-0 transition-all duration-500`} 
+                     style={{ width: order.status === 'pending' ? '15%' : order.status === 'shipped' ? '50%' : '100%' }}></div>
+                
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className={`w-4 h-4 rounded-full border-2 ${order.status === 'pending' || order.status === 'shipped' || order.status === 'delivered' ? 'bg-[var(--indigo-dye)] border-[var(--indigo-dye)]' : 'bg-white border-[var(--charcoal-ink)]/20'}`}></div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest mt-2">Processing</div>
                 </div>
-                <div className="space-y-4">
-                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                   {order.order_items.map((item: any) => (
-                      <div key={item.id} className="flex justify-between items-center font-sans">
-                         <div>
-                            <p className="font-bold">{item.product_variants.products.title}</p>
-                            <p className="text-sm opacity-70">Qty: {item.quantity}</p>
-                         </div>
-                         <p>₹{item.unit_price}</p>
-                      </div>
-                   ))}
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className={`w-4 h-4 rounded-full border-2 ${order.status === 'shipped' || order.status === 'delivered' ? 'bg-[var(--indigo-dye)] border-[var(--indigo-dye)]' : 'bg-white border-[var(--charcoal-ink)]/20'}`}></div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest mt-2">Shipped</div>
                 </div>
-                <div className="mt-8 pt-6 border-t-2 border-[var(--charcoal-ink)]/20 flex gap-4">
-                  <Button variant="outline" className="text-sm">Track Package</Button>
-                  <Button variant="outline" className="text-sm">Download Invoice (PDF)</Button>
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className={`w-4 h-4 rounded-full border-2 ${order.status === 'delivered' ? 'bg-[var(--indigo-dye)] border-[var(--indigo-dye)]' : 'bg-white border-[var(--charcoal-ink)]/20'}`}></div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest mt-2">Delivered</div>
                 </div>
-             </div>
-          ))}
-        </div>
-      )}
+              </div>
+            </div>
+
+            {/* Order Items */}
+            <div className="bg-[var(--unbleached-cotton)] p-4 border-2 border-[var(--charcoal-ink)]/10">
+              <h3 className="text-[10px] uppercase font-bold tracking-widest opacity-50 mb-3">Items</h3>
+              <div className="space-y-3">
+                {order.order_items?.map((item: any, idx: number) => (
+                  <div key={idx} className="flex justify-between items-center text-sm font-bold">
+                    <div>
+                      <span>{item.quantity}x </span>
+                      <span>{item.product_variants?.products?.title}</span>
+                      <span className="opacity-50 ml-2">({item.product_variants?.color})</span>
+                    </div>
+                    <div className="opacity-80">₹{(item.unit_price * item.quantity).toFixed(2)}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        ))}
+
+        {!orders || orders.length === 0 && (
+          <div className="text-center p-12 border-2 border-dashed border-[var(--charcoal-ink)]/20">
+            <p className="font-sans uppercase tracking-widest text-sm opacity-50">No orders placed yet.</p>
+          </div>
+        )}
+      </div>
     </div>
-  );
+  )
 }

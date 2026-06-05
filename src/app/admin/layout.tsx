@@ -1,35 +1,84 @@
+"use client";
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { Package, LayoutDashboard, ShoppingBag, PlusCircle, LogOut } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { Package, LayoutDashboard, ShoppingBag, PlusCircle, LogOut, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
+
+  const navItems = [
+    { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+    { name: 'Orders', href: '/admin/orders', icon: ShoppingBag },
+    { name: 'Products', href: '/admin/products', icon: Package },
+    { name: 'Categories', href: '/admin/categories', icon: Package },
+    { name: 'Live Inventory', href: '/admin/inventory', icon: Package },
+    { name: 'Promotions', href: '/admin/promotions', icon: PlusCircle },
+    { name: 'Settings', href: '/admin/settings', icon: Settings },
+  ];
+
   return (
     <div className="flex h-screen bg-[var(--unbleached-cotton)] overflow-hidden font-sans">
-      {/* Mobile-first Sidebar */}
-      <aside className="w-64 bg-[var(--charcoal-ink)] text-[var(--unbleached-cotton)] hidden md:flex flex-col border-r-2 border-[var(--turmeric)]">
-        <div className="p-6 border-b-2 border-[var(--charcoal-ink)]/20">
-           <h1 className="font-serif text-2xl font-bold tracking-tight text-[var(--turmeric)]">MITHILA</h1>
-           <p className="text-xs tracking-widest opacity-70 uppercase">Owner Portal</p>
+      {/* Sidebar */}
+      <motion.aside 
+        initial={false}
+        animate={{ width: isCollapsed ? 80 : 256 }}
+        className="bg-[var(--charcoal-ink)] text-[var(--unbleached-cotton)] hidden md:flex flex-col border-r-2 border-[var(--turmeric)] relative z-20"
+      >
+        <div className="p-6 border-b-2 border-[var(--charcoal-ink)]/20 flex items-center justify-between overflow-hidden whitespace-nowrap h-[88px]">
+           <AnimatePresence mode="wait">
+             {!isCollapsed ? (
+               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col">
+                 <h1 className="font-serif text-2xl font-bold tracking-tight text-[var(--turmeric)]">MITHILA</h1>
+                 <p className="text-xs tracking-widest opacity-70 uppercase">Owner Portal</p>
+               </motion.div>
+             ) : (
+               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex justify-center w-full">
+                 <span className="font-serif text-2xl font-bold text-[var(--turmeric)]">M</span>
+               </motion.div>
+             )}
+           </AnimatePresence>
         </div>
-        <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-          <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--madder-red)] rounded-sm transition-colors">
-            <LayoutDashboard size={20} /> Dashboard
-          </Link>
-          <Link href="/admin/orders" className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--madder-red)] rounded-sm transition-colors">
-            <ShoppingBag size={20} /> Orders
-          </Link>
-          <Link href="/admin/inventory" className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--madder-red)] rounded-sm transition-colors">
-            <Package size={20} /> Live Inventory
-          </Link>
-          <Link href="/admin/products/new" className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--madder-red)] rounded-sm transition-colors">
-            <PlusCircle size={20} /> AI Ingestion
-          </Link>
+
+        {/* Toggle Button */}
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="absolute -right-3 top-20 bg-[var(--turmeric)] text-[var(--charcoal-ink)] rounded-full p-1 border-2 border-[var(--charcoal-ink)] shadow-[2px_2px_0_var(--charcoal-ink)] hover:translate-y-[1px] hover:shadow-[1px_1px_0_var(--charcoal-ink)] transition-all z-30"
+        >
+          {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+
+        <nav className="flex-1 overflow-y-auto p-4 space-y-2 mt-4">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            return (
+              <Link 
+                key={item.href}
+                href={item.href} 
+                title={isCollapsed ? item.name : undefined}
+                className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} px-4 py-3 rounded-sm transition-colors whitespace-nowrap overflow-hidden
+                  ${isActive ? 'bg-[var(--indigo-dye)] text-[var(--unbleached-cotton)]' : 'hover:bg-[var(--madder-red)]'}
+                `}
+              >
+                <item.icon size={20} className="shrink-0" /> 
+                {!isCollapsed && <span>{item.name}</span>}
+              </Link>
+            );
+          })}
         </nav>
         <div className="p-4 border-t-2 border-[var(--charcoal-ink)]/20">
-          <button className="flex items-center gap-3 px-4 py-3 w-full hover:bg-[var(--madder-red)] rounded-sm transition-colors text-left text-red-300">
-            <LogOut size={20} /> Secure Logout
+          <button 
+            title={isCollapsed ? "Secure Logout" : undefined}
+            className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 w-full'} px-4 py-3 hover:bg-[var(--madder-red)] rounded-sm transition-colors text-left text-red-300 overflow-hidden whitespace-nowrap`}
+          >
+            <LogOut size={20} className="shrink-0" /> 
+            {!isCollapsed && <span>Secure Logout</span>}
           </button>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -39,7 +88,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <button><LayoutDashboard /></button>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-8">
+        <div className="flex-1 overflow-y-auto bg-[var(--unbleached-cotton)] text-[var(--charcoal-ink)]">
           {children}
         </div>
       </main>

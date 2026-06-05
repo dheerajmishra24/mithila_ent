@@ -81,9 +81,19 @@ export default function ContactPage() {
                     +91 9818555220
                   </a>
                 </div>
-                <div>
-                  <span className="block font-bold text-[10px] uppercase opacity-40">Artisan Workshop</span>
-                  <p className="text-zinc-600">Madhubani Village, Mithila Region, Bihar, India</p>
+                <div className="space-y-3">
+                  <div>
+                    <span className="block font-bold text-[10px] uppercase opacity-40">Registered Office</span>
+                    <p className="text-zinc-600 leading-relaxed">X-3458/7, Street -1, Raghubar Pura -2, Gandhi Nagar, DELHI - 110031</p>
+                  </div>
+                  <div>
+                    <span className="block font-bold text-[10px] uppercase opacity-40">Artisan Workshop</span>
+                    <p className="text-zinc-600 leading-relaxed">TA-106, Okhla Estate Marg, Tughlakabad Extension, Kalkaji New Delhi, Delhi 110019</p>
+                  </div>
+                  <div>
+                    <span className="block font-bold text-[10px] uppercase opacity-40">Tax Identity</span>
+                    <p className="text-zinc-600 font-mono text-xs mt-1">GSTIN: 07AGUPM2548P1ZH</p>
+                  </div>
                 </div>
               </div>
             </div>

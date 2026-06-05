@@ -13,15 +13,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
     .ilike('title', `%${query}%`)
     .eq('status', 'active');
 
-  // Use mock data if database is empty to ensure a fully working prototype
-  let products = dbProducts && dbProducts.length > 0 ? dbProducts : MOCK_PRODUCTS;
-
-  if (query && products === MOCK_PRODUCTS) {
-    products = products.filter(p => 
-      p.title.toLowerCase().includes(query.toLowerCase()) || 
-      p.description?.toLowerCase().includes(query.toLowerCase())
-    );
-  }
+  let products = dbProducts || [];
 
   return (
     <main className="flex-grow max-w-7xl mx-auto px-4 py-32 w-full min-h-screen">

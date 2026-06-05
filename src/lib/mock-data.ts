@@ -4,7 +4,7 @@ export const MOCK_VARIANTS = [
     color: 'Crimson Red',
     price: 1200,
     stock_quantity: 10,
-    images: ['https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=600&auto=format&fit=crop'],
+    images: ['/images/fabrics/cotton.png'],
     product_id: 'prod-1',
     products: {
       id: 'prod-1',
@@ -23,7 +23,7 @@ export const MOCK_VARIANTS = [
     color: 'Natural Ecru',
     price: 850,
     stock_quantity: 25,
-    images: ['https://images.unsplash.com/photo-1605289982774-9a6fef564df8?q=80&w=600&auto=format&fit=crop'],
+    images: ['/images/fabrics/viscose.png'],
     product_id: 'prod-2',
     products: {
       id: 'prod-2',
@@ -42,7 +42,7 @@ export const MOCK_VARIANTS = [
     color: 'Indigo Blue',
     price: 1450,
     stock_quantity: 5,
-    images: ['https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?q=80&w=600&auto=format&fit=crop'],
+    images: ['/images/fabrics/linen.png'],
     product_id: 'prod-3',
     products: {
       id: 'prod-3',
@@ -61,7 +61,7 @@ export const MOCK_VARIANTS = [
     color: 'Turmeric Yellow',
     price: 950,
     stock_quantity: 40,
-    images: ['https://images.unsplash.com/photo-1584346747551-5120352fb387?q=80&w=600&auto=format&fit=crop'],
+    images: ['/images/fabrics/wool.png'],
     product_id: 'prod-4',
     products: {
       id: 'prod-4',
@@ -80,7 +80,7 @@ export const MOCK_VARIANTS = [
     color: 'Forest Green',
     price: 1100,
     stock_quantity: 15,
-    images: ['https://images.unsplash.com/photo-1574634534894-89d7576c8259?q=80&w=600&auto=format&fit=crop'],
+    images: ['/images/fabrics/velvet.png'],
     product_id: 'prod-5',
     products: {
       id: 'prod-5',
@@ -99,7 +99,7 @@ export const MOCK_VARIANTS = [
     color: 'Charcoal Black',
     price: 1600,
     stock_quantity: 8,
-    images: ['https://images.unsplash.com/photo-1558024920-b41e1887dc32?q=80&w=600&auto=format&fit=crop'],
+    images: ['/images/fabrics/suede.png'],
     product_id: 'prod-6',
     products: {
       id: 'prod-6',
@@ -118,7 +118,7 @@ export const MOCK_VARIANTS = [
     color: 'Terracotta Orange',
     price: 890,
     stock_quantity: 50,
-    images: ['https://images.unsplash.com/photo-1598425237654-4c05bf607590?q=80&w=600&auto=format&fit=crop'],
+    images: ['/images/fabrics/corduroy.png'],
     product_id: 'prod-7',
     products: {
       id: 'prod-7',
@@ -137,7 +137,7 @@ export const MOCK_VARIANTS = [
     color: 'Pearl White',
     price: 2100,
     stock_quantity: 3,
-    images: ['https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=600&auto=format&fit=crop'],
+    images: ['/images/fabrics/twill.png'],
     product_id: 'prod-8',
     products: {
       id: 'prod-8',

@@ -80,24 +80,20 @@ export default function Home() {
 
   const faqs = [
     {
-      q: "What makes your fabrics stand out?",
-      a: "Every fabric swatch is loomed by master artisans using unbleached raw organic cotton and linen, then hand-detailed with natural pigments (derived from flowers, seeds, and charcoal ink) inspired by the ancient Madhubani art."
+      q: "What is the difference between plain and printed viscose for summer?",
+      a: "Plain viscose provides a monochromatic, high-density drape that absorbs heat and resists static. Printed viscose undergoes a dye-sublimation process that bonds color directly into the fibers. The structural breathability and fluid weight remain identical across both variations."
     },
     {
-      q: "Are your fabrics compatible with all designs?",
-      a: "Absolutely. Our pigments are derived strictly from organic botanical sources—like turmeric for yellow, indigo plants for blue, and madder root for deep red—completely free of synthetic chemicals or heavy metals."
+      q: "Which winter fabric is warmest: wool, fleece, or tweed?",
+      a: "Virgin wool provides the highest warmth-to-weight ratio due to natural fiber crimps that trap air. Thermal fleece offers immediate tactile warmth and retains heat even when wet. Tweed relies on a heavily spun, irregular matrix to physically block wind and moisture, making it best for harsh environmental defense."
     },
     {
-      q: "How long does the weaving process take?",
-      a: "We specialize in partnership orders for boutique brands and fashion collectors. Standard weaves take 2-3 weeks, while custom Jamdani layouts can take 4-6 weeks to loom, dry, and cure."
+      q: "How do I care for premium velvet and suede fabrics?",
+      a: "Premium velvet requires professional dry cleaning to prevent pile crushing and maintain light absorption properties. Micro-fiber suede resists surface abrasion and can be spot-cleaned with a damp cloth. Neither fabric should be exposed to direct, high-heat ironing."
     },
     {
-      q: "Are the fabrics waterproof or pre-washed?",
-      a: "All organic fabrics are pre-washed and natural-shrunk. They are highly breathable and retain their pigment structure. We recommend gentle hand washing in cold water."
-    },
-    {
-      q: "Do you offer a warranty on organic vegetable dyes?",
-      a: "Yes. We offer a lifetime heritage support on dye settings. If properly maintained (dry in shade, pH-neutral detergents), our botanical pigments retain their brilliance for generations."
+      q: "Do you offer wholesale fabric purchasing for designers?",
+      a: "Yes. We supply premium yardage at tiered wholesale rates for domestic artisans and design houses. Wholesale accounts require a valid tax identification number and a minimum order quantity of 50 yards per textile variant."
     }
   ];
 
@@ -106,19 +102,19 @@ export default function Home() {
       title: "Wireless Looms: The Evolution of Shuttle Weaving",
       date: "Feb 1, 2026",
       desc: "Stay updated with the latest trends in organic weaving, handloom innovations, and expert tips to enhance your fabric durability.",
-      img: "https://images.unsplash.com/photo-1598425237654-4c05bf607590?q=80&w=400&auto=format&fit=crop"
+      img: "/images/about/loom.png"
     },
     {
       title: "Indigo Dyeing and Beyond: Organic Pigment Fermentation",
       date: "Feb 4, 2026",
       desc: "Delving deep into traditional vat indigo fermentation methods and vegetable-based natural dye preservation techniques.",
-      img: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=400&auto=format&fit=crop"
+      img: "/images/about/dyes.png"
     },
     {
       title: "Eco-Friendly Handloom Solutions for Modern Brands",
       date: "Feb 7, 2026",
       desc: "How boutique designers are leveraging organic GOTS certified cotton and fair-trade artisans to build sustainable luxury lines.",
-      img: "https://images.unsplash.com/photo-1583391733958-d25e07fac662?q=80&w=400&auto=format&fit=crop"
+      img: "/images/about/fibers.png"
     }
   ];
 
@@ -133,22 +129,15 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex-grow w-full bg-[var(--unbleached-cotton)] text-zinc-900 pt-32 pb-24 font-sans overflow-x-hidden relative">
+    <main className="flex-grow w-full bg-[var(--unbleached-cotton)] text-zinc-900 pt-8 pb-24 font-sans overflow-x-hidden relative">
       
       {/* 1. HERO SECTION */}
-      <section className="relative w-full max-w-7xl mx-auto px-6 py-16 md:py-24 overflow-hidden rounded-3xl">
+      <section className="relative w-full max-w-7xl mx-auto px-6 py-8 md:py-12 rounded-3xl">
         <BackgroundPattern className="opacity-60" />
         
-        {/* Professional Authentic Mandala */}
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ ease: "linear", duration: 200, repeat: Infinity }}
-          className="absolute -right-[20%] -top-[40%] w-[800px] h-[800px] opacity-25 pointer-events-none z-0 mix-blend-multiply"
-        >
-          <Image src="/images/madhubani_mandala.png" alt="Authentic Madhubani Mandala" fill className="object-contain" priority />
-        </motion.div>
+        {/* Professional Authentic Mandala (temporarily removed per request) */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center relative z-10">
           
           {/* Hero Left Content */}
           <motion.div 
@@ -164,13 +153,13 @@ export default function Home() {
               Artisanal Heritage Revival
             </motion.span>
             
-            <AnimatedTitle text="Loomed by Hand. Crafted for Life." />
+            <AnimatedTitle text="Premium Textiles Engineered for Living." />
 
             <motion.h4 
               variants={fadeUpItem}
               className="text-lg md:text-xl font-medium text-zinc-800 leading-snug"
             >
-              Feel the distinct crispness of pure linen and the comforting weight of raw cotton against your skin. Every thread holds the tension of the wooden loom, offering a structural integrity that machine-made fabrics simply cannot replicate.
+              We source and supply heavyweight winter wools and breathable summer linens for domestic designers. Our year-round catalog guarantees exact drape, structural integrity, and long-lasting fabric memory.
             </motion.h4>
             
             <motion.div 
@@ -186,43 +175,39 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* Hero Right Visual (Vibrant bright cotton fabric showcase with floating keyframes) */}
+          {/* Hero Right Visual (Peacock SVG showcase) */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ 
               opacity: 1, 
               scale: 1,
-              y: [0, -12, 0],
+              y: [0, -15, 0],
               transition: {
-                y: {
-                  repeat: Infinity,
-                  duration: 5,
-                  ease: "easeInOut"
-                },
+                y: { repeat: Infinity, duration: 6, ease: "easeInOut" },
                 opacity: { duration: 0.8 },
                 scale: { type: "spring", bounce: 0.15, duration: 0.8 }
               }
             }}
-            className="relative flex justify-center lg:justify-end"
+            className="hidden lg:flex relative justify-center lg:justify-end w-full"
           >
-            <div className="relative w-full max-w-[450px] aspect-[4/5] overflow-hidden rounded-2xl border border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 p-3 shadow-md hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+            <div className="relative w-full max-w-[550px] aspect-square hover:scale-[1.03] transition-transform duration-700 cursor-pointer mix-blend-multiply drop-shadow-sm">
               <Image 
-                src="/images/madhubani_peacock.png" 
-                alt="Professional Madhubani Peacock Mural" 
+                src="/images/peacock hero.svg" 
+                alt="Professional Madhubani Peacock" 
                 fill
-                className="object-cover object-center rounded-xl" 
+                className="object-contain object-center" 
                 priority
               />
             </div>
           </motion.div>
-
         </div>
       </section>
 
       {/* PROFESSIONAL BORDER DIVIDER */}
-      <div className="w-full relative z-20 flex justify-center py-8 bg-[var(--unbleached-cotton)] h-24 md:h-32">
-        <Image src="/images/madhubani_border.png" alt="Madhubani Border" fill className="object-cover opacity-90 mix-blend-multiply" />
-      </div>
+      <div 
+        className="w-full relative z-20 h-24 md:h-32 opacity-90 mix-blend-multiply"
+        style={{ backgroundImage: 'url(/images/madhubani_border.png)', backgroundRepeat: 'repeat-x', backgroundSize: 'contain', backgroundPosition: 'center' }}
+      />
 
       {/* 2. INFINITE SCROLLING CERTIFICATION TICKER */}
       <section className="w-full py-8 bg-[var(--unbleached-cotton)] border-y border-[var(--charcoal-ink)]/10 overflow-hidden relative">
@@ -253,81 +238,94 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. DOUBLE COLUMN FEATURES / OVERVIEW */}
+      {/* 3. THE SCIENCE OF THE SEASON */}
       <section className="w-full py-24 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={scrollRevealVariants}
+          className="text-center max-w-3xl mx-auto mb-16 space-y-3"
+        >
+          <span className="text-[var(--madder-red)] font-sans text-xs uppercase tracking-wider font-semibold">Climate Engineering</span>
+          <h2 className="font-serif italic text-3xl md:text-5xl font-bold leading-tight text-[var(--charcoal-ink)]">
+            Fabric Functionality
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-12 lg:gap-16 mt-12">
           
+          {/* Spring / Summer Card */}
           <motion.div 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={scrollRevealVariants}
-            className="space-y-6"
+            className="relative flex flex-col group"
           >
-            <span className="text-[var(--madder-red)] font-sans text-xs uppercase tracking-wider font-semibold">Our latest innovation</span>
-            <h2 className="font-serif italic text-3xl md:text-5xl font-bold leading-tight text-[var(--charcoal-ink)]">
-              Our latest fabrics combine superior handloom thread density with unmatched organic durability
-            </h2>
-            <h4 className="font-sans text-base md:text-lg text-zinc-600 font-medium">
-              Designed for modern living, this organic weave blends premium comfort with intuitive styling.
-            </h4>
-            <p className="font-sans text-sm text-zinc-500 leading-relaxed text-justify">
-              Every piece of fabric is custom loomed by rural Bihar artisans using traditional warp-weft crossings. This manual control forms a high-density matrix of cotton slubs, bringing rich material texture, longevity, and breathability.
-            </p>
+            {/* Image Layer */}
+            <div className="w-full h-72 md:h-[22rem] relative rounded-2xl overflow-hidden shadow-lg z-10 border border-[var(--charcoal-ink)]/10">
+              <Image 
+                src="/images/fabrics/linen.png" 
+                fill 
+                className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+                alt="Spring/Summer Fabric Weave" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--charcoal-ink)]/20 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0" />
+            </div>
+
+            {/* Overlapping Text Layer */}
+            <div className="bg-white/95 backdrop-blur-xl p-8 md:p-10 border border-[var(--charcoal-ink)]/10 shadow-2xl rounded-2xl z-20 -mt-20 mx-4 md:mx-8 relative transition-transform duration-500 group-hover:-translate-y-2">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-2 h-2 rounded-full bg-[var(--madder-red)] animate-pulse" />
+                <h4 className="font-serif italic font-bold text-2xl text-[var(--charcoal-ink)]">Spring / Summer</h4>
+              </div>
+              <p className="font-sans text-xs md:text-sm text-zinc-600 leading-relaxed text-justify">
+                Warm climates demand fabrics that physically expel heat. Our linen, cotton, and viscose textiles are engineered with open weave structures that maximize air circulation. Natural fibers absorb body moisture and pull it to the fabric surface for rapid evaporation. This constant airflow prevents heat trapping and maintains a dry, structured drape in high humidity.
+              </p>
+            </div>
           </motion.div>
 
+          {/* Autumn / Winter Card */}
           <motion.div 
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerGridContainer}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={scrollRevealVariants}
+            className="relative flex flex-col group md:mt-16"
           >
-            {/* The Perfect Sound, Anywhere & Smart. Sleek. Powerful copy mapping */}
-            <motion.div 
-              variants={gridItemVariants}
-              whileHover={{ y: -3 }}
-              className="sonic-bento-card p-6 flex flex-col justify-between h-80 bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/10"
-            >
-              <div>
-                <span className="text-[var(--madder-red)] font-sans uppercase text-[10px] tracking-wider font-bold">The Perfect Swatch, Anywhere</span>
-                <h4 className="font-serif italic font-bold text-lg mt-3 text-[var(--charcoal-ink)]">Satin Weaves</h4>
-                <p className="font-sans text-xs text-zinc-500 leading-relaxed mt-2 text-justify">
-                  Our organic linen is designed to fill your space with rich, high-fidelity texture—whether you are designing a high-fashion apparel line or decorating your home.
-                </p>
-              </div>
-              <div className="w-full h-24 overflow-hidden rounded-xl border border-zinc-50 mt-4">
-                <img src="https://images.unsplash.com/photo-1598425237654-4c05bf607590?q=80&w=300&auto=format&fit=crop" className="w-full h-full object-cover" alt="Satin weaves" />
-              </div>
-            </motion.div>
+            {/* Image Layer */}
+            <div className="w-full h-72 md:h-[22rem] relative rounded-2xl overflow-hidden shadow-lg z-10 border border-[var(--charcoal-ink)]/10">
+              <Image 
+                src="/images/fabrics/wool.png" 
+                fill 
+                className="object-cover transition-transform duration-1000 group-hover:scale-105" 
+                alt="Autumn/Winter Fabric Weave" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--charcoal-ink)]/20 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-0" />
+            </div>
 
-            <motion.div 
-              variants={gridItemVariants}
-              whileHover={{ y: -3 }}
-              className="sonic-bento-card p-6 flex flex-col justify-between h-80 bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/10"
-            >
-              <div>
-                <span className="text-[var(--turmeric)] font-sans uppercase text-[10px] tracking-wider font-bold">Smart. Sleek. Powerful.</span>
-                <h4 className="font-serif italic font-bold text-lg mt-3 text-[var(--charcoal-ink)]">Jamdani Weaves</h4>
-                <p className="font-sans text-xs text-zinc-500 leading-relaxed mt-2 text-justify">
-                  Designed for modern living, this organic weave blends premium material softness with intuitive care instructions and raw handloomed structural grace.
-                </p>
+            {/* Overlapping Text Layer */}
+            <div className="bg-[var(--charcoal-ink)]/95 backdrop-blur-xl p-8 md:p-10 border border-[var(--charcoal-ink)]/20 shadow-2xl rounded-2xl z-20 -mt-20 mx-4 md:mx-8 relative transition-transform duration-500 group-hover:-translate-y-2">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-2 h-2 rounded-full bg-[var(--turmeric)] animate-pulse" />
+                <h4 className="font-serif italic font-bold text-2xl text-white">Autumn / Winter</h4>
               </div>
-              <div className="w-full h-24 overflow-hidden rounded-xl border border-zinc-50 mt-4">
-                <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=300&auto=format&fit=crop" className="w-full h-full object-cover" alt="Jamdani weaves" />
-              </div>
-            </motion.div>
+              <p className="font-sans text-xs md:text-sm text-zinc-300 leading-relaxed text-justify">
+                Cold weather requires textiles that actively build thermal barriers. Dense weaves found in our flannel, corduroy, twill, suede, velvet, wool, fleece, and tweed collections physically trap body heat within micro-pockets of air. The heavy weight and raised surface piles block wind penetration. This structural density ensures superior insulation and tactile warmth for domestic winters.
+              </p>
+            </div>
           </motion.div>
 
         </div>
       </section>
 
-      {/* 4. "WHY US" & BENTO STATS GRID (1-to-1 content alignment) */}
+      {/* 4. SHOP BY CATEGORY GRID */}
       <section className="w-full py-24 bg-[var(--unbleached-cotton)] border-y border-[var(--charcoal-ink)]/10">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-[var(--madder-red)] font-sans text-xs uppercase tracking-wider font-semibold">The Mithila Difference</span>
-            <h2 className="font-serif italic text-3xl md:text-4xl font-bold text-[var(--charcoal-ink)]">What makes authentic Indian handloom unique?</h2>
+            <span className="text-[var(--madder-red)] font-sans text-xs uppercase tracking-wider font-semibold">The Navigation Grid</span>
+            <h2 className="font-serif italic text-3xl md:text-4xl font-bold text-[var(--charcoal-ink)]">Shop by Category</h2>
           </div>
 
           <motion.div 
@@ -335,25 +333,50 @@ export default function Home() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerGridContainer}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
             {[
-              { stat: "01", title: "The Weave Architecture", desc: "Master artisans in Mithila, India, interlock warp and weft yarns with calculated manual precision, creating microscopic air pockets that ensure maximum breathability in humid climates." },
-              { stat: "02", title: "The Botanical Dyes", desc: "We exclusively use natural extracts—fermented indigo, madder root, and turmeric—which bind to natural fibers deeply, aging into a distinguished patina rather than fading." },
-              { stat: "03", title: "The Structural Integrity", desc: "Unlike mass-produced textiles that thin after washing, hand-spun cotton and linen fibers swell and soften, gaining strength and drape with every cycle." }
-            ].map((item, idx) => (
+              { title: "Premium Pure Linen", desc: "Breathable summer linen by the yard designed for structured warm-weather tailoring.", slug: "linen" },
+              { title: "Organic Woven Cotton", desc: "Medium-weight cotton offering superior moisture wicking and crisp garment construction.", slug: "cotton" },
+              { title: "Fluid Drape Viscose", desc: "High-density viscose fabric yielding a smooth, cooling finish for fluid silhouettes.", slug: "viscose" },
+              { title: "Brushed Winter Flannel", desc: "Double-brushed cotton flannel engineered for maximum heat retention and tactile softness.", slug: "flannel" },
+              { title: "Heavyweight Wale Corduroy", desc: "Durable ribbed corduroy providing deep textural ridges and robust cold-weather insulation.", slug: "corduroy" },
+              { title: "Diagonal Weave Twill", desc: "Tightly bound twill fabric ensuring exceptional tear resistance and structured fall.", slug: "twill" },
+              { title: "Supple Faux Suede", desc: "Dense micro-fiber suede offering a luxurious matte finish and substantial hand-feel.", slug: "suede" },
+              { title: "Plush Pile Velvet", desc: "Heavy pile velvet woven for light absorption, intense color depth, and tactile warmth.", slug: "velvet" },
+              { title: "Insulating Pure Wool", desc: "Dense virgin wool textiles guaranteeing maximum thermal insulation and wind resistance.", slug: "wool" },
+              { title: "Thermal Polar Fleece", desc: "High-loft fleece fabric structured to trap body heat without adding excess weight.", slug: "fleece" },
+              { title: "Heritage Woven Tweed", desc: "Heavily textured wool tweed crafted for structured outerwear and regional weather defense.", slug: "tweed" }
+            ].map((cat, idx) => (
               <motion.div 
                 key={idx}
                 variants={gridItemVariants}
                 whileHover={{ y: -4 }}
-                className="sonic-bento-card p-8 flex flex-col justify-between h-auto min-h-[16rem] bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/10"
+                className="sonic-bento-card relative group p-0 flex flex-col overflow-hidden min-h-[18rem] bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/10 hover:border-[var(--madder-red)]/50 transition-colors"
               >
-                <span className="font-serif italic text-4xl font-bold text-[var(--charcoal-ink)] opacity-20 leading-none mb-4">
-                  {item.stat}
-                </span>
-                <div>
-                  <h4 className="font-sans font-bold text-base text-[var(--charcoal-ink)] mb-2">{item.title}</h4>
-                  <p className="font-sans text-xs text-[var(--charcoal-ink)]/70 leading-relaxed text-justify">{item.desc}</p>
+                {/* Image Section */}
+                <div className="h-44 w-full relative overflow-hidden bg-[var(--unbleached-cotton)]">
+                  <Image 
+                    src={`/images/fabrics/${cat.slug}.png`} 
+                    alt={cat.title} 
+                    fill 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                  />
+                  {/* Subtle gradient overlay to merge image with card body */}
+                  <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[var(--charcoal-ink)]/10 to-transparent"></div>
+                </div>
+                
+                {/* Text Section */}
+                <div className="p-6 flex flex-col justify-between flex-grow">
+                  <div>
+                    <h4 className="font-serif italic font-bold text-lg text-[var(--charcoal-ink)] mb-2 group-hover:text-[var(--madder-red)] transition-colors">{cat.title}</h4>
+                    <p className="font-sans text-xs text-[var(--charcoal-ink)]/70 leading-relaxed text-justify">{cat.desc}</p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-[var(--charcoal-ink)]/10 flex justify-between items-center z-20 relative">
+                    <Link href={`/shop?category=${cat.slug}&style=plain`} className="font-sans text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/80 hover:text-[var(--madder-red)] transition-colors px-3 py-1.5 bg-white/60 hover:bg-white rounded shadow-sm backdrop-blur-md">Plain</Link>
+                    <Link href={`/shop?category=${cat.slug}&style=printed`} className="font-sans text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/80 hover:text-[var(--madder-red)] transition-colors px-3 py-1.5 bg-white/60 hover:bg-white rounded shadow-sm backdrop-blur-md">Printed</Link>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -373,10 +396,11 @@ export default function Home() {
             className="relative flex justify-center lg:justify-start"
           >
             <div className="relative w-full max-w-[500px] aspect-[4/3] overflow-hidden rounded-2xl border border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 p-3 shadow-sm hover:scale-[1.01] transition-transform duration-500">
-              <img 
-                src="https://images.unsplash.com/photo-1583391733958-d25e07fac662?q=80&w=600&auto=format&fit=crop" 
+              <Image 
+                src="/images/fabrics/suede.png" 
                 alt="Intricate Handloom fabric curations" 
-                className="w-full h-full object-cover rounded-xl" 
+                fill
+                className="object-cover rounded-xl" 
               />
             </div>
           </motion.div>
@@ -526,9 +550,10 @@ export default function Home() {
       </section>
 
       {/* PROFESSIONAL BORDER DIVIDER */}
-      <div className="w-full relative z-20 flex justify-center py-12 bg-[var(--unbleached-cotton)] h-32 md:h-40">
-        <Image src="/images/madhubani_border.png" alt="Madhubani Border" fill className="object-cover opacity-90 mix-blend-multiply" />
-      </div>
+      <div 
+        className="w-full relative z-20 h-32 md:h-40 opacity-90 mix-blend-multiply mt-12 mb-12"
+        style={{ backgroundImage: 'url(/images/madhubani_border.png)', backgroundRepeat: 'repeat-x', backgroundSize: 'contain', backgroundPosition: 'center' }}
+      />
 
       {/* 8. CTA BANNER ("Bring every room together") */}
       <motion.section 

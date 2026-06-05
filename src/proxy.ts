@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { updateSession } from '@/lib/supabase/middleware';
 
-export default function proxy(request: NextRequest) {
-  const response = NextResponse.next();
+export default async function proxy(request: NextRequest) {
+  // First run the supabase auth & role checks
+  const response = await updateSession(request);
+
+  // If updateSession returned a redirect (e.g. enforcing /login), return immediately
+  if (response.headers.has('location')) {
+    return response;
+  }
 
   // Basic security headers
   response.headers.set('X-DNS-Prefetch-Control', 'on');
@@ -11,13 +18,8 @@ export default function proxy(request: NextRequest) {
   response.headers.set('X-Content-Type-Options', 'nosniff');
 
   // Cloudflare GEO logic
-  // For Vercel, x-vercel-ip-country is used, for Cloudflare it's cf-ipcountry
   const country = request.headers.get('cf-ipcountry') || request.headers.get('x-vercel-ip-country') || 'US';
-  
-  // Set a custom header or cookie for the frontend to adjust currency
   response.headers.set('x-user-country', country);
-
-  // Here we would integrate Upstash Redis for rate limiting in production
 
   return response;
 }

@@ -99,24 +99,15 @@ const legalDocuments: Record<string, LegalDoc> = {
     date: "23 May 2026",
     sections: [
       {
-        title: "1. Shipping Timelines",
+        title: "1. Shipping Protocol",
         paragraphs: [
-          "We ship worldwide from our artisan center in Mithila, Bihar, India.",
-          "Ready-made fabric swatches are dispatched within 48 hours of payment verification.",
-          "Custom weavings, bespoke embroideries, and large-order Jamdani runs take between 4 to 6 weeks to loom, cure, and dry. You will receive progress photo updates via email or WhatsApp."
+          "All domestic orders are processed and dispatched within 48 hours of payment verification. Standard transit times range from 3 to 5 business days. Heavyweight orders exceeding 50 yards are shipped via freight and require a scheduled delivery window. Tracking information is provided immediately upon dispatch."
         ]
       },
       {
-        title: "2. Returns Conditions",
+        title: "2. Return Policy",
         paragraphs: [
-          "Due to the highly customized, hand-cut nature of our fabric yardage, returns are only accepted on standard, uncut, and unwashed fabric pieces within 7 days of delivery.",
-          "Custom-made sarees, tailored tunics, and personalized embroidered patches cannot be returned unless they arrive with transit damage."
-        ]
-      },
-      {
-        title: "3. Return Shipments",
-        paragraphs: [
-          "To request a return, email us at dheeraj.mishra02@gmail.com. Once approved, you will ship the fabric back to our workshop. Upon inspection, we will issue a full refund to your original payment method."
+          "We accept returns within 14 days of delivery. The fabric must remain uncut, unwashed, and entirely free of ambient odors or physical alterations. Once the returned yardage passes our structural inspection, a full refund is issued to the original payment method. Custom dye runs and wholesale bulk orders are final sale and cannot be returned."
         ]
       }
     ]

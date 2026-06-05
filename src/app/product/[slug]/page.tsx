@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     .eq('slug', slug)
     .single();
 
-  const product = dbProduct || MOCK_PRODUCTS.find(p => p.slug === slug);
+  const product = dbProduct;
 
   if (!product) return { title: 'Product Not Found' };
 
@@ -38,7 +38,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     .eq('slug', slug)
     .single();
 
-  const product = dbProduct || MOCK_PRODUCTS.find(p => p.slug === slug);
+  const product = dbProduct;
 
   if (!product) {
     notFound();
@@ -112,27 +112,51 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </p>
 
             <div className="space-y-8 text-[var(--charcoal-ink)] opacity-90 font-sans">
-              <p className="leading-relaxed text-sm opacity-80">
-                {product.description || 'This fabric commands attention through its sheer structural grace. Woven from high-twist yarns, the surface offers a tactile, granular grip that softens into a fluid drape over time. The rich, earthy pigment is fixed deep within the core of the raw fiber, ensuring the color matures rather than washes out. It carries the distinct signature of the human hand—minor variations in the tension of the weave that prove its authenticity and provenance.'}
+              <p className="leading-relaxed text-sm opacity-80 text-justify">
+                {product.description || 'This premium textile yields a dense hand-feel and falls with an authoritative, heavy drape. The specific weave density physically blocks wind penetration, making it a highly functional fabric for domestic climates. The surface presents a distinct matte finish.'}
               </p>
 
               <div className="grid grid-cols-2 gap-y-8 gap-x-4 py-8 border-y border-[var(--charcoal-ink)]/10">
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Weave</p>
-                  <p className="font-bold text-sm">{product.weave || 'Standard'}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Blend</p>
+                  <p className="font-bold text-sm">100% {product.categories?.name || 'Organic Yarn'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Color</p>
-                  <p className="font-bold text-sm">{defaultVariant.color}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Width</p>
+                  <p className="font-bold text-sm">{product.width || '54 inches / 137 cm'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">GSM</p>
-                  <p className="font-bold text-sm">{product.gsm ? `${product.gsm} g/m²` : 'Medium Weight'}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Weight / GSM</p>
+                  <p className="font-bold text-sm">{product.gsm ? `${product.gsm} GSM` : '320 GSM (Heavyweight)'}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Availability</p>
-                  <p className="font-bold text-sm text-[var(--indigo-dye)]">{defaultVariant.stock_quantity > 0 ? 'In Stock' : 'Out of Stock'}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Stretch</p>
+                  <p className="font-bold text-sm">{product.stretch || '0% Mechanical Stretch'}</p>
                 </div>
+                <div className="col-span-2 md:col-span-1">
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Origin</p>
+                  <p className="font-bold text-sm">{product.origin || 'Mithila Artisanal Cluster, India'}</p>
+                </div>
+              </div>
+              
+              <div className="pt-2">
+                 <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-3">Best Suited For</p>
+                 <ul className="list-disc pl-4 space-y-2 text-sm font-bold opacity-90">
+                   {(product.best_suited_for || ['Tailored overcoats and structural outerwear', 'Unlined summer blazers', 'Dense upholstery and domestic home goods']).map((item: string, idx: number) => (
+                     <li key={idx}>{item}</li>
+                   ))}
+                 </ul>
+              </div>
+
+              <div className="pt-6 border-t border-[var(--charcoal-ink)]/10">
+                 <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-3">Available Colors</p>
+                 <div className="flex flex-wrap gap-2">
+                   {product.product_variants.map((v: any, idx: number) => (
+                     <span key={idx} className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider border-2 ${idx === 0 ? 'bg-[var(--charcoal-ink)] text-white border-[var(--charcoal-ink)]' : 'border-[var(--charcoal-ink)]/20 text-[var(--charcoal-ink)] opacity-70'}`}>
+                       {v.color}
+                     </span>
+                   ))}
+                 </div>
               </div>
             </div>
 

@@ -27,6 +27,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/about" className="hover:text-[var(--turmeric)] transition-colors">Our Legacy</Link></li>
               <li><Link href="/shop" className="hover:text-[var(--turmeric)] transition-colors">Shop Fabrics</Link></li>
+              <li><Link href="/wholesale" className="hover:text-[var(--turmeric)] transition-colors">Wholesale Accounts</Link></li>
               <li><Link href="/contact" className="hover:text-[var(--turmeric)] transition-colors">Contact</Link></li>
             </ul>
           </div>
@@ -44,9 +45,16 @@ export default function Footer() {
           {/* Contact Details */}
           <div className="space-y-4">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--unbleached-cotton)]">Connect</h4>
-            <div className="space-y-1 text-sm text-[var(--unbleached-cotton)]/70">
-              <p>dheeraj.mishra02@gmail.com</p>
-              <p>+91 9818555220</p>
+            <div className="space-y-3 text-sm text-[var(--unbleached-cotton)]/70">
+              <div>
+                <p>dheeraj.mishra02@gmail.com</p>
+                <p>+91 9818555220</p>
+              </div>
+              <div className="text-xs opacity-80 leading-relaxed">
+                <p className="font-bold mb-1">GSTIN : 07AGUPM2548P1ZH</p>
+                <p className="mb-2"><strong>Reg. Office:</strong> X-3458/7, Street -1, Raghubar Pura -2, Gandhi Nagar, DELHI - 110031</p>
+                <p><strong>Workshop:</strong> TA-106, Okhla Estate Marg, Tughlakabad Extension, Kalkaji New Delhi, Delhi 110019</p>
+              </div>
             </div>
             <div className="flex gap-4 text-sm mt-3">
               <a href="#" className="hover:text-[var(--turmeric)]">Instagram</a>
