@@ -113,9 +113,9 @@ export default function AboutPage() {
               viewport={{ once: true, margin: "-100px" }}
               className="flex flex-col md:flex-row items-center gap-12 mb-24 relative"
             >
-              <div className="w-full md:w-1/2 flex justify-end">
-                <div className="bg-[var(--charcoal-ink)]/5 backdrop-blur-sm p-10 md:p-12 border border-[var(--charcoal-ink)]/10 w-full max-w-md relative z-20 transition-transform duration-700 hover:-translate-y-2">
-                  <div className="absolute -left-6 md:-right-6 md:left-auto top-10 w-12 h-[1px] bg-[var(--charcoal-ink)]/30 hidden md:block" />
+              <div className="w-full md:w-1/2 flex justify-end order-2 md:order-1">
+                <div className="bg-[#f0ecd8]/80 backdrop-blur-xl p-10 md:p-12 border border-[var(--charcoal-ink)]/10 w-full max-w-md shadow-2xl relative z-20 transition-transform duration-700 hover:-translate-y-2">
+                  <div className="absolute -right-6 top-10 w-12 h-[1px] bg-[var(--charcoal-ink)]/30 hidden md:block" />
                   
                   <span className="text-[5rem] leading-none font-serif italic font-bold text-[var(--charcoal-ink)]/10 absolute -top-10 -left-6 select-none pointer-events-none">01</span>
                   <h3 className="font-sans font-bold text-lg uppercase tracking-wider text-[var(--charcoal-ink)] mb-4">Fiber Procurement</h3>
@@ -130,7 +130,7 @@ export default function AboutPage() {
                   </p>
                 </div>
               </div>
-              <div className="w-full md:w-1/2 relative h-[300px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg z-10 border border-[var(--charcoal-ink)]/10 group">
+              <div className="w-full md:w-1/2 relative h-[300px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg z-10 border border-[var(--charcoal-ink)]/10 group order-1 md:order-2">
                 <Image src="/images/about/fibers.png" alt="Raw Fibers" fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-black/10 mix-blend-multiply group-hover:bg-transparent transition-colors duration-700" />
               </div>
@@ -143,7 +143,7 @@ export default function AboutPage() {
               viewport={{ once: true, margin: "-100px" }}
               className="flex flex-col md:flex-row-reverse items-center gap-12 relative"
             >
-              <div className="w-full md:w-1/2 flex justify-start">
+              <div className="w-full md:w-1/2 flex justify-start order-2 md:order-1">
                 <div className="bg-white/90 backdrop-blur-xl p-10 md:p-12 border border-[var(--charcoal-ink)]/10 w-full max-w-md shadow-2xl relative z-20 transition-transform duration-700 hover:-translate-y-2">
                   <div className="absolute -left-6 top-10 w-12 h-[1px] bg-[var(--charcoal-ink)]/30 hidden md:block" />
                   
@@ -160,8 +160,8 @@ export default function AboutPage() {
                   </p>
                 </div>
               </div>
-              <div className="w-full md:w-1/2 relative h-[300px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg z-10 border border-[var(--charcoal-ink)]/10 group">
-                <Image src="/images/about/dyes.png" alt="Botanical Dye Pigments" fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+              <div className="w-full md:w-1/2 relative h-[300px] md:h-[500px] rounded-2xl overflow-hidden shadow-lg z-10 border border-[var(--charcoal-ink)]/10 group order-1 md:order-2">
+                <Image src="/images/about/loom.png" alt="Finishing" fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-black/10 mix-blend-multiply group-hover:bg-transparent transition-colors duration-700" />
               </div>
             </motion.div>
