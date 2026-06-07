@@ -5,10 +5,11 @@ import BackgroundPattern from '@/components/vectors/BackgroundPattern';
 import { MotionDiv, MotionLink } from '@/components/Motion';
 
 import MobileFilterSheet from '@/components/MobileFilterSheet';
+import SortDropdown from '@/components/SortDropdown';
 
 export const revalidate = 3600; // ISR cache for 1 hour
 
-export default async function ShopPage({ searchParams }: { searchParams: Promise<{ category?: string, style?: string, color?: string, gsm?: string, construction?: string, count?: string, price?: string }> }) {
+export default async function ShopPage({ searchParams }: { searchParams: Promise<{ category?: string, style?: string, color?: string, gsm?: string, construction?: string, count?: string, price?: string, sort?: string }> }) {
   const params = await searchParams;
   const category = params.category?.toLowerCase();
   const style = params.style?.toLowerCase();
@@ -17,6 +18,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   const construction = params.construction;
   const count = params.count;
   const priceFilter = params.price;
+  const sort = params.sort;
   
   const supabase = await createClient();
   const { data: dbVariants, error } = await supabase
@@ -70,6 +72,16 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     });
   }
 
+  // Apply sorting
+  if (sort === 'price_asc') {
+    variants.sort((a, b) => (a.price || 0) - (b.price || 0));
+  } else if (sort === 'price_desc') {
+    variants.sort((a, b) => (b.price || 0) - (a.price || 0));
+  } else {
+    // Default sort by featured
+    variants.sort((a, b) => (b.products?.is_featured ? 1 : 0) - (a.products?.is_featured ? 1 : 0));
+  }
+
   const categoryDescriptions: Record<string, string> = {
     linen: "Pure linen holds tension and breathes. The long flax fibers provide high tensile strength and distinct surface slubs. This textile naturally resists heat retention and molds to the wearer over time.",
     cotton: "Woven cotton relies on a medium-weight structure for daily utility. The porous nature of the fiber allows consistent airflow while maintaining a crisp press. It provides a reliable foundation for both structured and relaxed garments.",
@@ -112,6 +124,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     if (construction) q.set('construction', construction);
     if (count) q.set('count', count);
     if (priceFilter) q.set('price', priceFilter);
+    if (sort) q.set('sort', sort);
 
     if (value === null || value === '') {
       q.delete(key);
@@ -259,7 +272,18 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
           </div>
 
           {/* Product Grid Area (w-full or w-3/4 on desktop) */}
-          <div className="w-full lg:w-3/4">
+          <div className="w-full lg:w-3/4 flex flex-col gap-6">
+            {/* Header / Sort Row */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[var(--charcoal-ink)]/5 p-4 rounded-lg border border-[var(--charcoal-ink)]/10">
+              <span className="font-sans text-sm font-bold text-[var(--charcoal-ink)] uppercase tracking-wider">
+                {variants.length} {variants.length === 1 ? 'Fabric' : 'Fabrics'} Found
+              </span>
+              <div className="flex items-center gap-3">
+                <span className="font-sans text-xs font-bold text-[var(--charcoal-ink)]/60 uppercase tracking-widest">Sort By</span>
+                <SortDropdown currentSort={sort || 'featured'} />
+              </div>
+            </div>
+
             {/* The Fluid Grid: grid-cols-1 on mobile, md:grid-cols-2 on tablet, xl:grid-cols-4 on massive screens */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
               {variants.length > 0 ? (
