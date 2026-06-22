@@ -2,7 +2,7 @@
 
 import { useCart } from '@/store/useCart';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import BackgroundPattern from '@/components/vectors/BackgroundPattern';
 import { Button } from '@/components/ui/Button';
 import { computeOrderTotals } from '@/lib/pricing';
@@ -19,6 +19,7 @@ export default function CheckoutPage() {
   const [applied, setApplied] = useState<AppliedDiscount | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
   const [applyingCoupon, setApplyingCoupon] = useState(false);
+  const idemKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -146,14 +147,16 @@ export default function CheckoutPage() {
     };
 
     try {
+      if (!idemKeyRef.current) idemKeyRef.current = crypto.randomUUID();
       const { createOrder } = await import('@/actions/orders');
-      const result = await createOrder(items, shippingDetails, applied?.code);
+      const result = await createOrder(items, shippingDetails, applied?.code, idemKeyRef.current);
 
       if (!result.success) {
         setError(result.error || 'Failed to process checkout');
         setIsProcessing(false);
         return;
       }
+      idemKeyRef.current = null; // order created; a future checkout gets a fresh key
 
       if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
         await payWithRazorpay(result.orderId as string, shippingDetails);

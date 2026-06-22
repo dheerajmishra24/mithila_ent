@@ -34,7 +34,7 @@ export async function updateOrderStatus(orderId: string, status: string, trackin
   return { success: true }
 }
 
-export async function createOrder(cartItems: any[], shippingAddress: any, discountCode?: string) {
+export async function createOrder(cartItems: any[], shippingAddress: any, discountCode?: string, idempotencyKey?: string) {
   const supabase = await createClient()
 
   const { data: userData } = await supabase.auth.getUser()
@@ -62,6 +62,7 @@ export async function createOrder(cartItems: any[], shippingAddress: any, discou
     p_items: items,
     p_shipping: shippingAddress ?? {},
     p_discount_code: discountCode && discountCode.trim() ? discountCode.trim() : null,
+    p_idempotency_key: idempotencyKey || null,
   })
 
   if (error || !orderId) {
