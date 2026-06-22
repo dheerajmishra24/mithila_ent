@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 export const revalidate = 86400; // Cache for 24 hours
 
@@ -116,7 +117,31 @@ const legalDocuments: Record<string, LegalDoc> = {
 
 export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const doc = legalDocuments[slug];
+  let doc = legalDocuments[slug];
+
+  // CMS override (Admin > Content). A non-empty body replaces the built-in copy.
+  try {
+    const sb = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    const { data: cms } = await sb
+      .from('site_content')
+      .select('title, body')
+      .eq('key', `legal_${slug}`)
+      .single();
+    if (cms?.body && cms.body.trim()) {
+      doc = {
+        title: cms.title || doc?.title || 'Policy',
+        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+        sections: [
+          { title: '', paragraphs: cms.body.split(/\n\s*\n/).map((x: string) => x.trim()).filter(Boolean) },
+        ],
+      };
+    }
+  } catch {
+    // ignore CMS read failures; fall back to built-in copy
+  }
 
   if (!doc) {
     notFound();

@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { requestCancellation } from '@/actions/orders'
 
 export default async function AccountOrdersPage() {
   const supabase = await createClient()
@@ -15,6 +16,8 @@ export default async function AccountOrdersPage() {
     .select(`
       id,
       status,
+      is_paid,
+      cancellation_requested,
       total_amount,
       tracking_status,
       created_at,
@@ -46,6 +49,21 @@ export default async function AccountOrdersPage() {
                 <div className="font-serif text-xl font-bold text-[var(--madder-red)]">₹{order.total_amount.toFixed(2)}</div>
                 {order.tracking_status && (
                   <div className="font-mono text-xs uppercase tracking-widest opacity-70">TRK: {order.tracking_status}</div>
+                )}
+                <div className="mt-2 flex md:justify-end items-center gap-2">
+                  <span className={`px-2 py-0.5 text-[9px] uppercase tracking-widest font-bold border ${order.is_paid ? 'border-green-600 text-green-700' : 'border-[var(--madder-red)] text-[var(--madder-red)]'}`}>
+                    {order.is_paid ? 'Paid' : 'Payment Pending'}
+                  </span>
+                </div>
+                {(order.status === 'pending' || order.status === 'paid') && !order.cancellation_requested && (
+                  <form action={async () => { 'use server'; await requestCancellation(order.id); }} className="mt-2 md:flex md:justify-end">
+                    <button type="submit" className="text-[10px] uppercase tracking-widest font-bold text-[var(--madder-red)] border border-[var(--madder-red)]/50 px-3 py-1 hover:bg-[var(--madder-red)] hover:text-white transition-colors">
+                      Request Cancellation
+                    </button>
+                  </form>
+                )}
+                {order.cancellation_requested && order.status !== 'cancelled' && (
+                  <div className="mt-2 text-[10px] uppercase tracking-widest font-bold text-[var(--turmeric)]">Cancellation requested</div>
                 )}
               </div>
             </div>
@@ -92,7 +110,7 @@ export default async function AccountOrdersPage() {
           </div>
         ))}
 
-        {!orders || orders.length === 0 && (
+        {(!orders || orders.length === 0) && (
           <div className="text-center p-12 border-2 border-dashed border-[var(--charcoal-ink)]/20">
             <p className="font-sans uppercase tracking-widest text-sm opacity-50">No orders placed yet.</p>
           </div>

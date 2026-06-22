@@ -75,9 +75,9 @@ const InvoiceDocument = ({ order, orderItems }: { order: any, orderItems: any[] 
       <View style={styles.row}>
         <View style={styles.colLeft}>
           <Text style={styles.boldText}>Billed To:</Text>
-          <Text style={styles.text}>{order.shipping_address?.fullName || 'Customer'}</Text>
-          <Text style={styles.text}>{order.shipping_address?.addressLine1}</Text>
-          <Text style={styles.text}>{order.shipping_address?.city}, {order.shipping_address?.postalCode}</Text>
+          <Text style={styles.text}>{[order.shipping_address?.firstName, order.shipping_address?.lastName].filter(Boolean).join(' ') || order.shipping_address?.fullName || 'Customer'}</Text>
+          <Text style={styles.text}>{order.shipping_address?.address1 || order.shipping_address?.addressLine1 || ''}</Text>
+          <Text style={styles.text}>{[order.shipping_address?.city, order.shipping_address?.state].filter(Boolean).join(', ')} {order.shipping_address?.pinCode || order.shipping_address?.postalCode || ''}</Text>
         </View>
         <View style={styles.colRight}>
           <Text style={styles.boldText}>Order Details:</Text>
@@ -98,24 +98,31 @@ const InvoiceDocument = ({ order, orderItems }: { order: any, orderItems: any[] 
             {item.product_variants?.products?.title} ({item.product_variants?.color})
           </Text>
           <Text style={[styles.text, { width: '15%', textAlign: 'right' }]}>{item.quantity}</Text>
-          <Text style={[styles.text, { width: '25%', textAlign: 'right' }]}>₹{(item.unit_price * item.quantity).toFixed(2)}</Text>
+          <Text style={[styles.text, { width: '25%', textAlign: 'right' }]}>₹{(Number(item.unit_price) * item.quantity).toFixed(2)}</Text>
         </View>
       ))}
 
       <View style={styles.row}>
         <Text style={[styles.text, styles.colLeft]}></Text>
         <Text style={[styles.text, { width: '15%', textAlign: 'right' }]}>Shipping</Text>
-        <Text style={[styles.text, { width: '25%', textAlign: 'right' }]}>₹{order.shipping_amount.toFixed(2)}</Text>
+        <Text style={[styles.text, { width: '25%', textAlign: 'right' }]}>₹{Number(order.shipping_amount || 0).toFixed(2)}</Text>
       </View>
       <View style={styles.row}>
         <Text style={[styles.text, styles.colLeft]}></Text>
         <Text style={[styles.text, { width: '15%', textAlign: 'right' }]}>Tax</Text>
-        <Text style={[styles.text, { width: '25%', textAlign: 'right' }]}>₹{order.tax_amount.toFixed(2)}</Text>
+        <Text style={[styles.text, { width: '25%', textAlign: 'right' }]}>₹{Number(order.tax_amount || 0).toFixed(2)}</Text>
       </View>
+      {Number(order.discount_applied || 0) > 0 && (
+        <View style={styles.row}>
+          <Text style={[styles.text, styles.colLeft]}></Text>
+          <Text style={[styles.text, { width: '15%', textAlign: 'right' }]}>Discount</Text>
+          <Text style={[styles.text, { width: '25%', textAlign: 'right' }]}>-₹{Number(order.discount_applied || 0).toFixed(2)}</Text>
+        </View>
+      )}
 
       <View style={styles.totalRow}>
         <Text style={styles.totalLabel}>Grand Total:</Text>
-        <Text style={styles.totalValue}>₹{order.total_amount.toFixed(2)}</Text>
+        <Text style={styles.totalValue}>₹{Number(order.total_amount || 0).toFixed(2)}</Text>
       </View>
     </Page>
   </Document>

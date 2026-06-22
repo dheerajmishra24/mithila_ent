@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Package, LayoutDashboard, ShoppingBag, PlusCircle, LogOut, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
+import { Package, LayoutDashboard, ShoppingBag, PlusCircle, LogOut, ChevronLeft, ChevronRight, Settings, Users, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { logout } from '@/actions/auth';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -17,6 +18,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Categories', href: '/admin/categories', icon: Package },
     { name: 'Live Inventory', href: '/admin/inventory', icon: Package },
     { name: 'Promotions', href: '/admin/promotions', icon: PlusCircle },
+    { name: 'Customers', href: '/admin/customers', icon: Users },
+    { name: 'Content', href: '/admin/content', icon: FileText },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 
@@ -70,13 +73,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
         <div className="p-4 border-t-2 border-[var(--charcoal-ink)]/20">
-          <button 
-            title={isCollapsed ? "Secure Logout" : undefined}
-            className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 w-full'} px-4 py-3 hover:bg-[var(--madder-red)] rounded-sm transition-colors text-left text-red-300 overflow-hidden whitespace-nowrap`}
-          >
-            <LogOut size={20} className="shrink-0" /> 
-            {!isCollapsed && <span>Secure Logout</span>}
-          </button>
+          <form action={logout} className={isCollapsed ? '' : 'w-full'}>
+            <button
+              type="submit"
+              title={isCollapsed ? "Secure Logout" : undefined}
+              className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3 w-full'} px-4 py-3 hover:bg-[var(--madder-red)] rounded-sm transition-colors text-left text-red-300 overflow-hidden whitespace-nowrap`}
+            >
+              <LogOut size={20} className="shrink-0" />
+              {!isCollapsed && <span>Secure Logout</span>}
+            </button>
+          </form>
         </div>
       </motion.aside>
 

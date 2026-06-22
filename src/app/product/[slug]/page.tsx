@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import AddToCartButton from './AddToCartButton';
+import ProductBuyBox from './ProductBuyBox';
 import { Metadata } from 'next';
 import { MOCK_PRODUCTS } from '@/lib/mock-data';
 import BackgroundPattern from '@/components/vectors/BackgroundPattern';
@@ -50,16 +50,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   if (!defaultVariant) {
     return <div className="py-24 text-center">Product is unavailable.</div>;
   }
-
-  const cartItem = {
-    id: defaultVariant.id,
-    product_id: product.id,
-    title: product.title,
-    color: defaultVariant.color,
-    price: defaultVariant.price,
-    quantity: 1,
-    image: defaultVariant.images[0] || '',
-  };
 
   return (
     <main className="flex-grow bg-[var(--unbleached-cotton)] pt-32 pb-24 relative overflow-hidden">
@@ -156,20 +146,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                  </ul>
               </div>
 
-              <div className="pt-6 border-t border-[var(--charcoal-ink)]/10">
-                 <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-3">Available Colors</p>
-                 <div className="flex flex-wrap gap-2">
-                   {product.product_variants.map((v: any, idx: number) => (
-                     <span key={idx} className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider border-2 ${idx === 0 ? 'bg-[var(--charcoal-ink)] text-white border-[var(--charcoal-ink)]' : 'border-[var(--charcoal-ink)]/20 text-[var(--charcoal-ink)] opacity-70'}`}>
-                       {v.color}
-                     </span>
-                   ))}
-                 </div>
-              </div>
             </div>
 
             <div className="mt-8">
-              <AddToCartButton item={cartItem} />
+              <ProductBuyBox productId={product.id} title={product.title} variants={product.product_variants} />
             </div>
 
             {/* Accordion Placeholders for Details */}

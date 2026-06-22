@@ -1,14 +1,46 @@
 import { createClient } from '@/lib/supabase/server';
+import { requireAdmin } from '@/lib/auth-guard';
 import { Package, ShoppingBag, IndianRupee, Users, TrendingUp, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AdminDashboard() {
+  await requireAdmin();
   const supabase = await createClient();
 
-  // Basic aggregations
+  // Live aggregations
   const { count: orderCount } = await supabase.from('orders').select('*', { count: 'exact', head: true });
   const { count: productCount } = await supabase.from('products').select('*', { count: 'exact', head: true });
+  const { count: customerCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+  const { count: pendingCount } = await supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pending');
+  const { data: revenueRows } = await supabase.from('orders').select('total_amount');
+  const grossRevenue = (revenueRows || []).reduce((sum, o: any) => sum + Number(o.total_amount || 0), 0);
+  const revenueLabel = grossRevenue >= 1000 ? `₹${(grossRevenue / 1000).toFixed(1)}k` : `₹${grossRevenue.toFixed(0)}`;
   
+  const { data: recentOrders } = await supabase
+    .from('orders')
+    .select('id, total_amount, status, is_paid, created_at')
+    .order('created_at', { ascending: false })
+    .limit(6);
+
+  const { data: lowStock } = await supabase
+    .from('product_variants')
+    .select('id, color, stock_quantity, products(title)')
+    .lt('stock_quantity', 20)
+    .order('stock_quantity', { ascending: true })
+    .limit(8);
+  const lowStockCount = lowStock?.length ?? 0;
+
+  const { data: soldItems } = await supabase
+    .from('order_items')
+    .select('quantity, product_variants(products(title))');
+  const topMap: Record<string, number> = {};
+  for (const it of soldItems || []) {
+    const title = (it as any).product_variants?.products?.title;
+    if (!title) continue;
+    topMap[title] = (topMap[title] || 0) + Number(it.quantity || 0);
+  }
+  const topProducts = Object.entries(topMap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
   return (
     <div className="space-y-12 p-4 md:p-8">
       <div className="flex justify-between items-end border-b-2 border-[var(--charcoal-ink)]/20 pb-4">
@@ -28,7 +60,7 @@ export default async function AdminDashboard() {
             <p className="text-xs uppercase tracking-widest font-bold text-[var(--charcoal-ink)]">Gross Revenue</p>
             <IndianRupee className="text-[var(--madder-red)]" size={24} />
           </div>
-          <p className="font-serif font-bold text-4xl text-[var(--charcoal-ink)]">₹2,45k</p>
+          <p className="font-serif font-bold text-4xl text-[var(--charcoal-ink)]">{revenueLabel}</p>
           <div className="mt-4 flex items-center gap-1 text-xs font-bold text-green-700 uppercase tracking-widest">
             <TrendingUp size={14} /> +12.5% this month
           </div>
@@ -39,9 +71,9 @@ export default async function AdminDashboard() {
             <p className="text-xs uppercase tracking-widest font-bold text-[var(--charcoal-ink)]">Orders Fulfilling</p>
             <ShoppingBag className="text-[var(--turmeric)]" size={24} />
           </div>
-          <p className="font-serif font-bold text-4xl text-[var(--charcoal-ink)]">{orderCount || 124}</p>
+          <p className="font-serif font-bold text-4xl text-[var(--charcoal-ink)]">{orderCount ?? 0}</p>
           <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[var(--charcoal-ink)] uppercase tracking-widest opacity-80">
-            23 pending dispatch
+            {pendingCount ?? 0} pending dispatch
           </div>
         </div>
 
@@ -50,9 +82,9 @@ export default async function AdminDashboard() {
             <p className="text-xs uppercase tracking-widest font-bold text-[var(--charcoal-ink)]">Fabric Catalog</p>
             <Package className="text-[var(--indigo-dye)]" size={24} />
           </div>
-          <p className="font-serif font-bold text-4xl text-[var(--charcoal-ink)]">{productCount || 45}</p>
+          <p className="font-serif font-bold text-4xl text-[var(--charcoal-ink)]">{productCount ?? 0}</p>
           <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[var(--madder-red)] uppercase tracking-widest">
-            4 items low stock
+            {lowStockCount} items low stock
           </div>
         </div>
 
@@ -61,26 +93,79 @@ export default async function AdminDashboard() {
             <p className="text-xs uppercase tracking-widest font-bold text-[var(--charcoal-ink)]">Clientele</p>
             <Users className="text-[var(--charcoal-ink)] opacity-50" size={24} />
           </div>
-          <p className="font-serif font-bold text-4xl text-[var(--charcoal-ink)]">89</p>
+          <p className="font-serif font-bold text-4xl text-[var(--charcoal-ink)]">{customerCount ?? 0}</p>
           <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[var(--charcoal-ink)] uppercase tracking-widest opacity-80">
             12 returning artisans
           </div>
         </div>
       </div>
 
-      {/* Loom Utilization Chart (Mock) */}
-      <div className="bg-white border-2 border-[var(--charcoal-ink)] p-8 shadow-[8px_8px_0_var(--turmeric)]">
-        <h2 className="font-serif text-2xl font-bold text-[var(--charcoal-ink)] mb-6">Loom Utilization & Fiber Output</h2>
-        <div className="flex items-end gap-2 h-48 border-b-2 border-l-2 border-[var(--charcoal-ink)] p-4 pb-0 pl-0 relative">
-           <div className="absolute top-0 -left-12 text-xs font-bold tracking-widest uppercase opacity-50 rotate-[-90deg] origin-left">Meters</div>
-           {/* Mock bars looking like threads */}
-           <div className="w-1/6 bg-[var(--indigo-dye)] h-[40%] hover:opacity-80 transition-opacity flex justify-center text-white text-xs pt-2">Jan</div>
-           <div className="w-1/6 bg-[var(--indigo-dye)] h-[55%] hover:opacity-80 transition-opacity flex justify-center text-white text-xs pt-2">Feb</div>
-           <div className="w-1/6 bg-[var(--madder-red)] h-[70%] hover:opacity-80 transition-opacity flex justify-center text-white text-xs pt-2">Mar</div>
-           <div className="w-1/6 bg-[var(--turmeric)] h-[90%] hover:opacity-80 transition-opacity flex justify-center text-[var(--charcoal-ink)] text-xs font-bold pt-2">Apr</div>
-           <div className="w-1/6 bg-[var(--indigo-dye)] h-[60%] hover:opacity-80 transition-opacity flex justify-center text-white text-xs pt-2">May</div>
-           <div className="w-1/6 bg-[var(--charcoal-ink)] h-[85%] hover:opacity-80 transition-opacity flex justify-center text-white text-xs pt-2">Jun</div>
+      {/* Recent Orders + Low Stock */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-serif text-xl font-bold text-[var(--charcoal-ink)]">Recent Orders</h2>
+            <Link href="/admin/orders" className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold hover:underline">View all</Link>
+          </div>
+          <div className="divide-y divide-[var(--charcoal-ink)]/10">
+            {(recentOrders || []).map((o: any) => (
+              <Link key={o.id} href={`/admin/orders/${o.id}`} className="flex items-center justify-between py-3 px-2 -mx-2 hover:bg-[var(--unbleached-cotton)] transition-colors">
+                <div>
+                  <div className="font-mono text-xs font-bold">#{o.id.split('-')[0].toUpperCase()}</div>
+                  <div className="text-[10px] opacity-50">{new Date(o.created_at).toLocaleDateString()}</div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-[9px] uppercase tracking-widest font-bold opacity-60">{o.status}</span>
+                  <span className={`text-[9px] uppercase tracking-widest font-bold ${o.is_paid ? 'text-green-700' : 'text-[var(--madder-red)]'}`}>{o.is_paid ? 'Paid' : 'Unpaid'}</span>
+                  <span className="font-bold text-[var(--madder-red)]">₹{Number(o.total_amount).toFixed(0)}</span>
+                </div>
+              </Link>
+            ))}
+            {(!recentOrders || recentOrders.length === 0) && <p className="py-6 text-center opacity-50 text-sm">No orders yet.</p>}
+          </div>
         </div>
+
+        <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-serif text-xl font-bold text-[var(--charcoal-ink)]">Low Stock</h2>
+            <Link href="/admin/inventory" className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold hover:underline">Manage</Link>
+          </div>
+          <div className="divide-y divide-[var(--charcoal-ink)]/10">
+            {(lowStock || []).map((v: any) => (
+              <div key={v.id} className="flex items-center justify-between py-3">
+                <div>
+                  <div className="font-bold text-sm">{v.products?.title || 'Variant'}</div>
+                  <div className="text-[10px] opacity-50">{v.color}</div>
+                </div>
+                <span className={`font-mono font-bold ${v.stock_quantity === 0 ? 'text-[var(--madder-red)]' : 'text-[var(--turmeric)]'}`}>{v.stock_quantity}</span>
+              </div>
+            ))}
+            {(!lowStock || lowStock.length === 0) && <p className="py-6 text-center opacity-50 text-sm">All variants well stocked.</p>}
+          </div>
+        </div>
+      </div>
+
+      {/* Top Sellers */}
+      <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)]">
+        <h2 className="font-serif text-xl font-bold text-[var(--charcoal-ink)] mb-4">Top Sellers (units)</h2>
+        {topProducts.length > 0 ? (
+          <div className="space-y-2">
+            {topProducts.map(([title, qty]) => {
+              const max = topProducts[0][1] || 1;
+              return (
+                <div key={title} className="flex items-center gap-3">
+                  <span className="w-40 truncate text-sm font-bold">{title}</span>
+                  <div className="flex-1 bg-[var(--charcoal-ink)]/5 h-4 relative">
+                    <div className="bg-[var(--indigo-dye)] h-4" style={{ width: `${Math.round((qty / max) * 100)}%` }} />
+                  </div>
+                  <span className="text-sm font-mono font-bold w-10 text-right">{qty}</span>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="py-4 text-center opacity-50 text-sm">No sales recorded yet.</p>
+        )}
       </div>
 
       {/* Quick Actions */}

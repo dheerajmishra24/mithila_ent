@@ -13,12 +13,6 @@ export default function AdminLogin() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Local bypass for testing
-    if (email === 'admin@mithila.com' && password === 'admin123') {
-      window.location.href = '/admin/dashboard';
-      return;
-    }
-
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {

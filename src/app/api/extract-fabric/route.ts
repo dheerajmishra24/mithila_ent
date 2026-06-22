@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI, Schema, SchemaType } from '@google/generative-ai';
+import { createClient } from '@/lib/supabase/server';
+import { checkApiRateLimit, clientIp } from '@/lib/ratelimit';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -26,6 +28,17 @@ const fabricSchema: Schema = {
 
 export async function POST(req: Request) {
   try {
+    // Admin only: this burns paid Gemini quota.
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+    if (profile?.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+    if (!(await checkApiRateLimit('extract-fabric:' + clientIp(req)))) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const { imageBase64, baseName } = await req.json();
 
     if (!imageBase64) {

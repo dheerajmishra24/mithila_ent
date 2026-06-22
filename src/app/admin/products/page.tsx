@@ -72,9 +72,9 @@ export default function ProductsPage() {
                       </span>
                     </td>
                     <td className="py-4 text-right flex justify-end gap-2">
-                      <button className="p-2 border-2 border-[var(--charcoal-ink)]/20 hover:border-[var(--charcoal-ink)] transition-colors">
+                      <Link href={`/admin/products/${p.id}`} className="p-2 border-2 border-[var(--charcoal-ink)]/20 hover:border-[var(--charcoal-ink)] transition-colors inline-flex items-center">
                         <Edit size={16} />
-                      </button>
+                      </Link>
                       <button onClick={() => handleDelete(p.id)} className="p-2 border-2 border-transparent text-[var(--madder-red)] hover:bg-[var(--madder-red)] hover:text-white transition-colors">
                         <Trash2 size={16} />
                       </button>

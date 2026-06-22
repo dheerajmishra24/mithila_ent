@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { getStoreSettings } from '@/lib/content';
 
-export default function Footer() {
+export default async function Footer() {
+  const settings = await getStoreSettings();
   return (
     <footer className="w-full bg-[var(--charcoal-ink)] text-[var(--unbleached-cotton)]/70 font-sans border-t-[6px] border-[var(--turmeric)] py-16">
       <div className="container mx-auto px-6 max-w-7xl">
@@ -47,8 +49,8 @@ export default function Footer() {
             <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--unbleached-cotton)]">Connect</h4>
             <div className="space-y-3 text-sm text-[var(--unbleached-cotton)]/70">
               <div>
-                <p>mithlaenterprises11@gmail.com</p>
-                <p>+91 9818555220</p>
+                <p>{settings.support_email}</p>
+                <p>{settings.support_phone}</p>
               </div>
               <div className="text-xs opacity-80 leading-relaxed">
                 <p className="font-bold mb-1">GSTIN : 07AGUPM2548P1ZH</p>
@@ -69,7 +71,7 @@ export default function Footer() {
 
         {/* Bottom copyright block */}
         <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--unbleached-cotton)]/50 gap-4">
-          <p>&copy; {new Date().getFullYear()} Mithila Enterprises. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {settings.store_name}. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/legal/privacy-policy" className="hover:underline">Privacy</Link>
             <Link href="/legal/terms-of-service" className="hover:underline">Terms</Link>

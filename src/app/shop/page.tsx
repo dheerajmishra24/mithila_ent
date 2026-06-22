@@ -23,7 +23,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   const supabase = await createClient();
   const { data: dbVariants, error } = await supabase
     .from('product_variants')
-    .select('*, products(title, slug, weave, count, construction, gsm, is_featured, tags)');
+    .select('*, products(title, slug, weave, count, construction, gsm, is_featured, tags, categories(name, slug))');
     
   if (error) {
     console.warn("Supabase fetch failed (expected if no DB configured), falling back to mock data.");
@@ -41,7 +41,11 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
   // Apply filters
   if (category) {
-    variants = variants.filter(v => v.products?.tags?.includes(category));
+    variants = variants.filter(v =>
+      v.products?.tags?.includes(category) ||
+      v.products?.categories?.slug === category ||
+      v.products?.categories?.name?.toLowerCase() === category
+    );
   }
   if (style) {
     variants = variants.filter(v => v.products?.tags?.includes(style));

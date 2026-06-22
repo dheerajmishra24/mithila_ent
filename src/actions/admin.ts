@@ -1,7 +1,8 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export interface ProductDraft {
   title: string
@@ -21,6 +22,12 @@ export interface ProductDraft {
 
 export async function createProduct(draft: ProductDraft, imagePreview: string | null) {
   const supabase = await createClient()
+
+  // Verify Admin
+  const { data: userData } = await supabase.auth.getUser()
+  if (!userData?.user) throw new Error('Unauthorized')
+  const { data: adminProfile } = await supabase.from('profiles').select('role').eq('id', userData.user.id).single()
+  if (adminProfile?.role !== 'admin') throw new Error('Forbidden')
   
   if (!draft.categoryId) {
     throw new Error('Category is required')
@@ -36,8 +43,8 @@ export async function createProduct(draft: ProductDraft, imagePreview: string | 
     title: draft.title,
     description: draft.description,
     weave: draft.weaveDensity,
-    count: draft.count || '',
-    construction: draft.construction || '',
+    count: draft.count || null,
+    construction: draft.construction || null,
     gsm: draft.gsm,
     width: draft.width,
     stretch: draft.stretch,
@@ -65,6 +72,7 @@ export async function createProduct(draft: ProductDraft, imagePreview: string | 
 
   revalidatePath('/admin')
   revalidatePath('/shop')
+  revalidateTag('latest-products', 'max')
   return { success: true, slug }
 }
 
@@ -97,4 +105,196 @@ export async function adjustInventory(variantId: string, adjustment: number) {
   
   revalidatePath('/admin/inventory')
   return { success: true, newStock }
+}
+
+
+async function assertAdmin(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const { data: userData } = await supabase.auth.getUser()
+  if (!userData?.user) throw new Error('Unauthorized')
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', userData.user.id).single()
+  if (profile?.role !== 'admin') throw new Error('Forbidden')
+}
+
+export interface ProductUpdate {
+  title: string
+  description: string
+  status: string
+  categoryId: string
+  weave: string
+  count: string
+  construction: string
+  gsm: number
+  width: string
+  stretch: string
+  origin: string
+  bestSuitedFor: string
+}
+
+export async function updateProduct(productId: string, fields: ProductUpdate) {
+  const supabase = await createClient()
+  await assertAdmin(supabase)
+
+  const { error } = await supabase
+    .from('products')
+    .update({
+      title: fields.title,
+      description: fields.description,
+      status: fields.status,
+      category_id: fields.categoryId || null,
+      weave: fields.weave,
+      count: fields.count || null,
+      construction: fields.construction || null,
+      gsm: fields.gsm,
+      width: fields.width,
+      stretch: fields.stretch,
+      origin: fields.origin,
+      best_suited_for: fields.bestSuitedFor.split(',').map((s) => s.trim()).filter(Boolean),
+    })
+    .eq('id', productId)
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/admin/products')
+  revalidatePath('/admin/inventory')
+  revalidatePath('/shop')
+  revalidateTag('latest-products', 'max')
+  return { success: true }
+}
+
+export async function updateVariant(
+  variantId: string,
+  fields: { color: string; price: number; stock_quantity: number }
+) {
+  const supabase = await createClient()
+  await assertAdmin(supabase)
+
+  const { error } = await supabase
+    .from('product_variants')
+    .update({
+      color: fields.color,
+      price: fields.price,
+      stock_quantity: Math.max(0, Math.floor(fields.stock_quantity)),
+    })
+    .eq('id', variantId)
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/admin/products')
+  revalidatePath('/admin/inventory')
+  revalidatePath('/shop')
+  revalidateTag('latest-products', 'max')
+  return { success: true }
+}
+
+export async function updateStoreSettings(formData: FormData) {
+  const supabase = await createClient()
+  await assertAdmin(supabase)
+
+  const store_name = ((formData.get('store_name') as string) || '').trim()
+  const support_email = ((formData.get('support_email') as string) || '').trim()
+  const support_phone = ((formData.get('support_phone') as string) || '').trim()
+
+  const { error } = await supabase
+    .from('store_settings')
+    .upsert({ id: true, store_name, support_email, support_phone, updated_at: new Date().toISOString() })
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/admin/settings')
+  revalidateTag('store-settings', 'max')
+  redirect('/admin/settings?saved=1')
+}
+
+
+export async function addVariant(
+  productId: string,
+  fields: { color: string; price: number; stock_quantity: number }
+) {
+  const supabase = await createClient()
+  await assertAdmin(supabase)
+
+  const { data: prod } = await supabase.from('products').select('slug').eq('id', productId).single()
+  const base = (prod?.slug || 'prod').substring(0, 3).toUpperCase()
+  const colorPart = (fields.color || 'VAR').substring(0, 3).toUpperCase()
+  const sku = `${base}-${colorPart}-${Math.floor(Math.random() * 10000)}`
+
+  const { data, error } = await supabase
+    .from('product_variants')
+    .insert({
+      product_id: productId,
+      sku,
+      color: fields.color || 'Default',
+      price: fields.price,
+      stock_quantity: Math.max(0, Math.floor(fields.stock_quantity)),
+      images: [],
+    })
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/admin/products')
+  revalidatePath('/admin/inventory')
+  revalidatePath('/shop')
+  revalidateTag('latest-products', 'max')
+  return { success: true, variant: data }
+}
+
+
+export async function setUserRole(userId: string, role: 'admin' | 'retail') {
+  const supabase = await createClient()
+  await assertAdmin(supabase)
+  if (role !== 'admin' && role !== 'retail') throw new Error('Invalid role')
+
+  const { error } = await supabase.from('profiles').update({ role }).eq('id', userId)
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/admin/customers')
+  return { success: true }
+}
+
+export interface CategoryUpdate {
+  name: string
+  slug: string
+  is_featured: boolean
+}
+
+export async function updateCategory(id: string, fields: CategoryUpdate) {
+  const supabase = await createClient()
+  await assertAdmin(supabase)
+
+  const slug = (fields.slug || '').trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  if (!fields.name?.trim() || !slug) throw new Error('Name and slug are required')
+
+  const { error } = await supabase
+    .from('categories')
+    .update({ name: fields.name.trim(), slug, is_featured: !!fields.is_featured })
+    .eq('id', id)
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/admin/categories')
+  revalidatePath('/shop')
+  return { success: true }
+}
+
+export async function updateSiteContent(formData: FormData) {
+  const supabase = await createClient()
+  await assertAdmin(supabase)
+
+  const key = ((formData.get('key') as string) || '').trim()
+  const title = ((formData.get('title') as string) || '').trim()
+  const body = (formData.get('body') as string) || ''
+  if (!key) throw new Error('Missing content key')
+
+  const { error } = await supabase
+    .from('site_content')
+    .upsert({ key, title, body, updated_at: new Date().toISOString() })
+  if (error) throw new Error(error.message)
+
+  revalidatePath('/admin/content')
+  revalidatePath('/')
+  revalidatePath('/about')
+  revalidatePath('/legal', 'layout')
+  revalidateTag('site-content', 'max')
+  redirect('/admin/content?saved=1')
 }

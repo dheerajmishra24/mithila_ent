@@ -7,5 +7,5 @@ test('has title', async ({ page }) => {
 
 test('shop navigation and cart', async ({ page }) => {
   await page.goto('/shop');
-  await expect(page.locator('h1')).toContainText('All Fabrics');
+  await expect(page.locator('h1')).toContainText('Fabric Registry');
 });
