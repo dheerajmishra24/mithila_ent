@@ -1,5 +1,16 @@
 {
   "crons": [
     { "path": "/api/cron/process-emails", "schedule": "0 0 * * *" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": ""
+        }
+      ]
+    }
   ]
 }
