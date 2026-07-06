@@ -92,7 +92,50 @@ export default function CategoriesPage() {
         </div>
 
         <div className="md:col-span-2">
-          <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-4">
+            {loading ? (
+              <p className="opacity-50">Loading categories...</p>
+            ) : categories.length === 0 ? (
+              <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 text-center opacity-50 shadow-[4px_4px_0_var(--charcoal-ink)]">No categories found.</div>
+            ) : (
+              categories.map((cat) => {
+                const editing = editingId === cat.id;
+                return (
+                  <div key={cat.id} className="bg-white border-2 border-[var(--charcoal-ink)] p-4 shadow-[4px_4px_0_var(--charcoal-ink)]">
+                    {editing ? (
+                      <div className="space-y-3">
+                        <input value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} placeholder="Name" className="w-full border-2 border-[var(--charcoal-ink)]/20 bg-transparent p-2 text-sm focus:outline-none focus:border-[var(--madder-red)]" />
+                        <input value={editForm.slug} onChange={(e) => setEditForm({ ...editForm, slug: e.target.value })} placeholder="Slug" className="w-full border-2 border-[var(--charcoal-ink)]/20 bg-transparent p-2 text-sm font-mono focus:outline-none focus:border-[var(--madder-red)]" />
+                        <label className="flex items-center gap-2 text-sm font-bold"><input type="checkbox" checked={editForm.is_featured} onChange={(e) => setEditForm({ ...editForm, is_featured: e.target.checked })} className="accent-[var(--turmeric)] w-4 h-4" /> Featured</label>
+                        <div className="flex gap-2">
+                          <button onClick={() => saveEdit(cat.id)} className="flex-1 inline-flex items-center justify-center gap-2 border-2 border-green-600 text-green-700 py-2 text-xs font-bold uppercase tracking-widest hover:bg-green-600 hover:text-white transition-colors"><Check size={16} /> Save</button>
+                          <button onClick={() => setEditingId(null)} className="inline-flex items-center justify-center border-2 border-[var(--charcoal-ink)]/20 px-4 hover:border-[var(--charcoal-ink)] transition-colors"><X size={16} /></button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex justify-between items-start gap-3">
+                          <div>
+                            <h3 className="font-serif font-bold text-lg">{cat.name}</h3>
+                            <p className="font-mono text-xs opacity-70">{cat.slug}</p>
+                          </div>
+                          <Star size={18} className={cat.is_featured ? 'text-[var(--turmeric)] fill-[var(--turmeric)]' : 'opacity-20'} />
+                        </div>
+                        <div className="flex gap-2 mt-4">
+                          <button onClick={() => startEdit(cat)} className="flex-1 inline-flex items-center justify-center gap-2 border-2 border-[var(--charcoal-ink)] py-2 text-xs font-bold uppercase tracking-widest hover:bg-[var(--charcoal-ink)] hover:text-white transition-colors"><Pencil size={14} /> Edit</button>
+                          <button onClick={() => handleDelete(cat.id)} className="inline-flex items-center justify-center border-2 border-[var(--madder-red)] text-[var(--madder-red)] px-4 py-2 hover:bg-[var(--madder-red)] hover:text-white transition-colors" aria-label="Delete"><Trash2 size={14} /></button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
             {loading ? (
               <p className="opacity-50">Loading categories...</p>
             ) : (

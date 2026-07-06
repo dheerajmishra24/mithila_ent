@@ -78,12 +78,9 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
-    // Temporary backdoor for the dev admin account
-    if (user.email === 'arpantyagi88@gmail.com') {
-      return supabaseResponse
-    }
-
-    // Role check for admin
+    // Role check for admin (no hardcoded bypass — admins are admins by their
+    // profile role). Dev convenience lives in /api/dev/login, which is gated to
+    // local development only and performs a real sign-in.
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')

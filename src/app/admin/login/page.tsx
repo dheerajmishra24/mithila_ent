@@ -45,6 +45,14 @@ export default function AdminLogin() {
             {isPending ? 'Authenticating…' : 'Authenticate'}
           </Button>
         </form>
+        {process.env.NODE_ENV !== 'production' && (
+          <a
+            href="/api/dev/login"
+            className="block mt-4 text-center text-xs underline opacity-50 hover:opacity-90"
+          >
+            Dev auto-login (local only)
+          </a>
+        )}
         <p className="font-sans text-xs opacity-60 mt-6 text-center">
           Non-admin accounts are denied access to this portal.
         </p>

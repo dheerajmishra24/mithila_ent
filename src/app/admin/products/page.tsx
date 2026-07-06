@@ -52,7 +52,35 @@ export default function ProductsPage() {
         </Link>
       </div>
 
-      <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-4">
+        {loading ? (
+          <p className="opacity-50">Loading catalog...</p>
+        ) : products.length === 0 ? (
+          <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 text-center opacity-50 shadow-[4px_4px_0_var(--charcoal-ink)]">No products found.</div>
+        ) : (
+          products.map((p) => {
+            const totalStock = p.product_variants?.reduce((acc: number, v: any) => acc + v.stock_quantity, 0) || 0;
+            return (
+              <div key={p.id} className="bg-white border-2 border-[var(--charcoal-ink)] p-4 shadow-[4px_4px_0_var(--charcoal-ink)]">
+                <div className="flex justify-between items-start gap-3">
+                  <h3 className="font-serif font-bold text-lg leading-tight">{p.title}</h3>
+                  <span className={`shrink-0 px-2 py-1 text-[10px] font-bold uppercase tracking-widest border-2 ${p.status === 'active' ? 'border-green-600 text-green-700 bg-green-50' : 'border-orange-600 text-orange-700 bg-orange-50'}`}>{p.status}</span>
+                </div>
+                <p className="text-sm opacity-70 mt-1">{p.categories?.name || 'Uncategorized'}</p>
+                <p className="text-sm mt-2">{p.product_variants?.length || 0} variants &middot; {totalStock} in stock</p>
+                <div className="flex gap-2 mt-4">
+                  <Link href={`/admin/products/${p.id}`} className="flex-1 inline-flex items-center justify-center gap-2 border-2 border-[var(--charcoal-ink)] py-2 text-xs font-bold uppercase tracking-widest hover:bg-[var(--charcoal-ink)] hover:text-white transition-colors"><Edit size={14} /> Edit</Link>
+                  <button onClick={() => handleDelete(p.id)} className="inline-flex items-center justify-center border-2 border-[var(--madder-red)] text-[var(--madder-red)] px-4 py-2 hover:bg-[var(--madder-red)] hover:text-white transition-colors" aria-label="Delete"><Trash2 size={14} /></button>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden md:block bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
         {loading ? (
           <p className="opacity-50">Loading catalog...</p>
         ) : (

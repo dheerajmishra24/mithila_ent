@@ -33,7 +33,47 @@ export default async function AdminCustomers() {
         <p className="font-sans text-sm opacity-70 mt-1 uppercase tracking-widest">Registered customers &amp; roles</p>
       </div>
 
-      <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-4">
+        {(!profiles || profiles.length === 0) ? (
+          <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 text-center opacity-50 shadow-[4px_4px_0_var(--charcoal-ink)]">No customers yet.</div>
+        ) : (
+          profiles.map((p) => {
+            const st = stats[p.id] || { count: 0, spend: 0 };
+            const isAdmin = p.role === 'admin';
+            return (
+              <div key={p.id} className="bg-white border-2 border-[var(--charcoal-ink)] p-4 shadow-[4px_4px_0_var(--charcoal-ink)]">
+                <div className="flex justify-between items-start gap-3">
+                  <div>
+                    <div className="font-bold">{p.full_name || 'Unnamed'}</div>
+                    <div className="text-xs opacity-50 font-mono">{p.id.split('-')[0]}</div>
+                  </div>
+                  <span className={`shrink-0 px-2 py-1 text-[10px] font-bold uppercase tracking-widest border-2 ${isAdmin ? 'border-[var(--turmeric)] text-[var(--charcoal-ink)] bg-[var(--turmeric)]/20' : 'border-[var(--charcoal-ink)]/20'}`}>{p.role}</span>
+                </div>
+                <div className="flex justify-between items-center mt-3 text-sm">
+                  <span className="opacity-70">{st.count} orders</span>
+                  <span className="font-bold text-[var(--madder-red)]">{money(st.spend)}</span>
+                </div>
+                <div className="text-xs opacity-60 mt-1">Joined {new Date(p.created_at).toLocaleDateString()}</div>
+                <form
+                  action={async () => {
+                    'use server';
+                    await setUserRole(p.id, isAdmin ? 'retail' : 'admin');
+                  }}
+                  className="mt-4"
+                >
+                  <button type="submit" className="w-full text-[10px] font-bold uppercase tracking-widest border-2 border-[var(--charcoal-ink)] px-3 py-2 hover:bg-[var(--charcoal-ink)] hover:text-white transition-colors">
+                    {isAdmin ? 'Revoke Admin' : 'Make Admin'}
+                  </button>
+                </form>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden md:block bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
         <table className="w-full text-left whitespace-nowrap">
           <thead>
             <tr className="border-b-2 border-[var(--charcoal-ink)] text-xs uppercase tracking-widest">

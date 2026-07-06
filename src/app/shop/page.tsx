@@ -8,9 +8,14 @@ import ProductImage from '@/components/ProductImage';
 import MobileFilterSheet from '@/components/MobileFilterSheet';
 import SortDropdown from '@/components/SortDropdown';
 
+import { getSiteContentMap } from '@/lib/content';
+
 export const revalidate = 3600; // ISR cache for 1 hour
 
 export default async function ShopPage({ searchParams }: { searchParams: Promise<{ category?: string, style?: string, color?: string, gsm?: string, construction?: string, count?: string, price?: string, sort?: string }> }) {
+  const contentMap = await getSiteContentMap();
+  const header = contentMap['shop_header'] || { title: '', body: '' };
+  
   const params = await searchParams;
   const category = params.category?.toLowerCase();
   const style = params.style?.toLowerCase();
@@ -155,10 +160,10 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
         >
           <span className="text-xs uppercase font-bold tracking-widest text-[var(--madder-red)]">Premium Collections</span>
           <h1 className="font-serif italic text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[var(--charcoal-ink)] tracking-tight">
-            {category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Registry` : 'Fabric Registry'}
+            {header.title || (category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Registry` : 'Fabric Registry')}
           </h1>
           <p className="font-sans text-sm md:text-base opacity-80 max-w-3xl leading-relaxed text-justify">
-            {currentDesc}
+            {header.body || currentDesc}
           </p>
         </MotionDiv>
         

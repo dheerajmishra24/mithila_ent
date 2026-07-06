@@ -31,7 +31,51 @@ export default function OrderListClient({ initialOrders }: { initialOrders: any[
 
   return (
     <div className="relative">
-      <div className="bg-[var(--unbleached-cotton)] border-4 border-double border-[var(--charcoal-ink)] shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-4">
+        {orders.length === 0 ? (
+          <div className="bg-[var(--unbleached-cotton)] border-2 border-[var(--charcoal-ink)] p-6 text-center font-serif text-lg opacity-50">No orders found.</div>
+        ) : (
+          orders.map((order: any) => (
+            <div key={order.id} className="bg-[var(--unbleached-cotton)] border-2 border-[var(--charcoal-ink)] p-4 shadow-[4px_4px_0_var(--charcoal-ink)]">
+              <div className="flex justify-between items-start gap-3">
+                <div>
+                  <p className="font-bold text-[var(--charcoal-ink)]">#{order.id.split('-')[0]}</p>
+                  <p className="text-xs opacity-70">{new Date(order.created_at).toLocaleDateString()}</p>
+                </div>
+                <span className={`shrink-0 px-2 py-1 text-[10px] font-bold uppercase tracking-widest border-2 ${order.is_paid ? 'border-green-600 text-green-700 bg-green-50' : 'border-red-600 text-red-700 bg-red-50'}`}>{order.is_paid ? 'Paid' : 'Unpaid'}</span>
+              </div>
+              <div className="flex justify-between items-center mt-3 text-sm">
+                <span className="font-bold">{order.profiles?.full_name || 'Guest User'}</span>
+                <span className="font-bold text-[var(--madder-red)]">&#8377;{order.total_amount}</span>
+              </div>
+              <div className="mt-3">
+                <label className="block text-[10px] font-bold uppercase tracking-widest opacity-60 mb-1">Status</label>
+                <select
+                  value={order.status}
+                  onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                  className="w-full bg-transparent border-2 border-[var(--charcoal-ink)] p-2 text-xs font-bold uppercase tracking-widest focus:outline-none focus:border-[var(--madder-red)]"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="paid">Processing</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+              <Button
+                onClick={() => setSelectedOrder(order)}
+                className="w-full mt-3 text-xs py-2 bg-transparent text-[var(--charcoal-ink)] border-2 border-[var(--charcoal-ink)] hover:bg-[var(--charcoal-ink)] hover:text-white transition-colors"
+              >
+                View Invoice
+              </Button>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden md:block bg-[var(--unbleached-cotton)] border-4 border-double border-[var(--charcoal-ink)] shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
         <table className="w-full text-left font-sans whitespace-nowrap">
           <thead className="bg-[var(--charcoal-ink)] text-[var(--unbleached-cotton)]">
             <tr>

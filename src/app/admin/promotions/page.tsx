@@ -109,7 +109,28 @@ export default function AdminPromotions() {
         </div>
 
         <div className="md:col-span-2">
-          <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-4">
+            {loading ? (
+              <p className="opacity-50">Loading promotions...</p>
+            ) : discounts.length === 0 ? (
+              <div className="bg-white border-2 border-[var(--charcoal-ink)] p-6 text-center opacity-50 shadow-[4px_4px_0_var(--charcoal-ink)]">No active promotions.</div>
+            ) : (
+              discounts.map((d) => (
+                <div key={d.id} className="bg-white border-2 border-[var(--charcoal-ink)] p-4 shadow-[4px_4px_0_var(--charcoal-ink)] flex justify-between items-center gap-3">
+                  <div>
+                    <h3 className="font-serif font-bold text-lg">{d.code}</h3>
+                    <p className="text-[10px] uppercase tracking-widest opacity-70">{d.type.replace('_', ' ')}</p>
+                    <p className="font-bold text-[var(--madder-red)] mt-1">{d.type === 'percentage' ? `${d.value}%` : d.type === 'fixed_amount' ? `₹${d.value}` : 'Free shipping'}</p>
+                  </div>
+                  <button onClick={() => handleDelete(d.id)} className="text-[var(--madder-red)] hover:opacity-70 transition-opacity p-2" aria-label="Delete"><Trash2 size={18} /></button>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden md:block bg-white border-2 border-[var(--charcoal-ink)] p-6 shadow-[4px_4px_0_var(--charcoal-ink)] overflow-x-auto">
             {loading ? (
               <p className="opacity-50">Loading promotions...</p>
             ) : (

@@ -94,7 +94,17 @@ function AnimatedTitle({ text }: { text: string }) {
   );
 }
 
-export default function HomeClient({ hero, latest }: { hero: { title?: string; body?: string }; latest?: any[] }) {
+export default function HomeClient({ 
+  hero, 
+  features,
+  cta,
+  latest 
+}: { 
+  hero: { title?: string; body?: string }; 
+  features: { title?: string; body?: string }; 
+  cta: { title?: string; body?: string }; 
+  latest?: any[] 
+}) {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   const faqs = [
@@ -276,8 +286,13 @@ export default function HomeClient({ hero, latest }: { hero: { title?: string; b
         >
           <span className="text-[var(--madder-red)] font-sans text-xs uppercase tracking-wider font-semibold">Climate Engineering</span>
           <h2 className="font-serif italic text-3xl md:text-5xl font-bold leading-tight text-[var(--charcoal-ink)]">
-            Fabric Functionality
+            {features?.title || "Fabric Functionality"}
           </h2>
+          {features?.body && (
+            <p className="font-sans text-sm md:text-base text-zinc-600 leading-relaxed mt-4">
+              {features.body}
+            </p>
+          )}
         </motion.div>
         
         <div className="flex flex-col gap-32 mt-20 max-w-6xl mx-auto relative">
@@ -666,12 +681,12 @@ export default function HomeClient({ hero, latest }: { hero: { title?: string; b
         <div className="bg-[var(--indigo-dye)] text-[var(--unbleached-cotton)] rounded-2xl p-8 md:p-16 shadow-lg relative overflow-hidden">
           <BackgroundPattern className="opacity-10 stroke-[var(--unbleached-cotton)] mix-blend-overlay" />
           <div className="relative z-10 max-w-2xl space-y-6">
-            <span className="text-xs uppercase font-bold tracking-widest text-[var(--turmeric)] opacity-90">Bring every room together</span>
-            <h2 className="font-serif italic text-3xl md:text-5xl font-bold leading-tight text-white">
-              Get yours - 15% off
+            <span className="text-xs uppercase font-bold tracking-widest text-zinc-400">Bring every room together</span>
+            <h2 className="font-serif italic text-3xl md:text-5xl font-bold leading-tight">
+              {cta?.title || "Get yours - 15% off"}
             </h2>
-            <p className="font-sans text-sm md:text-base opacity-90 leading-relaxed text-[var(--unbleached-cotton)]">
-              Experience our latest handloom cotton innovation, delivering exceptional material softness, unbeatable durability, and modern minimalist design.
+            <p className="font-sans text-sm md:text-base opacity-80 leading-relaxed">
+              {cta?.body || "Experience our latest handloom cotton innovation, delivering exceptional material softness, unbeatable durability, and modern minimalist design."}
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
               <Link 

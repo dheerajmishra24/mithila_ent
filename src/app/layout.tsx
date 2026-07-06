@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
+import StructuredData from "@/components/StructuredData";
+import SiteChrome from "@/components/SiteChrome";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
-import StructuredData from "@/components/StructuredData";
 import { getSiteContentMap } from "@/lib/content";
 
 const playfair = Playfair_Display({
@@ -38,15 +39,14 @@ export default async function RootLayout({
         <StructuredData />
       </head>
       <body className="min-h-full flex flex-col font-sans relative overflow-x-hidden w-full pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-        {announcement ? (
-          <div className="w-full bg-[var(--charcoal-ink)] text-[var(--unbleached-cotton)] text-center text-xs md:text-sm py-2 px-4 tracking-wide">
-            {announcement}
-          </div>
-        ) : null}
-        <Header />
-        {children}
-        <Footer />
-        <CartDrawer />
+        <SiteChrome 
+          announcement={announcement}
+          header={<Header />}
+          footer={<Footer />}
+          cartDrawer={<CartDrawer />}
+        >
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );
