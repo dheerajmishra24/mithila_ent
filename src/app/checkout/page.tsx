@@ -57,6 +57,35 @@ export default function CheckoutPage() {
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
 
+  useEffect(() => {
+    if (pinCode.length >= 6 && shippingState && items.length > 0) {
+      const fetchDynamicShipping = async () => {
+        setCalculatingShipping(true);
+        try {
+          const res = await fetch('/api/shipping/calculate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items, pinCode, state: shippingState })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (!data.error) {
+              setDynamicTotals(data);
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setCalculatingShipping(false);
+        }
+      };
+      const timer = setTimeout(fetchDynamicShipping, 500); // debounce
+      return () => clearTimeout(timer);
+    } else {
+      setDynamicTotals(null);
+    }
+  }, [pinCode, shippingState, items]);
+
   if (!mounted) return null;
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);

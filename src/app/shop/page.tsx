@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { MOCK_VARIANTS } from '@/lib/mock-data';
 import BackgroundPattern from '@/components/vectors/BackgroundPattern';
 import { MotionDiv, MotionLink } from '@/components/Motion';
 import ProductImage from '@/components/ProductImage';
@@ -93,16 +92,16 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     console.warn("Supabase fetch failed (expected if no DB configured), falling back to mock data.");
   }
 
-  let variants = (dbVariants && dbVariants.length > 0) ? dbVariants : MOCK_VARIANTS;
+  const variants = (dbVariants && dbVariants.length > 0) ? dbVariants : [];
 
   if (!sort) {
     variants.sort((a: any, b: any) => (b.products?.is_featured ? 1 : 0) - (a.products?.is_featured ? 1 : 0));
   }
 
-  // Fallback for options
-  const allColors = Array.from(new Set(MOCK_VARIANTS.map(v => v.color).filter(Boolean))) as string[];
-  const allConstructions = Array.from(new Set(MOCK_VARIANTS.map(v => v.products?.construction).filter(Boolean))) as string[];
-  const allCounts = Array.from(new Set(MOCK_VARIANTS.map(v => v.products?.count).filter(Boolean))) as string[];
+  // Filter options derived from live inventory
+  const allColors = Array.from(new Set(variants.map((v: any) => v.color).filter(Boolean))) as string[];
+  const allConstructions = Array.from(new Set(variants.map((v: any) => v.products?.construction).filter(Boolean))) as string[];
+  const allCounts = Array.from(new Set(variants.map((v: any) => v.products?.count).filter(Boolean))) as string[];
 
   const categoryDescriptions: Record<string, string> = {
     linen: "Pure linen holds tension and breathes. The long flax fibers provide high tensile strength and distinct surface slubs. This textile naturally resists heat retention and molds to the wearer over time.",
