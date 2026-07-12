@@ -329,24 +329,33 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
             </div>
 
             {/* COMING SOON SHOWCASE (Replacing Product Grid) */}
-            <div className="w-full relative bg-[var(--charcoal-ink)] rounded-[1.5rem] overflow-hidden min-h-[500px] flex items-center justify-center border border-[var(--charcoal-ink)]/10 p-8 md:p-16 shadow-2xl">
-              <div className="absolute inset-0 opacity-30">
-                 <Image src="/images/hero_desktop.png" fill sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" alt="Coming Soon Texture" />
-                 <div className="absolute inset-0 bg-gradient-to-b from-[var(--charcoal-ink)]/90 via-[var(--charcoal-ink)]/95 to-[var(--charcoal-ink)] backdrop-blur-sm" />
+            <div className="w-full relative sonic-bento-card bg-[var(--unbleached-cotton)] overflow-hidden min-h-[600px] flex items-center justify-center p-8 md:p-16">
+              {/* Subtle texture */}
+              <div className="absolute inset-0 pointer-events-none opacity-20">
+                <BackgroundPattern />
               </div>
-              <div className="relative z-10 text-center max-w-xl mx-auto space-y-6">
-                <div className="w-16 h-16 mx-auto bg-[var(--unbleached-cotton)] rounded-full flex items-center justify-center mb-6 shadow-lg border border-[var(--charcoal-ink)]/20">
-                   <span className="text-[var(--madder-red)] text-2xl font-serif italic font-bold">M</span>
+
+              <div className="relative z-10 text-center max-w-3xl mx-auto space-y-8">
+                {/* Central Motif */}
+                <div className="w-24 h-24 mx-auto bg-[var(--charcoal-ink)] rounded-t-full flex items-center justify-center mb-8 shadow-2xl relative overflow-hidden">
+                   <div className="absolute inset-0 bg-gradient-to-tr from-[var(--charcoal-ink)] to-[var(--charcoal-ink)]/80" />
+                   <span className="text-[var(--unbleached-cotton)] text-4xl font-serif italic font-bold relative z-10 drop-shadow-md">M</span>
                 </div>
-                <h3 className="font-serif italic font-bold text-4xl md:text-5xl text-[var(--unbleached-cotton)] leading-tight">
-                  Curating Our <span className="text-[var(--madder-red)]">Next Drop</span>
+                
+                <h3 className="font-serif italic font-bold text-5xl md:text-6xl text-[var(--charcoal-ink)] leading-[1.1] tracking-tight">
+                  Archiving Our <br/> <span className="text-[var(--madder-red)]">Past Collections</span>.
                 </h3>
-                <p className="font-sans text-base text-[var(--unbleached-cotton)]/80 leading-relaxed max-w-md mx-auto">
-                  We are currently organizing our inventory and preparing to launch our newest collection of hand-loomed textiles. Check back shortly to explore our fresh range of organic fabrics.
+                
+                <p className="font-sans text-lg text-[var(--charcoal-ink)]/70 leading-relaxed max-w-xl mx-auto font-medium">
+                  We are currently organizing our inventory and preparing the digital storefront for our newest curation of heritage textiles.
                 </p>
-                <div className="pt-6 flex justify-center">
-                   <Link href="/" className="px-8 py-3 border-2 border-[var(--madder-red)] text-[var(--madder-red)] font-bold text-sm uppercase tracking-wider hover:bg-[var(--madder-red)] hover:text-[var(--unbleached-cotton)] transition-colors rounded shadow-[4px_4px_0_var(--madder-red)] hover:translate-y-[2px] hover:shadow-[2px_2px_0_var(--madder-red)]">
-                     Back to Homepage
+                
+                <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                   <Link href="/about" className="px-8 py-3.5 border border-[var(--charcoal-ink)] text-[var(--charcoal-ink)] font-bold text-xs uppercase tracking-[0.2em] hover:bg-[var(--charcoal-ink)]/5 transition-colors rounded">
+                     Our Process
+                   </Link>
+                   <Link href="/" className="sonic-btn-primary px-8 py-3.5 text-xs tracking-[0.2em]">
+                     Return Home
                    </Link>
                 </div>
               </div>

@@ -495,26 +495,56 @@ export default function HomeClient({
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerGridContainer}
-            className="w-full relative bg-[var(--charcoal-ink)] rounded-[2rem] overflow-hidden min-h-[400px] flex items-center justify-center border border-[var(--charcoal-ink)] shadow-2xl p-8 md:p-16 mt-8"
+            className="w-full relative sonic-bento-card bg-[var(--unbleached-cotton)] overflow-hidden min-h-[500px] flex items-center justify-center p-8 md:p-16 mt-8"
           >
-            <div className="absolute inset-0 opacity-30">
-               <Image src="/images/hero_desktop.png" fill sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" alt="Coming Soon Texture" />
-               <div className="absolute inset-0 bg-gradient-to-t from-[var(--charcoal-ink)] via-[var(--charcoal-ink)]/80 to-transparent backdrop-blur-sm" />
+            {/* Elegant Background Texture */}
+            <div className="absolute inset-0 pointer-events-none opacity-20">
+              <BackgroundPattern />
             </div>
-            <div className="relative z-10 text-center max-w-2xl mx-auto space-y-6">
-              <span className="inline-block px-4 py-1.5 rounded-full border border-[var(--turmeric)]/30 text-[var(--turmeric)] text-xs font-bold uppercase tracking-widest bg-[var(--turmeric)]/10 shadow-sm backdrop-blur-md">
-                Spring / Summer 2026
-              </span>
-              <h3 className="font-serif italic font-bold text-4xl md:text-5xl lg:text-6xl text-[var(--unbleached-cotton)] leading-tight">
-                The New Collection is <span className="text-[var(--madder-red)]">Coming Soon</span>
-              </h3>
-              <p className="font-sans text-base md:text-lg text-[var(--unbleached-cotton)]/80 max-w-lg mx-auto leading-relaxed">
-                Our master weavers are currently curating an exclusive range of sustainable, high-density fabrics. Expect rich textures, organic dyes, and uncompromising quality.
-              </p>
-              <div className="pt-6 flex justify-center">
-                 <Link href="/about" className="px-8 py-3 bg-[var(--madder-red)] text-white font-bold text-sm uppercase tracking-wider hover:bg-[var(--turmeric)] hover:text-[var(--charcoal-ink)] transition-colors rounded shadow-lg">
-                   Read Our Story
-                 </Link>
+            
+            <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+              {/* Left Side: Editorial Typography */}
+              <div className="flex-1 space-y-6 text-center md:text-left">
+                <div className="inline-flex items-center gap-3 border border-[var(--charcoal-ink)]/20 rounded-full px-4 py-1.5 bg-[var(--charcoal-ink)]/5">
+                  <span className="w-2 h-2 rounded-full bg-[var(--turmeric)] animate-pulse" />
+                  <span className="text-[var(--charcoal-ink)] text-xs font-bold uppercase tracking-[0.2em]">Spring / Summer 2026</span>
+                </div>
+                
+                <h3 className="font-serif font-bold text-5xl md:text-6xl lg:text-7xl text-[var(--charcoal-ink)] leading-[1.05] tracking-tight">
+                  Curating <br/>
+                  <span className="italic text-[var(--madder-red)]">the Future</span> <br/>
+                  of Fabric.
+                </h3>
+                
+                <p className="font-sans text-base md:text-lg text-[var(--charcoal-ink)]/70 max-w-md mx-auto md:mx-0 leading-relaxed pt-6 border-t border-[var(--charcoal-ink)]/10">
+                  Our master weavers are currently curating an exclusive range of sustainable, high-density textiles. Expect rich textures, organic dyes, and uncompromising heritage quality.
+                </p>
+                
+                <div className="pt-4">
+                   <Link href="/about" className="sonic-btn-primary inline-flex">
+                     Read Our Legacy
+                   </Link>
+                </div>
+              </div>
+              
+              {/* Right Side: Editorial Image/Shape Collage */}
+              <div className="flex-1 w-full relative h-[350px] md:h-[500px] flex items-center justify-center mt-10 md:mt-0">
+                <div className="absolute w-[80%] h-[90%] bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/20 rounded-t-full rotate-[-6deg] transform origin-bottom" />
+                <div className="absolute w-[75%] h-[85%] bg-[var(--charcoal-ink)]/10 border border-[var(--charcoal-ink)]/30 rounded-t-full rotate-[4deg] transform origin-bottom overflow-hidden shadow-2xl">
+                   <Image 
+                     src="/images/hero_desktop.png" 
+                     fill 
+                     sizes="(max-width: 768px) 100vw, 50vw"
+                     className="object-cover opacity-90 mix-blend-multiply filter contrast-125 grayscale" 
+                     alt="Coming Soon Texture" 
+                   />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center z-20">
+                   <div className="bg-[var(--unbleached-cotton)]/95 backdrop-blur-md border-2 border-[var(--charcoal-ink)] px-10 py-12 shadow-[8px_8px_0_var(--charcoal-ink)] text-center max-w-[220px] transform -rotate-2">
+                      <span className="block font-serif italic text-5xl text-[var(--charcoal-ink)] mb-3">SS/26</span>
+                      <span className="block font-sans text-[10px] uppercase tracking-[0.3em] font-bold text-[var(--charcoal-ink)] border-t border-[var(--charcoal-ink)]/20 pt-3">In Progress</span>
+                   </div>
+                </div>
               </div>
             </div>
           </motion.div>
