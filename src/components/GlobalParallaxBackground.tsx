@@ -35,11 +35,11 @@ export default function GlobalParallaxBackground() {
           y: yParallax,
           position: 'absolute',
           width: '100vw',
-          height: '120vh', 
+          height: '115vh', // Taller than the screen to allow for parallax
           left: '0',
-          top: '-10vh', 
-          backgroundImage: 'url(/images/madhubani_premium.svg)',
-          backgroundSize: '100vw 120vh', // Forcibly stretches the SVG to exactly fill the container, eliminating all cropping
+          top: '-5vh', // Start slightly offset to allow scrolling up
+          backgroundImage: 'url(/images/madhubani_widescreen.png)',
+          backgroundSize: 'cover', // Now that the image is 16:9, cover will fit perfectly without extreme cropping!
           backgroundRepeat: 'no-repeat', 
           backgroundPosition: 'center center'
         }}
