@@ -48,7 +48,7 @@ export default function GlobalParallaxBackground() {
         <img 
           src="/images/madhubani_premium.svg" 
           alt="Premium Madhubani SVG Pattern" 
-          className="w-full h-full object-cover opacity-50" 
+          className="w-full h-full object-contain opacity-50" 
         />
       </motion.div>
 
