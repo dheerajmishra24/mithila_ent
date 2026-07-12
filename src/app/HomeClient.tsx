@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import Image from 'next/image';
 import BackgroundPattern from '@/components/vectors/BackgroundPattern';
+import ScrollBackdrop from '@/components/ui/ScrollBackdrop';
 
 // Animation spring configurations matching Sonic's elite motion curves
 const springTransition = { type: "spring" as const, bounce: 0.15, duration: 0.8 };
@@ -238,11 +239,8 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* PROFESSIONAL BORDER DIVIDER */}
-      <div 
-        className="w-full relative z-20 h-24 md:h-32 opacity-90 mix-blend-multiply"
-        style={{ backgroundImage: 'url(/images/madhubani_border.png)', backgroundRepeat: 'repeat-x', backgroundSize: 'contain', backgroundPosition: 'center' }}
-      />
+      {/* PROFESSIONAL SCROLLING BORDER DIVIDER */}
+      <ScrollBackdrop direction="left" height="120px" opacity={0.85} className="md:h-[140px]" />
 
       {/* 2. INFINITE SCROLLING CERTIFICATION TICKER */}
       <section className="w-full py-8 bg-[var(--unbleached-cotton)] border-y border-[var(--charcoal-ink)]/10 overflow-hidden relative">
@@ -419,6 +417,8 @@ export default function HomeClient({
 
           </div>
       </section>
+
+      <ScrollBackdrop direction="right" height="120px" opacity={0.85} className="md:h-[140px]" />
 
       {/* 4. SHOP BY CATEGORY GRID */}
       <section className="w-full py-24 bg-[var(--unbleached-cotton)] border-y border-[var(--charcoal-ink)]/10">
