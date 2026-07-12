@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
 import ProductCard from '@/components/ProductCard';
-import { MOCK_PRODUCTS } from '@/lib/mock-data';
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const params = await searchParams;

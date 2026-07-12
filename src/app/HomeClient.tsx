@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import Image from 'next/image';
 import BackgroundPattern from '@/components/vectors/BackgroundPattern';
-import { MOCK_VARIANTS } from '@/lib/mock-data';
 
 // Animation spring configurations matching Sonic's elite motion curves
 const springTransition = { type: "spring" as const, bounce: 0.15, duration: 0.8 };
@@ -496,53 +495,29 @@ export default function HomeClient({
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerGridContainer}
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-10"
+            className="w-full relative bg-[var(--charcoal-ink)] rounded-[2rem] overflow-hidden min-h-[400px] flex items-center justify-center border border-[var(--charcoal-ink)] shadow-2xl p-8 md:p-16 mt-8"
           >
-            {(latest && latest.length > 0 ? latest : MOCK_VARIANTS).slice(0, 4).map((variant: any) => (
-              <motion.div key={variant.id} variants={gridItemVariants}>
-                <Link 
-                  href={`/product/${variant.products?.slug}`} 
-                  className="polaroid-card group flex flex-col w-full bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/10 backdrop-blur-sm h-full"
-                >
-                  {/* Fixed aspect ratio container for imagery */}
-                  <div className="aspect-[3/4] bg-[var(--unbleached-cotton)] rounded-lg overflow-hidden border border-[var(--charcoal-ink)]/5 relative mb-4">
-                    {variant.images && variant.images[0] ? (
-                      <Image 
-                        src={variant.images[0]} 
-                        alt={variant.products?.title || 'Product Image'} 
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                        className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center text-[var(--charcoal-ink)]/40 p-4 text-center">
-                        <span className="text-sm font-serif italic mb-2">Image Coming Soon</span>
-                      </div>
-                    )}
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[var(--charcoal-ink)] text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                      {variant.products?.weave || 'Handloom'}
-                    </div>
-                  </div>
-                  <div className="flex flex-col flex-grow justify-between">
-                    <div>
-                      <h3 className="font-serif font-bold text-lg leading-tight mb-1 text-[var(--charcoal-ink)] group-hover:text-[var(--madder-red)] transition-colors">{variant.products?.title || 'Unnamed Fabric'}</h3>
-                      <p className="font-sans text-xs text-[var(--charcoal-ink)]/60 uppercase tracking-widest mb-3">{variant.color}</p>
-                    </div>
-                    <div className="flex justify-between items-end border-t border-[var(--charcoal-ink)]/10 pt-3 mt-auto">
-                      <span className="font-sans font-bold text-lg text-[var(--charcoal-ink)]">₹{variant.price.toLocaleString()}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--charcoal-ink)]/50 bg-[var(--charcoal-ink)]/5 px-2 py-1 rounded">per meter</span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+            <div className="absolute inset-0 opacity-30">
+               <Image src="/images/hero_desktop.png" fill sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" alt="Coming Soon Texture" />
+               <div className="absolute inset-0 bg-gradient-to-t from-[var(--charcoal-ink)] via-[var(--charcoal-ink)]/80 to-transparent backdrop-blur-sm" />
+            </div>
+            <div className="relative z-10 text-center max-w-2xl mx-auto space-y-6">
+              <span className="inline-block px-4 py-1.5 rounded-full border border-[var(--turmeric)]/30 text-[var(--turmeric)] text-xs font-bold uppercase tracking-widest bg-[var(--turmeric)]/10 shadow-sm backdrop-blur-md">
+                Spring / Summer 2026
+              </span>
+              <h3 className="font-serif italic font-bold text-4xl md:text-5xl lg:text-6xl text-[var(--unbleached-cotton)] leading-tight">
+                The New Collection is <span className="text-[var(--madder-red)]">Coming Soon</span>
+              </h3>
+              <p className="font-sans text-base md:text-lg text-[var(--unbleached-cotton)]/80 max-w-lg mx-auto leading-relaxed">
+                Our master weavers are currently curating an exclusive range of sustainable, high-density fabrics. Expect rich textures, organic dyes, and uncompromising quality.
+              </p>
+              <div className="pt-6 flex justify-center">
+                 <Link href="/about" className="px-8 py-3 bg-[var(--madder-red)] text-white font-bold text-sm uppercase tracking-wider hover:bg-[var(--turmeric)] hover:text-[var(--charcoal-ink)] transition-colors rounded shadow-lg">
+                   Read Our Story
+                 </Link>
+              </div>
+            </div>
           </motion.div>
-          
-          <div className="mt-16 text-center">
-            <Link href="/shop" className="sonic-btn-primary inline-block">
-              View All Fabrics
-            </Link>
-          </div>
         </div>
       </section>
 

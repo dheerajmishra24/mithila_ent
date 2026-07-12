@@ -2,7 +2,6 @@ import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import ProductBuyBox from './ProductBuyBox';
 import { Metadata } from 'next';
-import { MOCK_PRODUCTS } from '@/lib/mock-data';
 import BackgroundPattern from '@/components/vectors/BackgroundPattern';
 import { MotionDiv } from '@/components/Motion';
 import ProductImage from '@/components/ProductImage';

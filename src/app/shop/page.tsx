@@ -92,7 +92,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
     console.warn("Supabase fetch failed (expected if no DB configured), falling back to mock data.");
   }
 
-  const variants = (dbVariants && dbVariants.length > 0) ? dbVariants : [];
+  let variants = (dbVariants && dbVariants.length > 0) ? dbVariants : [];
 
   if (!sort) {
     variants.sort((a: any, b: any) => (b.products?.is_featured ? 1 : 0) - (a.products?.is_featured ? 1 : 0));
@@ -327,48 +327,28 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
               </div>
             </div>
 
-            {/* The Fluid Grid: grid-cols-1 on mobile, md:grid-cols-2 on tablet, xl:grid-cols-4 on massive screens */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
-              {variants.length > 0 ? (
-                variants.map((variant, index) => (
-                  <MotionLink 
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.5, delay: (index % 4) * 0.1 }}
-                    key={variant.id} 
-                    href={`/product/${variant.products?.slug}`} 
-                    className="polaroid-card group flex flex-col w-full bg-[var(--charcoal-ink)]/5 border border-[var(--charcoal-ink)]/10 backdrop-blur-sm"
-                  >
-                    {/* Fixed aspect ratio container for imagery */}
-                    <div className="aspect-[3/4] bg-neutral-100 rounded-lg overflow-hidden border border-[var(--charcoal-ink)]/5 relative mb-4">
-                      <ProductImage
-                        src={variant.images?.[0]}
-                        alt={variant.products?.title || 'Product'}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-                        className="group-hover:scale-105 transition-transform duration-500"
-                      />
-                      {variant.products?.is_featured && (
-                        <span className="absolute top-4 left-4 bg-[var(--madder-red)] text-white text-[9px] font-bold px-3 py-1.5 uppercase tracking-wider rounded-md shadow-sm">
-                          Featured
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="px-2 pb-2 space-y-1">
-                      <span className="text-[9px] uppercase font-bold tracking-wider text-zinc-500">{variant.products?.weave} Weave</span>
-                      <h3 className="font-serif italic font-bold text-lg md:text-xl text-[var(--charcoal-ink)] mt-1 leading-tight">{variant.products?.title}</h3>
-                      <p className="font-sans text-xs text-zinc-500 pt-1">{variant.color} colorway</p>
-                      <p className="font-sans font-bold text-sm md:text-base text-[var(--indigo-dye)] mt-2">₹{variant.price} / meter</p>
-                    </div>
-                  </MotionLink>
-                ))
-              ) : (
-                <div className="col-span-full py-24 text-center opacity-70 sonic-bento-card bg-[var(--charcoal-ink)]/5 p-8 border border-[var(--charcoal-ink)]/10 backdrop-blur-sm">
-                   <p className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">Coming Soon!</p>
-                   <p className="font-sans mt-2 text-sm text-[var(--charcoal-ink)]/80">Our weavers are operating the looms to restore these swatches soon.</p>
+            {/* COMING SOON SHOWCASE (Replacing Product Grid) */}
+            <div className="w-full relative bg-[var(--charcoal-ink)] rounded-[1.5rem] overflow-hidden min-h-[500px] flex items-center justify-center border border-[var(--charcoal-ink)]/10 p-8 md:p-16 shadow-2xl">
+              <div className="absolute inset-0 opacity-30">
+                 <Image src="/images/hero_desktop.png" fill sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" alt="Coming Soon Texture" />
+                 <div className="absolute inset-0 bg-gradient-to-b from-[var(--charcoal-ink)]/90 via-[var(--charcoal-ink)]/95 to-[var(--charcoal-ink)] backdrop-blur-sm" />
+              </div>
+              <div className="relative z-10 text-center max-w-xl mx-auto space-y-6">
+                <div className="w-16 h-16 mx-auto bg-[var(--unbleached-cotton)] rounded-full flex items-center justify-center mb-6 shadow-lg border border-[var(--charcoal-ink)]/20">
+                   <span className="text-[var(--madder-red)] text-2xl font-serif italic font-bold">M</span>
                 </div>
-              )}
+                <h3 className="font-serif italic font-bold text-4xl md:text-5xl text-[var(--unbleached-cotton)] leading-tight">
+                  Curating Our <span className="text-[var(--madder-red)]">Next Drop</span>
+                </h3>
+                <p className="font-sans text-base text-[var(--unbleached-cotton)]/80 leading-relaxed max-w-md mx-auto">
+                  We are currently organizing our inventory and preparing to launch our newest collection of hand-loomed textiles. Check back shortly to explore our fresh range of organic fabrics.
+                </p>
+                <div className="pt-6 flex justify-center">
+                   <Link href="/" className="px-8 py-3 border-2 border-[var(--madder-red)] text-[var(--madder-red)] font-bold text-sm uppercase tracking-wider hover:bg-[var(--madder-red)] hover:text-[var(--unbleached-cotton)] transition-colors rounded shadow-[4px_4px_0_var(--madder-red)] hover:translate-y-[2px] hover:shadow-[2px_2px_0_var(--madder-red)]">
+                     Back to Homepage
+                   </Link>
+                </div>
+              </div>
             </div>
           </div>
           
