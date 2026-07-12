@@ -21,45 +21,27 @@ export default function GlobalParallaxBackground() {
     mass: 1.2,
   });
 
-  // Opposing parallax transforms
-  const yUp = useTransform(smoothScrollY, [0, 5000], [0, -500]);   // Moves UP when scrolling down
-  const yDown = useTransform(smoothScrollY, [0, 5000], [0, 500]); // Moves DOWN when scrolling down
+  // A single, unified parallax transform
+  const yParallax = useTransform(smoothScrollY, [0, 5000], [0, -300]);
 
   if (!mounted || pathname?.startsWith('/admin')) return null;
 
   return (
     <div className="fixed inset-0 z-40 pointer-events-none overflow-hidden mix-blend-multiply opacity-25">
       
-      {/* LEFT SIDE: Moves DOWN when scrolling down */}
+      {/* SINGLE UNIFIED BACKGROUND */}
       <motion.div 
         style={{ 
-          y: yDown,
+          y: yParallax,
           position: 'absolute',
-          width: '60vw', // Covers the left half plus some overlap buffer
-          height: '250vh', // Massive height to allow scrolling without clipping
-          left: '-5vw',
-          top: '-75vh', // Start way up so it has room to move down
+          width: '120vw',
+          height: '200vh', // Extra height to allow scrolling without clipping
+          left: '-10vw',
+          top: '-20vh',
           backgroundImage: 'url(/images/madhubani_premium.svg)',
-          backgroundSize: '800px',
+          backgroundSize: '1000px', // Large, readable scale for the art
           backgroundRepeat: 'repeat',
-          backgroundPosition: 'left top'
-        }}
-        className="grayscale contrast-125 opacity-50 will-change-transform"
-      />
-
-      {/* RIGHT SIDE: Moves UP when scrolling down */}
-      <motion.div 
-        style={{ 
-          y: yUp,
-          position: 'absolute',
-          width: '60vw', // Covers the right half plus buffer
-          height: '250vh', // Massive height
-          right: '-5vw',
-          top: '-25vh', // Start near the top so it has room to move up
-          backgroundImage: 'url(/images/madhubani_premium.svg)',
-          backgroundSize: '800px',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'right top'
+          backgroundPosition: 'center top'
         }}
         className="grayscale contrast-125 opacity-50 will-change-transform"
       />
