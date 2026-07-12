@@ -39,18 +39,16 @@ export default function GlobalParallaxBackground() {
           y: yParallax,
           position: 'absolute',
           width: '120vw',
-          height: '120vh',
+          height: '200vh', // extra height for parallax scrolling
           left: '-10vw',
-          top: '-10vh'
+          top: '-20vh',
+          backgroundImage: 'url(/images/madhubani_premium.svg)',
+          backgroundSize: '800px', // Large enough to be visible, small enough to repeat and cover
+          backgroundRepeat: 'repeat',
+          backgroundPosition: 'center top'
         }}
-        className="grayscale contrast-125 will-change-transform"
-      >
-        <img 
-          src="/images/madhubani_premium.svg" 
-          alt="Premium Madhubani SVG Pattern" 
-          className="w-full h-full object-contain opacity-50" 
-        />
-      </motion.div>
+        className="grayscale contrast-125 opacity-50 will-change-transform"
+      />
 
     </div>
   );
