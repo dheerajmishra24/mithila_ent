@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export default function GlobalParallaxBackground() {
@@ -32,18 +31,24 @@ export default function GlobalParallaxBackground() {
       
       {/* 
         A single, massive container that is larger than the viewport (120vw/120vh).
-        This gives us room to parallax scroll the image up/down without showing the edges.
+        We use inline styles for width/height to guarantee they are applied properly,
+        preventing any "0 height" issues with Next.js or Tailwind JIT.
       */}
       <motion.div 
-        style={{ y: yParallax }}
-        className="absolute w-[120vw] h-[120vh] -left-[10vw] -top-[10vh] grayscale contrast-125 will-change-transform"
+        style={{ 
+          y: yParallax,
+          position: 'absolute',
+          width: '120vw',
+          height: '120vh',
+          left: '-10vw',
+          top: '-10vh'
+        }}
+        className="grayscale contrast-125 will-change-transform"
       >
-        <Image 
+        <img 
           src="/images/madhubani_premium.svg" 
           alt="Premium Madhubani SVG Pattern" 
-          fill 
-          className="object-cover opacity-50" 
-          priority
+          className="w-full h-full object-cover opacity-50" 
         />
       </motion.div>
 
