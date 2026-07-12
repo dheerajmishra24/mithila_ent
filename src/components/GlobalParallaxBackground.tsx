@@ -35,11 +35,11 @@ export default function GlobalParallaxBackground() {
           y: yParallax,
           position: 'absolute',
           width: '100vw',
-          height: '115vh', // Only slightly taller than the screen to allow for parallax without massive zooming
+          height: '120vh', 
           left: '0',
-          top: '-5vh', // Start slightly offset to allow scrolling up
+          top: '-10vh', 
           backgroundImage: 'url(/images/madhubani_premium.svg)',
-          backgroundSize: 'cover', // Now it scales to 115vh instead of 200vh, drastically reducing cropping!
+          backgroundSize: '100vw 120vh', // Forcibly stretches the SVG to exactly fill the container, eliminating all cropping
           backgroundRepeat: 'no-repeat', 
           backgroundPosition: 'center center'
         }}
