@@ -21,8 +21,8 @@ export default function GlobalParallaxBackground() {
     mass: 1.2,
   });
 
-  // A single, unified parallax transform
-  const yParallax = useTransform(smoothScrollY, [0, 5000], [0, -300]);
+  // A subtle, unified parallax transform, perfectly calibrated to the 115vh container
+  const yParallax = useTransform(smoothScrollY, [0, 5000], [0, -120]);
 
   if (!mounted || pathname?.startsWith('/admin')) return null;
 
@@ -34,13 +34,13 @@ export default function GlobalParallaxBackground() {
         style={{ 
           y: yParallax,
           position: 'absolute',
-          width: '120vw',
-          height: '200vh', // Extra height to allow scrolling without clipping
-          left: '-10vw',
-          top: '-20vh',
+          width: '100vw',
+          height: '115vh', // Only slightly taller than the screen to allow for parallax without massive zooming
+          left: '0',
+          top: '-5vh', // Start slightly offset to allow scrolling up
           backgroundImage: 'url(/images/madhubani_premium.svg)',
-          backgroundSize: 'cover', // Ensures ONE single image scales to cover the entire area
-          backgroundRepeat: 'no-repeat', // Prevents tiling
+          backgroundSize: 'cover', // Now it scales to 115vh instead of 200vh, drastically reducing cropping!
+          backgroundRepeat: 'no-repeat', 
           backgroundPosition: 'center center'
         }}
         className="grayscale contrast-125 opacity-50 will-change-transform"
