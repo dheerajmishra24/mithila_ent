@@ -22,10 +22,8 @@ export default function GlobalParallaxBackground() {
     mass: 1.2,
   });
 
-  // Create varied movement speeds for a rich, layered parallax effect
-  const yFast = useTransform(smoothScrollY, [0, 5000], [0, -500]);
-  const ySlow = useTransform(smoothScrollY, [0, 5000], [0, -200]);
-  const yReverse = useTransform(smoothScrollY, [0, 5000], [0, 300]);
+  // A subtle, unified parallax scroll that moves the entire massive SVG
+  const yParallax = useTransform(smoothScrollY, [0, 5000], [0, -300]);
 
   if (!mounted || pathname?.startsWith('/admin')) return null;
 
@@ -33,35 +31,22 @@ export default function GlobalParallaxBackground() {
     <div className="fixed inset-0 z-40 pointer-events-none overflow-hidden mix-blend-multiply opacity-25">
       
       {/* 
-        We create a uniform grid that spans much larger than the viewport 
-        so it seamlessly covers the screen and scrolls infinitely. 
+        A single, massive container that is larger than the viewport (120vw/120vh).
+        This gives us room to parallax scroll the image up/down without showing the edges.
       */}
-      <div className="absolute inset-[-50%] w-[200%] h-[200%] grid grid-cols-3 md:grid-cols-4 gap-8 opacity-40">
-        
-        {Array.from({ length: 24 }).map((_, i) => {
-          // Assign alternating scroll speeds to create a dynamic tapestry
-          const yTransform = i % 3 === 0 ? yFast : i % 3 === 1 ? ySlow : yReverse;
-          // Rotate some tiles for a seamless, interlocking look
-          const rotateClass = i % 2 === 0 ? "" : "rotate-90";
+      <motion.div 
+        style={{ y: yParallax }}
+        className="absolute w-[120vw] h-[120vh] -left-[10vw] -top-[10vh] grayscale contrast-125 will-change-transform"
+      >
+        <Image 
+          src="/images/madhubani_premium.svg" 
+          alt="Premium Madhubani SVG Pattern" 
+          fill 
+          className="object-cover opacity-50" 
+          priority
+        />
+      </motion.div>
 
-          return (
-            <motion.div 
-              key={i}
-              style={{ y: yTransform }}
-              className={`relative w-full aspect-square grayscale contrast-125 will-change-transform ${rotateClass}`}
-            >
-              <Image 
-                src="/images/madhubani_premium.svg" 
-                alt="Premium Madhubani SVG Pattern" 
-                fill 
-                className="object-cover md:object-contain opacity-50" 
-                priority={i < 4}
-              />
-            </motion.div>
-          );
-        })}
-
-      </div>
     </div>
   );
 }
