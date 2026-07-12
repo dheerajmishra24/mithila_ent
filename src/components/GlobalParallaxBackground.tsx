@@ -39,9 +39,9 @@ export default function GlobalParallaxBackground() {
           left: '-10vw',
           top: '-20vh',
           backgroundImage: 'url(/images/madhubani_premium.svg)',
-          backgroundSize: '1000px', // Large, readable scale for the art
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'center top'
+          backgroundSize: 'cover', // Ensures ONE single image scales to cover the entire area
+          backgroundRepeat: 'no-repeat', // Prevents tiling
+          backgroundPosition: 'center center'
         }}
         className="grayscale contrast-125 opacity-50 will-change-transform"
       />
