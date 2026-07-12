@@ -72,6 +72,12 @@ export default function Header() {
               alt="Mithila Enterprises Logo" 
               className="h-10 md:h-12 w-auto object-contain transition-transform group-hover:scale-105"
             />
+            <span className="font-serif italic font-bold text-lg tracking-tight text-[var(--madder-red)] transition-colors">
+              Mithila
+            </span>
+            <span className="font-sans text-[9px] uppercase tracking-widest text-[var(--madder-red)] opacity-70 font-bold border-l border-[var(--charcoal-ink)]/20 pl-2 hidden sm:block">
+              Enterprises
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
