@@ -31,7 +31,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const fabricInfo = fabricData ? fabricData[slug] : undefined;
 
   return (
-    <main className="flex-grow bg-[var(--unbleached-cotton)]">
+    <main className="flex-grow bg-transparent">
       {/* 1. EDITORIAL HERO SECTION */}
       <section className="w-full relative min-h-[50vh] md:min-h-[60vh] flex items-center pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0 z-0">

@@ -19,7 +19,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <main className="flex-grow flex items-center justify-center py-16 bg-[var(--unbleached-cotton)]">
+    <main className="flex-grow flex items-center justify-center py-16 bg-transparent">
       <div className="max-w-md w-full bg-white p-8 border-2 border-[var(--charcoal-ink)] shadow-[4px_4px_0_var(--charcoal-ink)]">
         <h1 className="font-serif text-2xl font-bold mb-4">Reset Password</h1>
         <form onSubmit={handleReset} className="space-y-4">

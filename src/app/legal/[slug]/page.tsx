@@ -148,7 +148,7 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
   }
 
   return (
-    <main className="flex-grow w-full bg-[#fafafa] text-zinc-900 pt-32 pb-24 font-sans">
+    <main className="flex-grow w-full bg-transparent text-zinc-900 pt-32 pb-24 font-sans">
       <div className="container mx-auto px-6 max-w-3xl bg-white p-8 md:p-16 border border-zinc-150 shadow-md rounded-2xl mt-8">
         
         {/* Document Header */}

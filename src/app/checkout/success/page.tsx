@@ -15,7 +15,7 @@ export default function CheckoutSuccessPage() {
   }, [clearCart]);
 
   return (
-    <main className="flex-grow bg-[var(--unbleached-cotton)] py-24 flex items-center justify-center text-center">
+    <main className="flex-grow bg-transparent py-24 flex items-center justify-center text-center">
       <div className="max-w-xl mx-auto px-4">
         <CheckCircle className="w-24 h-24 text-[var(--turmeric)] mx-auto mb-8" />
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-[var(--charcoal-ink)] mb-4">

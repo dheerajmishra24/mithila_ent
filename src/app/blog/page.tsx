@@ -14,7 +14,7 @@ export default function BlogListingPage() {
   const posts = getAllPosts();
 
   return (
-    <main className="flex-grow w-full bg-[var(--unbleached-cotton)] text-[var(--charcoal-ink)] pt-24 md:pt-28 pb-24 font-sans overflow-x-hidden relative">
+    <main className="flex-grow w-full bg-transparent text-[var(--charcoal-ink)] pt-24 md:pt-28 pb-24 font-sans overflow-x-hidden relative">
       {/* ── Hero Header ── */}
       <section className="relative w-full max-w-7xl mx-auto px-6 pt-8 pb-16 md:pt-12 md:pb-24 text-center">
         <BackgroundPattern className="opacity-40" />

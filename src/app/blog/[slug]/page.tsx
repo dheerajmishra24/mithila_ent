@@ -44,7 +44,7 @@ export default async function BlogPostPage({
   const paragraphs = post.content.split('\n\n');
 
   return (
-    <main className="flex-grow w-full bg-[var(--unbleached-cotton)] text-[var(--charcoal-ink)] pt-24 md:pt-28 pb-24 font-sans overflow-x-hidden relative">
+    <main className="flex-grow w-full bg-transparent text-[var(--charcoal-ink)] pt-24 md:pt-28 pb-24 font-sans overflow-x-hidden relative">
       {/* ── Hero Cover Image ── */}
       <section className="relative w-full max-w-7xl mx-auto px-6">
         <div className="relative w-full aspect-[21/9] overflow-hidden rounded-sm border-2 border-[var(--charcoal-ink)] shadow-[6px_6px_0_var(--charcoal-ink)]">

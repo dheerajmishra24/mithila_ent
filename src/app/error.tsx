@@ -15,7 +15,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <main className="flex-grow bg-[var(--unbleached-cotton)] py-32 flex flex-col items-center justify-center text-center px-4">
+    <main className="flex-grow bg-transparent py-32 flex flex-col items-center justify-center text-center px-4">
       {/* Madhubani Motif Placeholder */}
       <div className="w-32 h-32 border-4 border-dashed border-[var(--madder-red)] opacity-50 mb-8 rotate-45"></div>
       

@@ -19,7 +19,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="flex-grow w-full bg-[var(--unbleached-cotton)] text-[var(--charcoal-ink)] pt-32 pb-24 font-sans relative">
+    <main className="flex-grow w-full bg-transparent text-[var(--charcoal-ink)] pt-32 pb-24 font-sans relative">
       <div className="container mx-auto px-6 max-w-6xl">
         
         {/* Page Header */}

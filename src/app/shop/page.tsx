@@ -161,7 +161,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   };
 
   return (
-    <main className="flex-grow bg-[var(--unbleached-cotton)] pt-24 md:pt-32 pb-24 relative overflow-x-hidden w-full">
+    <main className="flex-grow bg-transparent pt-24 md:pt-32 pb-24 relative overflow-x-hidden w-full">
       <BackgroundPattern className="opacity-40" />
       <div className="container mx-auto px-4 md:px-8 max-w-screen-2xl relative z-10">
         

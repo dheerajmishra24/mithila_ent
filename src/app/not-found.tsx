@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/Button';
 
 export default function NotFound() {
   return (
-    <main className="flex-grow bg-[var(--unbleached-cotton)] py-32 flex flex-col items-center justify-center text-center px-4">
+    <main className="flex-grow bg-transparent py-32 flex flex-col items-center justify-center text-center px-4">
       {/* Madhubani Motif Placeholder */}
       <div className="w-32 h-32 kachni-border bg-[var(--charcoal-ink)] opacity-20 mb-8 relative">
         <div className="absolute inset-2 bg-[var(--madder-red)] opacity-50"></div>

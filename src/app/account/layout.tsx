@@ -3,7 +3,7 @@ import { logout } from '@/actions/auth';
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-grow bg-[var(--unbleached-cotton)] py-16">
+    <main className="flex-grow bg-transparent py-16">
       <div className="container mx-auto px-4 md:px-8 max-w-6xl">
         <h1 className="font-serif text-4xl font-bold text-[var(--charcoal-ink)] mb-8">My Portal</h1>
         <div className="flex flex-col md:flex-row gap-12">
