@@ -27,7 +27,7 @@ export default function GlobalParallaxBackground() {
   if (!mounted || pathname?.startsWith('/admin')) return null;
 
   return (
-    <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden opacity-100">
+    <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden opacity-15 mix-blend-multiply">
       
       {/* SINGLE UNIFIED BACKGROUND */}
       <motion.div 

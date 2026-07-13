@@ -251,7 +251,7 @@ export default function HomeClient({
         <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#f7f3cc] to-transparent z-10 pointer-events-none" />
         
         <div className="container mx-auto px-6 max-w-7xl mb-4">
-          <h3 className="font-sans font-bold text-[10px] uppercase tracking-widest text-zinc-400 text-center">
+          <h3 className="font-sans font-bold text-[10px] uppercase tracking-widest text-[var(--charcoal-ink)]/60 text-center">
             Trusted by Thousands, Engineered for Excellence
           </h3>
         </div>
@@ -261,7 +261,7 @@ export default function HomeClient({
           <motion.div 
             animate={{ x: [0, -1200] }}
             transition={{ ease: "linear", duration: 30, repeat: Infinity }}
-            className="flex gap-16 whitespace-nowrap font-serif italic text-base text-zinc-500 font-bold opacity-80"
+            className="flex gap-16 whitespace-nowrap font-serif italic text-base text-[var(--charcoal-ink)] font-bold opacity-90"
           >
             {/* Double the array for seamless endless marquee looping */}
             {[...brandTags, ...brandTags].map((tag, idx) => (
