@@ -156,9 +156,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
               ))
             ) : (
               <div className="col-span-full py-24 text-center sonic-bento-card bg-[var(--unbleached-cotton)] border border-[var(--charcoal-ink)]/10 shadow-lg">
-                 <div className="w-20 h-20 mx-auto bg-[var(--charcoal-ink)]/5 rounded-full flex items-center justify-center mb-8 border border-[var(--charcoal-ink)]/10">
-                    <span className="text-[var(--charcoal-ink)] text-3xl font-serif italic">M</span>
-                 </div>
+                <div className="w-16 h-16 mx-auto relative mb-6">
+                  <Image src="/images/logo.png" alt="Mithila Enterprises Logo" fill className="object-contain" />
+                </div>
                  <p className="font-serif italic text-4xl font-bold text-[var(--charcoal-ink)] mb-4">Curating {category.name}</p>
                  <p className="font-sans text-lg text-[var(--charcoal-ink)]/70 max-w-lg mx-auto leading-relaxed">Our weavers are currently preparing the newest collection of {category.name.toLowerCase()} fabrics. Check back soon for fresh inventory.</p>
               </div>

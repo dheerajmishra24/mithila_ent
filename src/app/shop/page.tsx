@@ -337,9 +337,8 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
               <div className="relative z-10 text-center max-w-3xl mx-auto space-y-8">
                 {/* Central Motif */}
-                <div className="w-24 h-24 mx-auto bg-[var(--charcoal-ink)] rounded-t-full flex items-center justify-center mb-8 shadow-2xl relative overflow-hidden">
-                   <div className="absolute inset-0 bg-gradient-to-tr from-[var(--charcoal-ink)] to-[var(--charcoal-ink)]/80" />
-                   <span className="text-[var(--unbleached-cotton)] text-4xl font-serif italic font-bold relative z-10 drop-shadow-md">M</span>
+                <div className="w-24 h-24 mx-auto relative mb-8">
+                   <Image src="/images/logo.png" alt="Mithila Enterprises Logo" fill className="object-contain drop-shadow-xl" />
                 </div>
                 
                 <h3 className="font-serif italic font-bold text-5xl md:text-6xl text-[var(--charcoal-ink)] leading-[1.1] tracking-tight">
