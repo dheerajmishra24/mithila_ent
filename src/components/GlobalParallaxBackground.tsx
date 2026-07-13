@@ -34,16 +34,16 @@ export default function GlobalParallaxBackground() {
         style={{ 
           y: yParallax,
           position: 'absolute',
-          width: '105vw', // Slightly wider to hide blur edges
-          height: '120vh', // Slightly taller to hide blur edges
-          left: '-2.5vw', // Offset to center the scaled width
-          top: '-10vh', // Offset to center the scaled height
+          width: '100vw',
+          height: '150vh', // Extra height to allow smooth parallax scrolling when tiling
+          left: '0',
+          top: '-25vh', 
           backgroundImage: 'url(/images/madhubani_premium_bg.png)',
-          backgroundSize: 'cover', 
-          backgroundRepeat: 'no-repeat', 
-          backgroundPosition: 'center center'
+          backgroundSize: '800px', // Fixed crisp size to prevent stretching/blurring
+          backgroundRepeat: 'repeat', // Tile the image to properly fill the screen
+          backgroundPosition: 'top center'
         }}
-        className="will-change-transform blur-md"
+        className="will-change-transform"
       />
 
     </div>
