@@ -104,12 +104,12 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                   {fabricInfo.howItsMade}
                 </p>
 
-                <div className="bg-[var(--charcoal-ink)] text-[var(--unbleached-cotton)] p-10 md:p-16 rounded-[2rem] shadow-2xl relative overflow-hidden sonic-bento-card">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--turmeric)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-                  <div className="absolute bottom-0 left-0 w-48 h-48 bg-[var(--madder-red)]/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
-                  <span className="text-[var(--turmeric)] font-sans uppercase text-[10px] tracking-[0.3em] font-bold block mb-4 relative z-10">The Market View</span>
-                  <h2 className="text-3xl md:text-4xl font-serif italic font-bold text-[var(--unbleached-cotton)] mb-8 relative z-10 leading-tight">Modern Fashion Trends</h2>
-                  <p className="font-sans text-[var(--unbleached-cotton)]/80 text-lg md:text-xl leading-relaxed text-justify relative z-10">
+                <div className="bg-[#1c1917] text-[#f7f3cc] p-10 md:p-16 rounded-[2rem] shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-[#f59e0b]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+                  <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#dc2626]/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
+                  <span className="text-[#f59e0b] font-sans uppercase text-[10px] tracking-[0.3em] font-bold block mb-4 relative z-10">The Market View</span>
+                  <h2 className="text-3xl md:text-4xl font-serif italic font-bold text-[#f7f3cc] mb-8 relative z-10 leading-tight">Modern Fashion Trends</h2>
+                  <p className="font-sans text-[#f7f3cc]/80 text-lg md:text-xl leading-relaxed text-justify relative z-10">
                     {fabricInfo.fashionTrends}
                   </p>
                 </div>
