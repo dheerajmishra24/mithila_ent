@@ -77,7 +77,11 @@ export async function register(prevState: any, formData: FormData) {
     return { error: pwError }
   }
 
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const origin = process.env.NEXT_PUBLIC_SITE_URL 
+    ? process.env.NEXT_PUBLIC_SITE_URL 
+    : process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3000'
   
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -127,7 +131,11 @@ export async function logout() {
 
 export async function signInWithGoogle(formData: FormData) {
   const supabase = await createClient()
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const origin = process.env.NEXT_PUBLIC_SITE_URL 
+    ? process.env.NEXT_PUBLIC_SITE_URL 
+    : process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3000'
   const nextPath = formData.get('next') as string || '/account'
   
   const { data, error } = await supabase.auth.signInWithOAuth({
