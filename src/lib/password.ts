@@ -1,6 +1,6 @@
 // Centralized password policy — single source of truth for signup AND reset.
 // Minimum 8 chars with lowercase, uppercase, a digit, and a special character.
-export const PASSWORD_MIN_LENGTH = 12;
+export const PASSWORD_MIN_LENGTH = 8;
 
 export const passwordRules: { label: string; test: (pw: string) => boolean }[] = [
   { label: `At least ${PASSWORD_MIN_LENGTH} characters`, test: (pw) => pw.length >= PASSWORD_MIN_LENGTH },
