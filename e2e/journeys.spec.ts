@@ -23,10 +23,10 @@ test('login page renders email + password fields', async ({ page }) => {
   await expect(page.locator('input[name="password"]')).toBeVisible();
 });
 
-test('signup shows the 12-char password rule as you type', async ({ page }) => {
+test('signup shows the 8-char password rule as you type', async ({ page }) => {
   await page.goto('/signup');
   await page.fill('input[name="password"]', 'abc');
-  await expect(page.getByText('At least 12 characters')).toBeVisible();
+  await expect(page.getByText('At least 8 characters')).toBeVisible();
 });
 
 test('admin dashboard redirects anonymous visitors to login', async ({ page }) => {

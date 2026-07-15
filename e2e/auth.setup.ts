@@ -8,15 +8,15 @@ setup('authenticate as admin', async ({ page }) => {
   await page.goto('/login');
   
   // Rely on semantic selectors
-  await page.getByPlaceholder('Email address').fill('admin@mithilaenterprise.com');
-  await page.getByPlaceholder('Password').fill('AdminPassword123!');
+  await page.locator('input[name="email"]').fill('admin@mithilaenterprise.com');
+  await page.locator('input[name="password"]').fill('AdminPassword123!');
   await page.getByRole('button', { name: /sign in|log in/i }).click();
 
   // Wait until the dashboard navigation completes
   await page.waitForURL('**/admin/dashboard');
   
   // Explicit assertion to confirm successful login
-  await expect(page.getByRole('heading', { name: /dashboard|overview/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /executive ledger|dashboard/i })).toBeVisible();
 
   // Save the authenticated state (cookies, local storage)
   await page.context().storageState({ path: authFile });

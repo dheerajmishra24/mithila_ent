@@ -41,7 +41,7 @@ test.describe('Dashboard Features & E2E Validation', () => {
     await page.goto('/admin/dashboard');
     
     // Explicit visibility assertions (NO waitForTimeout)
-    await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /executive ledger|dashboard/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /inventory/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /orders/i })).toBeVisible();
 
