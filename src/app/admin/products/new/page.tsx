@@ -37,7 +37,8 @@ export default function AIProductIngestion() {
     width: '54 inches / 137 cm',
     stretch: '0% Mechanical Stretch',
     origin: 'Mithila Artisanal Cluster, India',
-    bestSuitedFor: 'Tailored overcoats, Unlined summer blazers, Dense upholstery'
+    bestSuitedFor: 'Tailored overcoats, Unlined summer blazers, Dense upholstery',
+    print: ''
   });
 
   useEffect(() => {
@@ -100,12 +101,13 @@ export default function AIProductIngestion() {
         colors: Array.isArray(data.colors) ? data.colors : [],
         categoryId: categories.length > 0 ? categories[0].id : '',
         collectionIds: [],
-        gsm: data.gsm || 0,
+        gsm: parseInt(data.gsm) || 320,
         minOrderQuantity: 1,
-        width: data.width || '',
-        stretch: data.stretch || '',
-        origin: data.origin || '',
-        bestSuitedFor: data.bestSuitedFor || ''
+        width: data.width || '54 inches / 137 cm',
+        stretch: data.stretch || '0% Mechanical Stretch',
+        origin: data.origin || 'Mithila Artisanal Cluster, India',
+        bestSuitedFor: data.bestSuitedFor || '',
+        print: data.print || ''
       });
 
       setStep('review');
@@ -356,6 +358,10 @@ export default function AIProductIngestion() {
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-[var(--indigo-dye)] mb-1">Stretch</label>
                     <input type="text" value={draft.stretch} onChange={e => setDraft({...draft, stretch: e.target.value})} className="w-full border-b-2 border-[var(--charcoal-ink)]/20 bg-transparent py-2 font-bold focus:outline-none focus:border-[var(--madder-red)]" />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Print / Pattern</label>
+                    <input type="text" value={draft.print} onChange={e => setDraft({...draft, print: e.target.value})} placeholder="e.g. Solid, Hand Block, Digital Print" className="w-full border-b-2 border-[var(--charcoal-ink)]/20 bg-transparent py-2 font-bold focus:outline-none focus:border-[var(--madder-red)]" />
                   </div>
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-[var(--indigo-dye)] mb-1">Origin</label>

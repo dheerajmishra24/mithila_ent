@@ -21,6 +21,7 @@ export interface ProductDraft {
   colors: string[]
   categoryId: string
   collectionIds?: string[]
+  print?: string
 }
 
 export async function createProduct(draft: ProductDraft, imagePreview: string | null) {
@@ -53,7 +54,8 @@ export async function createProduct(draft: ProductDraft, imagePreview: string | 
     stretch: draft.stretch,
     origin: draft.origin,
     best_suited_for: draft.bestSuitedFor.split(',').map(s => s.trim()).filter(Boolean),
-    status: 'active'
+    status: 'active',
+    print: draft.print || null
   }).select().single()
 
   if (prodError) throw new Error(prodError.message)
@@ -143,6 +145,7 @@ export interface ProductUpdate {
   origin: string
   bestSuitedFor: string
   collectionIds?: string[]
+  print?: string
 }
 
 export async function updateProduct(productId: string, fields: ProductUpdate) {
@@ -164,6 +167,7 @@ export async function updateProduct(productId: string, fields: ProductUpdate) {
       stretch: fields.stretch,
       origin: fields.origin,
       best_suited_for: fields.bestSuitedFor.split(',').map((s) => s.trim()).filter(Boolean),
+      print: fields.print || null
     })
     .eq('id', productId)
 

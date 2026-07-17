@@ -17,13 +17,14 @@ const fabricSchema: Schema = {
     stretch: { type: SchemaType.STRING, description: 'The stretch factor (e.g. 0% Mechanical Stretch, 2% Elastane).' },
     origin: { type: SchemaType.STRING, description: 'The artisanal origin (e.g. Mithila Artisanal Cluster, India).' },
     bestSuitedFor: { type: SchemaType.STRING, description: 'Comma separated list of garments this is best suited for (e.g. Tailored overcoats, Unlined blazers).' },
+    print: { type: SchemaType.STRING, description: 'The print type if visible (e.g. Solid, Pattern, Digital Print, Hand Block, Ikat, None).' },
     colors: { 
       type: SchemaType.ARRAY, 
       items: { type: SchemaType.STRING },
       description: 'A list of 2-4 descriptive color variants detected or suitable for the fabric.'
     }
   },
-  required: ['title', 'description', 'weaveDensity', 'pigment', 'gsm', 'width', 'stretch', 'origin', 'bestSuitedFor', 'colors']
+  required: ['title', 'description', 'weaveDensity', 'pigment', 'gsm', 'width', 'stretch', 'origin', 'bestSuitedFor', 'print', 'colors']
 };
 
 export async function POST(req: Request) {

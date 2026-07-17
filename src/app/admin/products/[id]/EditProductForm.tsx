@@ -25,6 +25,7 @@ export default function EditProductForm({ product, categories, collections, init
     stretch: product.stretch || '',
     origin: product.origin || '',
     bestSuitedFor: Array.isArray(product.best_suited_for) ? product.best_suited_for.join(', ') : '',
+    print: product.print || '',
     collectionIds: initialCollectionIds || [],
   });
 
@@ -123,6 +124,7 @@ export default function EditProductForm({ product, categories, collections, init
         stretch: form.stretch,
         origin: form.origin,
         bestSuitedFor: form.bestSuitedFor,
+        print: form.print,
         collectionIds: form.collectionIds,
       });
 
@@ -273,6 +275,10 @@ export default function EditProductForm({ product, categories, collections, init
           <div>
             <label className={labelClass}>Stretch</label>
             <input className={inputClass} value={form.stretch} onChange={(e) => setField('stretch', e.target.value)} />
+          </div>
+          <div>
+            <label className={labelClass}>Print / Pattern</label>
+            <input className={inputClass} value={form.print} onChange={(e) => setField('print', e.target.value)} />
           </div>
           <div>
             <label className={labelClass}>Origin</label>

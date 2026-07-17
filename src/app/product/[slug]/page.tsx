@@ -136,6 +136,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Origin</p>
                   <p className="font-bold text-sm">{product.origin || 'Mithila Artisanal Cluster, India'}</p>
                 </div>
+                {product.print && (
+                  <div className="col-span-2 md:col-span-1">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Print / Pattern</p>
+                    <p className="font-bold text-sm">{product.print}</p>
+                  </div>
+                )}
               </div>
               
               <div className="pt-2">
