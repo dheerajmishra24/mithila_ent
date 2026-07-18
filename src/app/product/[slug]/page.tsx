@@ -46,14 +46,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   let subcategoryName = null;
   if (product.subcategory_id) {
-    const { data: sub } = await supabase
-      .from('categories')
-      .select('name')
-      .eq('id', product.subcategory_id)
-      .single();
-    if (sub) {
-      subcategoryName = sub.name;
-    }
+    const { data: subcat } = await supabase.from('categories').select('name').eq('id', product.subcategory_id).single();
+    if (subcat) subcategoryName = subcat.name;
   }
 
   // For simplicity, we auto-select the first variant if there's no complex variant switcher built yet
@@ -69,7 +63,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
         {/* Breadcrumb */}
         <div className="font-sans text-xs opacity-70 mb-12 tracking-widest font-bold text-[var(--madder-red)]">
-          HOME / SHOP / {(product.categories?.name || product.tags?.[0] || 'FABRIC').toUpperCase()} {subcategoryName ? `/ ${subcategoryName.toUpperCase()} ` : ''}/ {product.title.toUpperCase()}
+          HOME / SHOP / {(product.categories?.name || product.tags?.[0] || 'FABRIC').toUpperCase()} / {product.title.toUpperCase()}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -124,12 +118,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Blend</p>
                   <p className="font-bold text-sm">100% {product.categories?.name || 'Organic Yarn'}</p>
                 </div>
-                {subcategoryName && (
-                  <div>
-                    <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Subcategory</p>
-                    <p className="font-bold text-sm">{subcategoryName}</p>
-                  </div>
-                )}
                 <div>
                   <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Width</p>
                   <p className="font-bold text-sm">{product.width || '54 inches / 137 cm'}</p>
@@ -158,6 +146,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   <div className="col-span-2 md:col-span-1">
                     <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Print / Pattern</p>
                     <p className="font-bold text-sm">{product.print}</p>
+                  </div>
+                )}
+                {subcategoryName && (
+                  <div className="col-span-2 md:col-span-1">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-[var(--charcoal-ink)]/50 mb-1">Subcategory</p>
+                    <p className="font-bold text-sm">{subcategoryName}</p>
                   </div>
                 )}
               </div>
