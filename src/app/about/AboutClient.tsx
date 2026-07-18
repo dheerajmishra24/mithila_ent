@@ -185,7 +185,7 @@ export default function AboutClient({
           <div className="text-center max-w-2xl mx-auto mb-20 space-y-2">
             <span className="text-[var(--madder-red)] font-sans uppercase text-xs tracking-wider font-semibold">The Process</span>
             <h2 className="font-serif italic text-4xl md:text-5xl font-bold text-[var(--charcoal-ink)]">Structural Engineering</h2>
-            <p className="font-sans text-sm text-zinc-500 mt-4 leading-relaxed">
+            <p className="font-sans text-sm mt-4 leading-relaxed" style={{ color: 'lab(2 0.16 -0.58)' }}>
               We reject industrial mass-production. Every yard of textile is physically constructed through a four-stage mechanical process designed to maximize durability.
             </p>
           </div>
@@ -207,13 +207,13 @@ export default function AboutClient({
                   
                   <span className="text-[5rem] leading-none font-serif italic font-bold text-[var(--charcoal-ink)]/10 absolute -top-10 -left-6 select-none pointer-events-none">01</span>
                   <h3 className="font-sans font-bold text-lg uppercase tracking-wider text-[var(--charcoal-ink)] mb-4">Fiber Procurement</h3>
-                  <p className="font-sans text-sm leading-relaxed text-zinc-600 text-justify mb-10">
+                  <p className="font-sans text-sm leading-relaxed text-justify mb-10" style={{ color: 'lab(2 0.16 -0.58)' }}>
                     We source raw, unbleached flax and high-crimp virgin wool. We strictly select fibers based on tensile strength and climate suitability, avoiding pre-softened or chemically altered crops.
                   </p>
                   
                   <span className="text-[5rem] leading-none font-serif italic font-bold text-[var(--charcoal-ink)]/10 absolute -bottom-10 -right-6 select-none pointer-events-none">02</span>
                   <h3 className="font-sans font-bold text-lg uppercase tracking-wider text-[var(--charcoal-ink)] mb-4 mt-8 pt-8 border-t border-[var(--charcoal-ink)]/10">Tension Weaving</h3>
-                  <p className="font-sans text-sm leading-relaxed text-zinc-600 text-justify">
+                  <p className="font-sans text-sm leading-relaxed text-justify" style={{ color: 'lab(2 0.16 -0.58)' }}>
                     Yarns are interlaced on wooden shuttle looms. Human operators manually dictate the warp and weft tension. This creates minute structural variations that allow the final fabric to breathe and flex.
                   </p>
                 </div>
@@ -237,13 +237,13 @@ export default function AboutClient({
                   
                   <span className="text-[5rem] leading-none font-serif italic font-bold text-[var(--charcoal-ink)]/10 absolute -top-10 -right-6 select-none pointer-events-none">03</span>
                   <h3 className="font-sans font-bold text-lg uppercase tracking-wider text-[var(--charcoal-ink)] mb-4">Pigment Binding</h3>
-                  <p className="font-sans text-sm leading-relaxed text-zinc-600 text-justify mb-10">
+                  <p className="font-sans text-sm leading-relaxed text-justify mb-10" style={{ color: 'lab(2 0.16 -0.58)' }}>
                     The woven yardage is submerged in natural dye vats. Rather than coating the surface, the pigments penetrate deep into the core of the fibers, ensuring the color matures evenly over time.
                   </p>
                   
                   <span className="text-[5rem] leading-none font-serif italic font-bold text-[var(--charcoal-ink)]/10 absolute -bottom-10 -left-6 select-none pointer-events-none">04</span>
                   <h3 className="font-sans font-bold text-lg uppercase tracking-wider text-[var(--charcoal-ink)] mb-4 mt-8 pt-8 border-t border-[var(--charcoal-ink)]/10">Mechanical Finishing</h3>
-                  <p className="font-sans text-sm leading-relaxed text-zinc-600 text-justify">
+                  <p className="font-sans text-sm leading-relaxed text-justify" style={{ color: 'lab(2 0.16 -0.58)' }}>
                     We rely entirely on physical abrasion to finish our textiles. Flannels are aggressively brushed to raise an insulating nap, while twills are pressed to lock the diagonal weave matrix.
                   </p>
                 </div>
