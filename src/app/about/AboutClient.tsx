@@ -127,8 +127,11 @@ export default function AboutClient({
                      <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">The Foundation</span>
                   </div>
                   <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5">
+                    <p className="text-sm text-zinc-600 leading-relaxed mb-3">
+                      The story of Mithila Enterprises began when <strong>Mr. P.N. Mishra</strong> traveled to Delhi from a small town in Bihar with just ₹25 in his pocket. Driven by sheer determination, he started small but dreamed big.
+                    </p>
                     <p className="text-sm text-zinc-600 leading-relaxed">
-                      Mithila Enterprises was founded by <strong>Mr. P.N. Mishra</strong>. We started operations from our first registered office at X-3458/7, Street-1, Raghubar Pura-2, Gandhi Nagar, Delhi - 110031. From day one, we began catering pan-India, establishing strong logistical roots.
+                      He officially founded the company in 1979, operating out of our first registered office at X-3458/7, Street-1, Raghubar Pura-2, Gandhi Nagar, Delhi - 110031. From these humble beginnings, he steadily expanded the business, eventually supplying premium textiles pan-India.
                     </p>
                   </div>
                 </div>
