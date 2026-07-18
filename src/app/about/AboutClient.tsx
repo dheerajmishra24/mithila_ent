@@ -128,10 +128,10 @@ export default function AboutClient({
                   </div>
                   <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5">
                     <p className="text-sm text-zinc-600 leading-relaxed mb-3">
-                      The story of Mithila Enterprises began when <strong>Mr. P.N. Mishra</strong> traveled to Delhi from a small town in Bihar with just ₹25 in his pocket. Driven by sheer determination, he started small but dreamed big.
+                      With merely ₹25 in his pocket, boundless ambition, and an unrelenting work ethic, <strong>Mr. P.N. Mishra</strong> journeyed from a small town in Bihar to the bustling streets of Delhi. 
                     </p>
                     <p className="text-sm text-zinc-600 leading-relaxed">
-                      He officially founded the company in 1979, operating out of our first registered office at X-3458/7, Street-1, Raghubar Pura-2, Gandhi Nagar, Delhi - 110031. From these humble beginnings, he steadily expanded the business, eventually supplying premium textiles pan-India.
+                      In 1979, he laid the cornerstone of Mithila Enterprises in Gandhi Nagar. What began as a humble endeavor soon blossomed into a formidable pan-India operation, driven by his uncompromising dedication to premium textile quality and customer trust.
                     </p>
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export default function AboutClient({
                   </div>
                   <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5 inline-block text-left w-full">
                     <p className="text-sm text-zinc-600 leading-relaxed">
-                      As demand for our premium woven yardage grew, we significantly expanded our storage and distribution capabilities by opening our first major warehouse in Okhla.
+                      As the reputation of our uncompromising weaves spread across the nation, so did our footprint. To keep pace with surging demand from domestic designers and large-scale creators, we established our first major warehouse in Okhla. This decade of aggressive expansion transformed Mithila Enterprises from a local supplier into a vital artery of India's textile supply chain.
                     </p>
                   </div>
                 </div>
@@ -157,23 +157,43 @@ export default function AboutClient({
                 </div>
               </div>
 
-              {/* 2007 - Present */}
+              {/* 2007 */}
               <div className="flex flex-col md:flex-row items-start md:items-center w-full">
                 <div className="hidden md:block w-1/2 pr-12 text-right">
-                  <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">2007 - Present</h3>
-                  <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">New Generation</span>
+                  <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">2007</h3>
+                  <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">Relocation</span>
                 </div>
                 <div className="absolute left-[15px] md:left-[50%] transform -translate-x-[50%] w-3 h-3 rounded-full bg-[var(--charcoal-ink)] ring-4 ring-[#f7f3cc] shadow-sm" />
                 <div className="w-full md:w-1/2 pl-12 md:pl-12">
                   <div className="md:hidden mb-2">
-                     <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">2007 - Present</h3>
-                     <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">New Generation</span>
+                     <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">2007</h3>
+                     <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">Relocation</span>
                   </div>
                   <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5">
                     <p className="text-sm text-zinc-600 leading-relaxed">
-                      We relocated our primary operations to TA-106, Okhla Estate Marg, Tughlakabad Extension, Kalkaji, New Delhi - 110019. In this milestone year, <strong>Mr. Dheeraj Mishra</strong> (son of Mr. P.N. Mishra) officially joined the business, bringing modern logistics to our pan-India network.
+                      Seeking a permanent anchor for our growing operations, we moved to our current headquarters at TA-106, Okhla Estate Marg, Tughlakabad Extension, Kalkaji, New Delhi - 110019. This strategic relocation provided the infrastructure necessary to scale our logistical capabilities and serve our diverse clientele with even greater efficiency.
                     </p>
                   </div>
+                </div>
+              </div>
+
+              {/* 2015 - Present */}
+              <div className="flex flex-col md:flex-row items-start md:items-center w-full">
+                <div className="w-full md:w-1/2 pl-12 md:pl-0 md:pr-12 md:text-right order-2 md:order-1">
+                  <div className="md:hidden mb-2">
+                     <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">2015 - Present</h3>
+                     <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">New Generation</span>
+                  </div>
+                  <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5 inline-block text-left w-full">
+                    <p className="text-sm text-zinc-600 leading-relaxed">
+                      A new era of innovation began as <strong>Mr. Dheeraj Mishra</strong> (son of Mr. P.N. Mishra) officially joined the business. Blending his father's time-honored principles with modern technological strategies, he expanded our network to cater not just to domestic designers, but to major export companies. Under his leadership, the legacy of Mithila Enterprises continues to evolve.
+                    </p>
+                  </div>
+                </div>
+                <div className="absolute left-[15px] md:left-[50%] transform -translate-x-[50%] w-3 h-3 rounded-full bg-[var(--madder-red)] ring-4 ring-[#f7f3cc] shadow-sm order-1 md:order-2" />
+                <div className="hidden md:block w-1/2 pl-12 order-3">
+                  <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">2015 - Present</h3>
+                  <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">New Generation</span>
                 </div>
               </div>
             </div>
