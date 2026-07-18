@@ -99,6 +99,84 @@ export default function AboutClient({
           </motion.div>
         </section>
 
+        {/* Our Journey Section */}
+        <section className="mb-32">
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-2">
+            <span className="text-[var(--madder-red)] font-sans uppercase text-xs tracking-wider font-semibold">The Legacy</span>
+            <h2 className="font-serif italic text-4xl md:text-5xl font-bold text-[var(--charcoal-ink)]">Our Journey</h2>
+            <p className="font-sans text-sm text-zinc-500 mt-4 leading-relaxed">
+              From our humble beginnings in Delhi to catering pan-India, our commitment to quality textiles has remained unwavering for over four decades.
+            </p>
+          </div>
+
+          <div className="relative w-full max-w-4xl mx-auto font-sans">
+            {/* Timeline Line */}
+            <div className="absolute left-[20px] md:left-[50%] top-0 bottom-0 w-[2px] bg-[var(--charcoal-ink)]/10" />
+
+            <div className="space-y-12 relative">
+              {/* 1979 */}
+              <div className="flex flex-col md:flex-row items-start md:items-center w-full">
+                <div className="hidden md:block w-1/2 pr-12 text-right">
+                  <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">1979</h3>
+                  <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">The Foundation</span>
+                </div>
+                <div className="absolute left-[15px] md:left-[50%] transform -translate-x-[50%] w-3 h-3 rounded-full bg-[var(--turmeric)] ring-4 ring-[#f7f3cc] shadow-sm" />
+                <div className="w-full md:w-1/2 pl-12 md:pl-12">
+                  <div className="md:hidden mb-2">
+                     <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">1979</h3>
+                     <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">The Foundation</span>
+                  </div>
+                  <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5">
+                    <p className="text-sm text-zinc-600 leading-relaxed">
+                      Mithila Enterprises was founded by <strong>Mr. P.N. Mishra</strong>. We started operations from our first registered office at X-3458/7, Street-1, Raghubar Pura-2, Gandhi Nagar, Delhi - 110031. From day one, we began catering pan-India, establishing strong logistical roots.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 1997-2007 */}
+              <div className="flex flex-col md:flex-row items-start md:items-center w-full">
+                <div className="w-full md:w-1/2 pl-12 md:pl-0 md:pr-12 md:text-right order-2 md:order-1">
+                  <div className="md:hidden mb-2">
+                     <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">1997 - 2007</h3>
+                     <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">Expansion</span>
+                  </div>
+                  <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5 inline-block text-left w-full">
+                    <p className="text-sm text-zinc-600 leading-relaxed">
+                      As demand for our premium woven yardage grew, we significantly expanded our storage and distribution capabilities by opening our first major warehouse in Okhla.
+                    </p>
+                  </div>
+                </div>
+                <div className="absolute left-[15px] md:left-[50%] transform -translate-x-[50%] w-3 h-3 rounded-full bg-[var(--indigo-dye)] ring-4 ring-[#f7f3cc] shadow-sm order-1 md:order-2" />
+                <div className="hidden md:block w-1/2 pl-12 order-3">
+                  <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">1997 - 2007</h3>
+                  <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">Expansion</span>
+                </div>
+              </div>
+
+              {/* 2007 - Present */}
+              <div className="flex flex-col md:flex-row items-start md:items-center w-full">
+                <div className="hidden md:block w-1/2 pr-12 text-right">
+                  <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">2007 - Present</h3>
+                  <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">New Generation</span>
+                </div>
+                <div className="absolute left-[15px] md:left-[50%] transform -translate-x-[50%] w-3 h-3 rounded-full bg-[var(--charcoal-ink)] ring-4 ring-[#f7f3cc] shadow-sm" />
+                <div className="w-full md:w-1/2 pl-12 md:pl-12">
+                  <div className="md:hidden mb-2">
+                     <h3 className="font-serif italic text-2xl font-bold text-[var(--charcoal-ink)]">2007 - Present</h3>
+                     <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">New Generation</span>
+                  </div>
+                  <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5">
+                    <p className="text-sm text-zinc-600 leading-relaxed">
+                      We relocated our primary operations to TA-106, Okhla Estate Marg, Tughlakabad Extension, Kalkaji, New Delhi - 110019. In this milestone year, <strong>Mr. Dheeraj Mishra</strong> (son of Mr. P.N. Mishra) officially joined the business, bringing modern logistics to our pan-India network.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Intersecting Process Section */}
         <section className="mb-32">
           <div className="text-center max-w-2xl mx-auto mb-20 space-y-2">
