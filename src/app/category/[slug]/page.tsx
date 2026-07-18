@@ -33,21 +33,44 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   return (
     <main className="flex-grow bg-transparent">
       {/* 1. EDITORIAL HERO SECTION */}
-      <section className="w-full relative min-h-[50vh] md:min-h-[60vh] flex items-center pt-32 pb-16 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image src={`/images/fabrics/${slug}.png`} alt={category.name} fill className="object-cover opacity-[0.85] mix-blend-multiply filter contrast-125 grayscale" sizes="100vw" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--unbleached-cotton)] via-[var(--unbleached-cotton)]/85 to-[var(--unbleached-cotton)]/40 backdrop-blur-[2px]" />
-        </div>
-        
+      <section className="w-full relative min-h-[60vh] md:min-h-[75vh] flex items-center pt-32 pb-24 overflow-hidden">
         <div className="container mx-auto px-6 md:px-8 relative z-10">
-          <div className="max-w-4xl">
-            <span className="text-[var(--madder-red)] font-sans uppercase text-xs tracking-[0.3em] font-bold">The Material Archive</span>
-            <h1 className="font-serif text-6xl md:text-8xl lg:text-[8rem] font-bold text-[var(--charcoal-ink)] mt-4 mb-6 tracking-tight leading-none">
-              {category.name}
-            </h1>
-            <p className="font-sans text-xl md:text-2xl text-[var(--charcoal-ink)]/80 leading-relaxed font-medium max-w-2xl border-l-4 border-[var(--madder-red)] pl-6">
-              {fabricInfo ? fabricInfo.heroDescription : `Explore our premium collection of ${category.name.toLowerCase()} fabrics, woven with care and inspired by heritage.`}
-            </p>
+          <div className="flex flex-col md:flex-row items-center gap-16 lg:gap-24">
+            
+            {/* Text Content */}
+            <div className="flex-1 w-full max-w-2xl">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="h-[2px] w-12 bg-[var(--turmeric)]" />
+                <span className="text-[var(--charcoal-ink)]/80 font-sans uppercase text-xs tracking-[0.4em] font-bold">
+                  The Material Archive
+                </span>
+              </div>
+              
+              <h1 className="font-serif italic text-6xl md:text-8xl lg:text-[7.5rem] text-[var(--charcoal-ink)] mb-8 tracking-tight leading-[0.9]">
+                {category.name}
+              </h1>
+              
+              <p className="font-sans text-lg md:text-xl text-zinc-700 leading-relaxed font-light max-w-xl">
+                {fabricInfo ? fabricInfo.heroDescription : `Explore our premium collection of ${category.name.toLowerCase()} fabrics, woven with care and inspired by heritage.`}
+              </p>
+            </div>
+
+            {/* Featured Image */}
+            <div className="flex-1 w-full flex justify-center md:justify-end">
+              <div className="relative w-full max-w-lg aspect-[4/5] rounded-t-full rounded-b-xl overflow-hidden shadow-2xl shadow-[var(--charcoal-ink)]/20 border-8 border-white/40">
+                <Image 
+                  src={`/images/fabrics/${slug}.png`} 
+                  alt={category.name} 
+                  fill 
+                  className="object-cover hover:scale-110 transition-transform duration-[2000ms] ease-out" 
+                  sizes="(max-width: 768px) 100vw, 50vw" 
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                <div className="absolute inset-0 border border-white/20 rounded-t-full rounded-b-xl pointer-events-none" />
+              </div>
+            </div>
+            
           </div>
         </div>
       </section>
