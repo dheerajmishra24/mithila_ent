@@ -122,12 +122,17 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
 
   const currentDesc = category ? categoryDescriptions[category] || "Browse our complete catalog of premium woven yardage and seasonal textiles." : "Browse our complete catalog of premium woven yardage and seasonal textiles.";
 
-  const { data: dbCollections } = await supabase.from('collections').select('title, slug').eq('is_active', true).order('title');
-  const collectionsList = dbCollections || [];
-
   const { data: dbCategories } = await supabase.from('categories').select('*').order('name');
   const parentCategories = dbCategories?.filter(c => !c.parent_id) || [];
   const subCategories = dbCategories?.filter(c => c.parent_id) || [];
+
+  const categoriesList = [
+    { name: 'All Fabrics', slug: '' },
+    ...(dbCategories || []).map(c => ({ name: c.name, slug: c.slug }))
+  ];
+
+  const { data: dbCollections } = await supabase.from('collections').select('title, slug').eq('is_active', true).order('title');
+  const collectionsList = dbCollections || [];
 
   const getFilterUrl = (key: string, value: string | null) => {
     const q = new URLSearchParams();
