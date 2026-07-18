@@ -294,7 +294,7 @@ export default function HomeClient({
             {features?.title || "Fabric Functionality"}
           </h2>
           {features?.body && (
-            <p className="font-sans text-sm md:text-base text-zinc-600 leading-relaxed mt-4">
+            <p className="font-sans text-sm md:text-base text-zinc-700 leading-relaxed mt-4">
               {features.body}
             </p>
           )}
@@ -324,7 +324,7 @@ export default function HomeClient({
                   <span className="w-2 h-2 rounded-full bg-[var(--turmeric)] animate-pulse" />
                   <h4 className="font-serif italic font-bold text-3xl text-[var(--charcoal-ink)]">Spring Transition</h4>
                 </div>
-                <p className="font-sans text-sm text-zinc-600 leading-relaxed text-justify">
+                <p className="font-sans text-sm text-zinc-700 leading-relaxed text-justify">
                   Spring requires versatile transitional fabrics. Our light cottons and fine twill weaves provide just enough structure to ward off cool morning breezes while remaining highly breathable as the day warms up. The ideal balance of crispness and comfort, engineered to gracefully navigate fluctuating diurnal temperatures.
                 </p>
               </motion.div>
@@ -382,7 +382,7 @@ export default function HomeClient({
                   <span className="w-2 h-2 rounded-full bg-[var(--turmeric)] animate-pulse" />
                   <h4 className="font-serif italic font-bold text-3xl text-[var(--charcoal-ink)]">Autumn Insulation</h4>
                 </div>
-                <p className="font-sans text-sm text-zinc-600 leading-relaxed text-justify">
+                <p className="font-sans text-sm text-zinc-700 leading-relaxed text-justify">
                   As temperatures drop, tactile warmth becomes essential. The raised surface piles of our flannel, corduroy, and suede fabrics act as a windbreak, trapping a light layer of insulating air against the body without the heavy bulk of winter gear. Rich textures that emulate the changing colors of the earth.
                 </p>
               </motion.div>
@@ -579,7 +579,7 @@ export default function HomeClient({
               whileInView="visible"
               viewport={{ once: true }}
               variants={scrollRevealVariants}
-              className="text-zinc-500 font-sans text-sm max-w-md text-center mb-16 leading-relaxed"
+              className="text-zinc-700 font-sans text-sm max-w-md text-center mb-16 leading-relaxed"
             >
               Stay updated with the latest trends in organic weaving, handloom innovations, and expert care tips to enhance your heritage fabrics.
             </motion.p>
@@ -604,7 +604,7 @@ export default function HomeClient({
                     <div>
                       <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 font-semibold">{blog.date}</span>
                       <h3 className="font-serif italic font-bold text-lg text-[var(--charcoal-ink)] mt-1 line-clamp-2 group-hover:text-[var(--madder-red)] transition-colors leading-snug">{blog.title}</h3>
-                      <p className="font-sans text-xs text-zinc-500 mt-2 line-clamp-3 leading-relaxed">{blog.desc}</p>
+                      <p className="font-sans text-xs text-zinc-700 mt-2 line-clamp-3 leading-relaxed">{blog.desc}</p>
                     </div>
                     <Link href={`/blog/${blog.slug}`} className="text-xs font-bold text-[var(--madder-red)] hover:text-[var(--charcoal-ink)] transition-colors uppercase tracking-wider block mt-4 pt-2 border-t border-zinc-50">
                       Read Article &rarr;
@@ -663,7 +663,7 @@ export default function HomeClient({
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                      <div className="px-6 pb-6 pt-2 font-sans text-sm text-zinc-600 border-t border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 leading-relaxed">
+                      <div className="px-6 pb-6 pt-2 font-sans text-sm text-zinc-700 border-t border-[var(--charcoal-ink)]/10 bg-[var(--charcoal-ink)]/5 leading-relaxed">
                         {faq.a}
                       </div>
                     </motion.div>

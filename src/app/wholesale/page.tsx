@@ -64,7 +64,7 @@ export default function WholesalePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="font-sans text-sm md:text-base text-zinc-500 leading-relaxed"
+            className="font-sans text-sm md:text-base text-zinc-700 leading-relaxed"
           >
             We supply premium, structurally engineered yardage to domestic artisans and premier design houses.
           </motion.p>
@@ -83,7 +83,7 @@ export default function WholesalePage() {
               <div>
                 <span className="text-[var(--madder-red)] font-sans uppercase text-[10px] tracking-wider font-bold">Criteria</span>
                 <h3 className="font-serif text-2xl italic font-bold mt-2 text-zinc-950">Account Requirements</h3>
-                <p className="font-sans text-xs text-zinc-500 leading-relaxed mt-2 text-justify">
+                <p className="font-sans text-xs text-zinc-700 leading-relaxed mt-2 text-justify">
                   Wholesale accounts are strictly reserved for registered businesses and independent designers requiring bulk yardage. Approval grants access to our tiered volume pricing and direct liaison with our master weavers for custom dye runs.
                 </p>
               </div>
@@ -106,7 +106,7 @@ export default function WholesalePage() {
 
             <div className="pt-6 border-t border-zinc-200 mt-8">
               <h4 className="font-sans font-bold text-xs uppercase text-zinc-800">Logistics & Freight</h4>
-              <p className="font-sans text-xs text-zinc-500 mt-2 leading-relaxed text-justify">
+              <p className="font-sans text-xs text-zinc-700 mt-2 leading-relaxed text-justify">
                 Heavyweight orders exceeding 100 yards are palletized and shipped via dedicated freight. Standard transit times for domestic freight range from 5 to 7 business days. We ensure all fabric rolls are securely wrapped in climate-resistant casing to prevent moisture penetration during transit.
               </p>
             </div>

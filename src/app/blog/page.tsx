@@ -28,7 +28,7 @@ export default function BlogListingPage() {
             The Weaver&rsquo;s Journal
           </h1>
 
-          <p className="font-sans text-sm md:text-base text-zinc-600 leading-relaxed max-w-xl mx-auto">
+          <p className="font-sans text-sm md:text-base text-zinc-700 leading-relaxed max-w-xl mx-auto">
             Dispatches from the loom floor — exploring heritage dyeing
             techniques, handloom innovation, sustainable sourcing, and the
             living culture of Indian textiles.
@@ -94,7 +94,7 @@ export default function BlogListingPage() {
                   </h2>
 
                   {/* Excerpt */}
-                  <p className="font-sans text-xs text-zinc-500 leading-relaxed line-clamp-3 flex-grow">
+                  <p className="font-sans text-xs text-zinc-700 leading-relaxed line-clamp-3 flex-grow">
                     {post.excerpt}
                   </p>
 

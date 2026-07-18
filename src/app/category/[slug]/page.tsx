@@ -147,7 +147,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                     )}
                   </div>
                   <div className="px-2 pb-2">
-                    <span className="text-[9px] uppercase font-bold tracking-wider text-zinc-500">{variant.products?.weave} Weave</span>
+                    <span className="text-[9px] uppercase font-bold tracking-wider text-zinc-700">{variant.products?.weave} Weave</span>
                     <h3 className="font-serif font-bold text-lg text-[var(--charcoal-ink)] mt-1 group-hover:text-[var(--madder-red)] transition-colors">{variant.products?.title}</h3>
                     <p className="font-sans text-xs opacity-70 mt-1">{variant.color} colorway</p>
                     <p className="font-sans font-bold text-[var(--charcoal-ink)] mt-3">₹{variant.price} / meter</p>

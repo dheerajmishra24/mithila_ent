@@ -75,7 +75,7 @@ export default async function BlogPostPage({
               {post.date}
             </span>
             <span className="text-zinc-400">·</span>
-            <span className="text-zinc-500 font-medium">{post.author}</span>
+            <span className="text-zinc-700 font-medium">{post.author}</span>
           </div>
 
           {/* Title */}
@@ -172,7 +172,7 @@ export default async function BlogPostPage({
                     <h3 className="font-serif italic font-bold text-lg leading-snug text-[var(--charcoal-ink)] group-hover:text-[var(--madder-red)] transition-colors line-clamp-2">
                       {related.title}
                     </h3>
-                    <p className="font-sans text-xs text-zinc-500 leading-relaxed line-clamp-3 flex-grow">
+                    <p className="font-sans text-xs text-zinc-700 leading-relaxed line-clamp-3 flex-grow">
                       {related.excerpt}
                     </p>
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-[var(--madder-red)] uppercase tracking-wider pt-3 border-t border-[var(--charcoal-ink)]/10 group-hover:gap-2 transition-all">

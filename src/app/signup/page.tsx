@@ -67,7 +67,7 @@ export default function SignupPage() {
                     <span className={rule.test(password) ? "text-green-600" : "text-zinc-400"}>
                       {rule.test(password) ? '✓' : '○'}
                     </span>
-                    <span className={rule.test(password) ? "text-zinc-800" : "text-zinc-500"}>
+                    <span className={rule.test(password) ? "text-zinc-800" : "text-zinc-700"}>
                       {rule.label}
                     </span>
                   </div>

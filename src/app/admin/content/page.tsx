@@ -203,7 +203,7 @@ export default async function AdminContent({
                       <h3 className="font-sans text-sm font-bold uppercase tracking-widest text-[var(--madder-red)]">
                         {block.title}
                       </h3>
-                      <span className="text-[10px] font-mono bg-zinc-100 px-2 py-1 rounded text-zinc-500">
+                      <span className="text-[10px] font-mono bg-zinc-100 px-2 py-1 rounded text-zinc-700">
                         {block.key}
                       </span>
                     </div>

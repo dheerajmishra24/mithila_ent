@@ -166,7 +166,7 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
                 {section.title}
               </h2>
               {section.paragraphs.map((p, pIdx) => (
-                <p key={pIdx} className="font-sans text-sm md:text-base leading-relaxed text-zinc-600 text-justify">
+                <p key={pIdx} className="font-sans text-sm md:text-base leading-relaxed text-zinc-700 text-justify">
                   {p}
                 </p>
               ))}

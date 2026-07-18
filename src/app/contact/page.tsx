@@ -64,7 +64,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="font-sans text-sm md:text-base text-zinc-500 leading-relaxed"
+            className="font-sans text-sm md:text-base text-zinc-700 leading-relaxed"
           >
             You can contact us via email, phone, or by filling out the form on this page. We strive to respond promptly and look forward to connecting with you soon!
           </motion.p>
@@ -84,7 +84,7 @@ export default function ContactPage() {
               <div>
                 <span className="text-[var(--madder-red)] font-sans uppercase text-[10px] tracking-wider font-bold">Inquiries</span>
                 <h3 className="font-serif text-2xl italic font-bold mt-2 text-zinc-950">Write Us</h3>
-                <p className="font-sans text-xs text-zinc-500 leading-relaxed mt-2">
+                <p className="font-sans text-xs text-zinc-700 leading-relaxed mt-2">
                   Have questions about fabric weights, bulk orders, or custom loom settings? Our textile experts are here to assist.
                 </p>
               </div>
@@ -105,15 +105,15 @@ export default function ContactPage() {
                 <div className="space-y-3">
                   <div>
                     <span className="block font-bold text-[10px] uppercase opacity-40">Registered Office</span>
-                    <p className="text-zinc-600 leading-relaxed">X-3458/7, Street -1, Raghubar Pura -2, Gandhi Nagar, DELHI - 110031</p>
+                    <p className="text-zinc-700 leading-relaxed">X-3458/7, Street -1, Raghubar Pura -2, Gandhi Nagar, DELHI - 110031</p>
                   </div>
                   <div>
                     <span className="block font-bold text-[10px] uppercase opacity-40">Warehouse</span>
-                    <p className="text-zinc-600 leading-relaxed">TA-106, Okhla Estate Marg, Tughlakabad Extension, Kalkaji New Delhi, Delhi 110019</p>
+                    <p className="text-zinc-700 leading-relaxed">TA-106, Okhla Estate Marg, Tughlakabad Extension, Kalkaji New Delhi, Delhi 110019</p>
                   </div>
                   <div>
                     <span className="block font-bold text-[10px] uppercase opacity-40">Tax Identity</span>
-                    <p className="text-zinc-600 font-mono text-xs mt-1">GSTIN: 07AGUPM2548P1ZH</p>
+                    <p className="text-zinc-700 font-mono text-xs mt-1">GSTIN: 07AGUPM2548P1ZH</p>
                   </div>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function ContactPage() {
                 >
                   <span className="text-3xl">✉️</span>
                   <h4 className="font-sans text-base font-bold text-zinc-900">Message Received!</h4>
-                  <p className="font-sans text-xs text-zinc-500 leading-relaxed">
+                  <p className="font-sans text-xs text-zinc-700 leading-relaxed">
                     Thank you, {formState.firstName}. Our representative will follow up with you at {formState.email} shortly.
                   </p>
                 </motion.div>

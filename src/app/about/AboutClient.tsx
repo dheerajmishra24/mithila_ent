@@ -67,7 +67,7 @@ export default function AboutClient({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="font-sans text-sm md:text-lg text-zinc-500 leading-relaxed max-w-lg mx-auto"
+            className="font-sans text-sm md:text-lg text-zinc-700 leading-relaxed max-w-lg mx-auto"
           >
             {intro.body || 'We supply the raw materials. You engineer the final form.'}
           </motion.p>
@@ -89,7 +89,7 @@ export default function AboutClient({
             <h3 className="font-serif text-3xl md:text-4xl italic font-bold text-[var(--charcoal-ink)] mb-6">
               {heritage.title || "Material Physics"}
             </h3>
-            <p className="font-sans text-sm leading-relaxed text-zinc-600 text-justify mb-4 whitespace-pre-wrap">
+            <p className="font-sans text-sm leading-relaxed text-zinc-700 text-justify mb-4 whitespace-pre-wrap">
               {heritage.body || "We source, engineer, and supply premium textiles for domestic designers, individual creators and export companies. Our entire catalog is built on material physics rather than marketing trends. We focus strictly on the structural integrity, weave density, and tactile properties of our fabrics.\n\nEvery yard of linen, cotton, and wool undergoes rigorous tension and abrasion testing to ensure longevity. We bypass standard chemical finishing processes to preserve the natural memory of the raw fibers. This guarantees that garments constructed from our yardage hold their shape and adapt to the wearer over years of continued use."}
             </p>
             <div className="border-t border-zinc-100 pt-6 mt-8 flex flex-wrap gap-6 font-sans text-[10px] font-bold uppercase tracking-widest text-[var(--charcoal-ink)]/50">
@@ -127,10 +127,10 @@ export default function AboutClient({
                      <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">The Foundation</span>
                   </div>
                   <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5">
-                    <p className="text-sm text-zinc-600 leading-relaxed mb-3">
+                    <p className="text-sm text-zinc-700 leading-relaxed mb-3">
                       With merely ₹25 in his pocket, boundless ambition, and an unrelenting work ethic, <strong>Mr. P.N. Mishra</strong> journeyed from a small town in Bihar to the bustling streets of Delhi. 
                     </p>
-                    <p className="text-sm text-zinc-600 leading-relaxed">
+                    <p className="text-sm text-zinc-700 leading-relaxed">
                       In 1979, he laid the cornerstone of Mithila Enterprises in Gandhi Nagar. What began as a humble endeavor soon blossomed into a formidable pan-India operation, driven by his uncompromising dedication to premium textile quality and customer trust.
                     </p>
                   </div>
@@ -145,7 +145,7 @@ export default function AboutClient({
                      <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">Expansion</span>
                   </div>
                   <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5 inline-block text-left w-full">
-                    <p className="text-sm text-zinc-600 leading-relaxed">
+                    <p className="text-sm text-zinc-700 leading-relaxed">
                       As the reputation of our uncompromising weaves spread across the nation, so did our footprint. To keep pace with surging demand from domestic designers and large-scale creators, we established our first major warehouse in Okhla. This decade of aggressive expansion transformed Mithila Enterprises from a local supplier into a vital artery of India's textile supply chain.
                     </p>
                   </div>
@@ -170,7 +170,7 @@ export default function AboutClient({
                      <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">Relocation</span>
                   </div>
                   <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5">
-                    <p className="text-sm text-zinc-600 leading-relaxed">
+                    <p className="text-sm text-zinc-700 leading-relaxed">
                       While keeping our roots and registered head office in Gandhi Nagar, we expanded to a new primary operations and dispatch hub at TA-106, Okhla Estate Marg, Tughlakabad Extension, Kalkaji, New Delhi - 110019. This strategic move provided the modern infrastructure necessary to scale our logistical capabilities and serve our diverse clientele with even greater efficiency.
                     </p>
                   </div>
@@ -185,7 +185,7 @@ export default function AboutClient({
                      <span className="text-xs uppercase tracking-widest text-[var(--madder-red)] font-bold">New Generation</span>
                   </div>
                   <div className="bg-[#f0ecd8]/50 p-6 rounded-lg border border-[var(--charcoal-ink)]/5 inline-block text-left w-full">
-                    <p className="text-sm text-zinc-600 leading-relaxed">
+                    <p className="text-sm text-zinc-700 leading-relaxed">
                       A new era of innovation began as <strong>Mr. Dheeraj Mishra</strong> (son of Mr. P.N. Mishra) officially joined the business. Blending his father's time-honored principles with modern technological strategies, he expanded our network to cater not just to domestic designers, but to major export companies. Under his leadership, the legacy of Mithila Enterprises continues to evolve.
                     </p>
                   </div>

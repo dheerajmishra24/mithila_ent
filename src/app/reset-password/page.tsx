@@ -55,7 +55,7 @@ export default function ResetPassword() {
                 return (
                   <div key={idx} className="flex items-center gap-2 text-xs font-sans">
                     <span className={ok ? 'text-green-600' : 'text-zinc-400'}>{ok ? '✓' : '○'}</span>
-                    <span className={ok ? 'text-zinc-800' : 'text-zinc-500'}>{rule.label}</span>
+                    <span className={ok ? 'text-zinc-800' : 'text-zinc-700'}>{rule.label}</span>
                   </div>
                 );
               })}
