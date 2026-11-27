@@ -61,7 +61,7 @@ jobs:
 
   database-and-e2e:
     name: RLS (pgTAP), advisors, red-team, E2E + WCAG
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Playwright Chromium does not support ubuntu 26.04 yet
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -89,6 +89,36 @@ jobs:
             echo "RAZORPAY_WEBHOOK_SECRET=rt_whsec_local"
             echo "LOGISTICS_WEBHOOK_SECRET=rt_logi_local"
             echo "CRON_SECRET=rt_cron_local"
+            # Test-only values for the two-step sign-in, lead CRM and
+            # privacy/messaging red-team and E2E tests. Provider APIs point
+            # at mock servers the tests start on 127.0.0.1.
+            echo "WHATSAPP_TOKEN=rt_wa_local"
+            echo "WHATSAPP_PHONE_ID=rt-phone"
+            echo "WHATSAPP_AUTH_TEMPLATE=admin_code"
+            echo "WHATSAPP_API_BASE=http://127.0.0.1:3199/wa"
+            echo "WHATSAPP_VERIFY_TOKEN=rt_verify_local"
+            echo "META_APP_SECRET=rt_meta_local"
+            echo "MSG91_AUTH_KEY=rt_msg91_local"
+            echo "MSG91_OTP_TEMPLATE_ID=rt-dlt-otp"
+            echo "SMS_API_BASE=http://127.0.0.1:3199/sms"
+            echo "OTP_PEPPER=rt_local_pepper_0123456789abcdef0123456789"
+            echo "META_LEADS_VERIFY_TOKEN=rt_leads_verify_local"
+            echo "META_PAGE_ACCESS_TOKEN=rt_page_local"
+            echo "META_GRAPH_API_BASE=http://127.0.0.1:3198/graph"
+            echo "META_PIXEL_ID=rt-pixel"
+            echo "META_CAPI_TOKEN=rt_capi_local"
+            echo "META_CAPI_TEST_CODE=TEST123"
+            echo "GOOGLE_LEADS_KEY=rt_google_key_local"
+            echo "GOOGLE_DM_CLIENT_ID=rt-client"
+            echo "GOOGLE_DM_CLIENT_SECRET=rt_client_secret_local"
+            echo "GOOGLE_DM_REFRESH_TOKEN=rt_refresh_local"
+            echo "GOOGLE_OAUTH_TOKEN_URL=http://127.0.0.1:3198/oauth/token"
+            echo "GOOGLE_DM_API_BASE=http://127.0.0.1:3198/dm"
+            echo "GOOGLE_ADS_CUSTOMER_ID=123-456-7890"
+            echo "GOOGLE_ADS_QUALIFIED_ACTION_ID=111"
+            echo "GOOGLE_ADS_WON_ACTION_ID=222"
+            echo "SHIPROCKET_WEBHOOK_TOKEN=rt_ship_token_local"
+            echo "RESEND_WEBHOOK_SECRET=whsec_cnQtcmVzZW5kLXNpZ25pbmcta2V5LWxvY2FsLTAwMDE="
             echo "NEXT_TELEMETRY_DISABLED=1"
           } >> "$GITHUB_ENV"
       - name: Build

@@ -16,7 +16,17 @@ export interface RemnantDTO {
 }
 
 export async function listRemnants(limit = 60): Promise<RemnantDTO[]> {
-  const { data, error } = await createAdminClient()
+  // The page is pre-rendered at build time (revalidate = 600). A build without
+  // the service key (CI, preview) gets an empty list instead of a failed build;
+  // the next revalidation on a configured server fills it in.
+  let client: ReturnType<typeof createAdminClient>;
+  try {
+    client = createAdminClient();
+  } catch {
+    console.warn('listRemnants: service role not configured; showing no remnants');
+    return [];
+  }
+  const { data, error } = await client
     .from('fabric_rolls')
     .select('roll_code, remaining_m, product_variants!inner(color, price, images, products!inner(title, slug, status, sell_unit))')
     .eq('status', 'remnant')
