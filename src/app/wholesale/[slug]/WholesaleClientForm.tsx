@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import AdConsentCheckbox from '@/components/AdConsentCheckbox';
+import { readAttribution } from '@/lib/leads/attribution-client';
 
 interface WholesaleClientFormProps {
   categoryName: string;
@@ -23,6 +25,9 @@ export default function WholesaleClientForm({
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [adConsent, setAdConsent] = useState(false);
+  // One id per enquiry, so a double click or retry is stored once.
+  const [submissionId] = useState(() => crypto.randomUUID());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +40,9 @@ export default function WholesaleClientForm({
         body: JSON.stringify({
           ...formState,
           category: categorySlug,
+          adConsent,
+          submissionId,
+          attribution: readAttribution(),
         }),
       });
       if (res.ok) {
@@ -154,6 +162,8 @@ export default function WholesaleClientForm({
               className="w-full px-3 py-2 text-xs border border-[var(--charcoal-ink)]/30 rounded-sm focus:outline-hidden focus:border-[var(--madder-red)] resize-none"
             />
           </div>
+
+          <AdConsentCheckbox id="wholesale-ad-consent" checked={adConsent} onChange={setAdConsent} />
 
           {error && <p className="text-red-600 text-xs font-bold">{error}</p>}
 

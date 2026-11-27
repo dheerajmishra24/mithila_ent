@@ -23,14 +23,15 @@ export async function POST(request: Request) {
     const supabase = await createClient();
     const { data: order } = await supabase
       .from('orders')
-      .select('id, total_amount, is_paid, user_id, shipping_address, razorpay_order_id')
+      .select('id, amount_due, is_paid, user_id, shipping_address, razorpay_order_id')
       .eq('id', orderId)
       .single();
 
     if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     if (order.is_paid) return NextResponse.json({ error: 'Order already paid' }, { status: 409 });
 
-    const amountPaise = Math.round(Number(order.total_amount) * 100);
+    // amount_due = order total minus any swatch credit applied (migration 0052).
+    const amountPaise = Math.round(Number(order.amount_due) * 100);
     if (!Number.isFinite(amountPaise) || amountPaise < 100) {
       return NextResponse.json({ error: 'Invalid order amount' }, { status: 400 });
     }

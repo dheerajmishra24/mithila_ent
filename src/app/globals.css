@@ -45,6 +45,9 @@ body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Equal-width digits so prices, totals and table columns line up. It only
+     changes digit spacing, not the numeral style of each font. */
+  font-variant-numeric: tabular-nums;
 }
 
 html {

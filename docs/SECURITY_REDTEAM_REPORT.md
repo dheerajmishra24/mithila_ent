@@ -103,3 +103,37 @@ These attack classes from the playbook have nothing to attack yet. They are reco
 - **Meta / Google lead webhooks:** not built.
 
 Build plan and ownership: `docs/INTEGRATIONS_COMPLIANCE_REPORT.md` and `docs/PRODUCTION_CHECKLIST.md`.
+
+## Authentication review (2026-11-27)
+
+Every flow was driven through the real UI on the local stack (`tests/e2e/auth.spec.ts`, 12 tests, all passing) plus unit tests (`tests/auth-hardening.test.ts`, 12 tests).
+
+| Flow | Result | Evidence |
+|---|---|---|
+| Protected page → login → back to the page | Pass | proxy now keeps `next` (`src/lib/supabase/middleware.ts`) |
+| Wrong password vs unknown email | Same message | `REDTEAM auth.login_error_message "Incorrect email or password."` |
+| 5 failures lock the account, right password still refused | Pass | `REDTEAM auth.lockout_row [{"attempts":5,"locked_until":…}]` |
+| `next=` open redirect (`//host`, `https://host`, `/\host`) | Stays on site | auth.spec "next= cannot send you to another site" |
+| Logout, then replay the old cookies in a new browser | Refused | `REDTEAM auth.replayed_cookie_after_logout ".../login?next=%2Faccount"` |
+| Customer opens /admin; admin signs in | Customer → `/`; admin → dashboard | proxy and login use `is_admin()` (user_roles), same as the DAL |
+| Sign-up password policy (app) | Enforced | auth.spec sign-up test |
+| Weak password sent straight to the Auth API | 422 `weak_password` locally | `REDTEAM auth.api_weak_password` (needs the same setting in production, below) |
+| Password reset by email, link reuse, old password | Works; link single-use; old password refused | auth.spec reset test (Mailpit) |
+| Reset page opened without a link | "Link expired" page | auth.spec |
+| `/login?error=` text injection | Only fixed codes render | `loginPageError` allowlist |
+| Google provider off | Back to /login with a message, not raw JSON | auth.spec |
+
+Fixed in this change:
+- Email-confirmation and OAuth links were built from the request's Host header; now only the site's own hosts are trusted (`src/lib/site-origin.ts`).
+- Raw Supabase error text is no longer shown on login and sign-up (`src/lib/auth-errors.ts`).
+- Post-login admin redirect and the proxy read `is_admin()` instead of `profiles.role`.
+- Forgot-password gives the same reply for any address; reset signs out other devices and handles expired links.
+- Login and sign-up keep the typed email after a failed attempt.
+- Local `supabase/config.toml`: password policy matches the app (12 characters, all four classes); redirect URLs include the local app.
+
+Production Auth settings (read 2026-11-27 from the public `/auth/v1/settings` endpoint): Google on, email sign-up on, **email confirmation off** (`mailer_autoconfirm: true`). Owner actions in the Supabase dashboard (Authentication):
+1. Turn on **Confirm email**. Without it anyone can open an account under someone else's address. The sign-up page already handles the "check your email" case.
+2. Set the password policy to minimum 12 characters with lowercase, uppercase, digits and symbols, and turn on leaked-password protection. The app enforces this, but the public Auth API does not until it is set there.
+3. URL Configuration: Site URL `https://www.mithilaenterprises.co.in`; redirect URLs `https://www.mithilaenterprises.co.in/**` and `https://mithilaenterprises.co.in/**`.
+
+Not covered: Google sign-in end to end (needs real Google credentials), and `/admin/login`, which is unreachable while signed out because the admin layout guards it (signed-out visitors go to `/login`, which works for admins).

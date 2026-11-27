@@ -1,6 +1,6 @@
 # TRAI DLT Operations Checklist
 
-> **Status (2026-11-27):** the app sends **no SMS**. This checklist must be complete before any SMS (OTP fallback, order or COD confirmation) goes live. Operators drop unregistered SMS without telling the sender.
+> **Status (2026-11-27):** the only SMS in code is the owner-portal sign-in code fallback (MSG91 Flow API, `src/lib/messaging/dlt-sms.ts`). It stays off until `MSG91_AUTH_KEY` and `MSG91_OTP_TEMPLATE_ID` are set, and it sends exactly the "Login / verification OTP" template below, with the code as the only variable. See `docs/ADMIN_TWO_STEP.md`. This checklist must be complete before any SMS goes live. Operators drop unregistered SMS without telling the sender.
 > Owner fills in the blanks. Keep IDs here; never put API keys or passwords in this file.
 
 ## 1. Registration

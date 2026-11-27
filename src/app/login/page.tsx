@@ -7,6 +7,7 @@ import { useActionState } from 'react';
 import { login, signInWithGoogle } from '@/actions/auth';
 import { PasswordInput } from '@/components/PasswordInput';
 import { safeNextPath } from '@/lib/safe-next';
+import { loginPageError } from '@/lib/auth-errors';
 
 const initialState = {
   error: '',
@@ -15,6 +16,7 @@ const initialState = {
 export default function LoginPage() {
   const searchParams = useSearchParams();
   const nextPath = safeNextPath(searchParams.get('next'));
+  const linkError = loginPageError(searchParams.get('error'));
   const [state, formAction, isPending] = useActionState(login, initialState);
 
   return (
@@ -29,15 +31,15 @@ export default function LoginPage() {
         <form action={formAction} className="space-y-6">
           <input type="hidden" name="next" value={nextPath} />
           
-          {state?.error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-sm mb-4">
-              {state.error}
+          {(state?.error || linkError) && (
+            <div role="alert" className="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded text-sm mb-4">
+              {state?.error || linkError}
             </div>
           )}
 
           <div>
             <label className="block font-sans text-xs font-bold uppercase tracking-widest text-[var(--charcoal-ink)] mb-2" htmlFor="login-email">Email</label>
-            <input id="login-email" type="email" name="email" autoComplete="email" required className="w-full border-2 border-[var(--charcoal-ink)] bg-transparent p-3 font-sans focus:outline-none focus:border-[var(--madder-red)] transition-colors" />
+            <input id="login-email" defaultValue={(state as { email?: string } | undefined)?.email ?? ''} type="email" name="email" autoComplete="email" required className="w-full border-2 border-[var(--charcoal-ink)] bg-transparent p-3 font-sans focus:outline-none focus:border-[var(--madder-red)] transition-colors" />
           </div>
           <div>
             <label className="block font-sans text-xs font-bold uppercase tracking-widest text-[var(--charcoal-ink)] mb-2" htmlFor="login-password">Password</label>

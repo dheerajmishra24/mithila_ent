@@ -8,7 +8,7 @@ SELECT plan(32);
 CREATE FUNCTION pg_temp.act_as(p_role text, p_sub uuid DEFAULT NULL) RETURNS void
 LANGUAGE plpgsql AS $$
 BEGIN
-  PERFORM set_config('request.jwt.claims', json_build_object('sub', p_sub, 'role', p_role)::text, true);
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', p_sub, 'role', p_role, 'aal', 'aal2', 'session_id', gen_random_uuid(), 'amr', json_build_array(json_build_object('method', 'totp', 'timestamp', extract(epoch from now())::bigint)))::text, true);
   PERFORM set_config('role', p_role, true);
 END $$;
 
@@ -96,7 +96,7 @@ SELECT is((SELECT row(subtotal, discount_applied, tax_amount, total_amount)::tex
           '(2000.00,200.00,240.00,2140.00)', 'O1 totals after line 1: 2000 - 200 + 240 + 100 = 2140');
 SELECT is((SELECT status FROM public.order_items WHERE id = 'f1000000-0000-4000-8000-000000000001'),
           'cancelled', 'O1 line 1 marked cancelled');
-SELECT is((SELECT stock_quantity FROM public.product_variants WHERE id = 'e1000000-0000-4000-8000-000000000001'),
+SELECT is((SELECT stock_quantity::integer FROM public.product_variants WHERE id = 'e1000000-0000-4000-8000-000000000001'),
           12, 'restock added 2 to variant 1 (10 -> 12)');
 
 -- Double cancel is rejected and changes nothing.
@@ -107,7 +107,7 @@ SELECT throws_ok(
 RESET ROLE;
 SELECT is((SELECT total_amount FROM public.orders WHERE id = 'a0000000-0000-4000-8000-00000000000a'),
           2140.00, 'O1 total unchanged after rejected double cancel');
-SELECT is((SELECT stock_quantity FROM public.product_variants WHERE id = 'e1000000-0000-4000-8000-000000000001'),
+SELECT is((SELECT stock_quantity::integer FROM public.product_variants WHERE id = 'e1000000-0000-4000-8000-000000000001'),
           12, 'no second restock after rejected double cancel');
 SELECT is((SELECT count(*) FROM public.order_item_cancellations
             WHERE order_item_id = 'f1000000-0000-4000-8000-000000000001'),
@@ -133,7 +133,7 @@ SELECT is((SELECT (j->>'refund_amount')::numeric FROM r2), 2040.00, 'O1 last lin
 SELECT is((SELECT row(subtotal, discount_applied, tax_amount, total_amount)::text
              FROM public.orders WHERE id = 'a0000000-0000-4000-8000-00000000000a'),
           '(0.00,0.00,0.00,100.00)', 'O1 after all lines: only shipping remains');
-SELECT is((SELECT stock_quantity FROM public.product_variants WHERE id = 'e2000000-0000-4000-8000-000000000002'),
+SELECT is((SELECT stock_quantity::integer FROM public.product_variants WHERE id = 'e2000000-0000-4000-8000-000000000002'),
           20, 'shrinkage cancel leaves variant 2 stock unchanged');
 SELECT is((SELECT (j->>'restocked')::boolean FROM r2), false, 'shrinkage reports restocked = false');
 SELECT is((SELECT count(*) FROM public.order_events

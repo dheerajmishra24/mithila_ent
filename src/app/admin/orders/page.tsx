@@ -86,13 +86,15 @@ export default async function AdminOrdersPage() {
                     {order.status === 'pending' && (
                       <form action={async (formData) => {
                         'use server';
-                        const tracking = formData.get('tracking') as string;
-                        await updateOrderStatus(order.id, 'shipped', tracking);
+                        const awb = formData.get('awb') as string;
+                        await updateOrderStatus(order.id, 'shipped', undefined, awb);
                       }} className="flex flex-col gap-2">
                         <input
                           type="text"
-                          name="tracking"
-                          placeholder="Tracking Number"
+                          name="awb"
+                          placeholder="AWB number"
+                          aria-label={`AWB number for order ${order.id.split('-')[0].toUpperCase()}`}
+                          pattern="[A-Za-z0-9\-]{4,40}"
                           required
                           className="bg-transparent border border-white/20 p-2 text-xs focus:outline-none focus:border-[var(--turmeric)] placeholder:opacity-40"
                         />

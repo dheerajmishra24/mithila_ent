@@ -48,7 +48,7 @@
     "@axe-core/playwright": "4.14.0",
     "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
@@ -60,6 +60,7 @@
     "supabase": "^3.2.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^2.1.8"
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
   }
 }

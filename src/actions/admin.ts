@@ -41,6 +41,9 @@ export interface ProductDraft {
   subcategoryId?: string
   collectionIds?: string[]
   print?: string
+  sellUnit?: 'MTR' | 'PCS'
+  remnantThresholdM?: number
+  hsnCode?: string
 }
 
 function slugify(s: string): string {
@@ -78,7 +81,9 @@ export async function createProduct(draft: ProductDraft, imagePreview: string | 
     origin: d.origin,
     best_suited_for: d.bestSuitedFor.split(',').map(s => s.trim()).filter(Boolean),
     status: 'active',
-    print: d.print || null
+    print: d.print || null,
+    sell_unit: d.sellUnit ?? 'MTR',
+    hsn_code: d.hsnCode || null,
   }).select().single()
 
   if (prodError) throw new Error(prodError.message)
@@ -147,6 +152,9 @@ export interface ProductUpdate {
   bestSuitedFor: string
   collectionIds?: string[]
   print?: string
+  sellUnit?: 'MTR' | 'PCS'
+  remnantThresholdM?: number
+  hsnCode?: string
 }
 
 export async function updateProduct(productId: string, fields: ProductUpdate) {
@@ -171,11 +179,19 @@ export async function updateProduct(productId: string, fields: ProductUpdate) {
       stretch: f.stretch,
       origin: f.origin,
       best_suited_for: f.bestSuitedFor.split(',').map((s) => s.trim()).filter(Boolean),
-      print: f.print || null
+      print: f.print || null,
+      ...(f.sellUnit ? { sell_unit: f.sellUnit } : {}),
+      ...(f.remnantThresholdM != null ? { remnant_threshold_m: Math.round(f.remnantThresholdM * 100) / 100 } : {}),
+      ...(f.hsnCode !== undefined ? { hsn_code: f.hsnCode || null } : {}),
     })
     .eq('id', id)
 
-  if (error) throw new Error(error.message)
+  if (error) {
+    if (error.message.includes('UNIT_CHANGE_HAS_ROLLS')) {
+      throw new Error('This product already has rolls or orders by the metre, so its unit cannot change.')
+    }
+    throw new Error(error.message)
+  }
 
   if (f.collectionIds) {
     const { error: delErr } = await supabase.from('product_collections').delete().eq('product_id', id)

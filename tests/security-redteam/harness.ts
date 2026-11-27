@@ -34,10 +34,45 @@ export function service(): SupabaseClient {
   return createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
-export type Persona = { id: string; email: string; client: SupabaseClient; session: { access_token: string; refresh_token: string; [k: string]: unknown } };
+export type Persona = {
+  id: string;
+  email: string;
+  password: string;
+  client: SupabaseClient;
+  session: { access_token: string; refresh_token: string; [k: string]: unknown };
+  /** Base32 TOTP secret, when an authenticator app was set up (admins). */
+  totpSecret?: string;
+};
 
-/** Create a confirmed user, optionally admin, and return a signed-in client. */
-export async function persona(tag: string, opts: { admin?: boolean } = {}): Promise<Persona> {
+function base32Decode(input: string): Buffer {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let bits = '';
+  for (const c of input.replace(/=+$/, '').toUpperCase()) {
+    const i = alphabet.indexOf(c);
+    if (i < 0) throw new Error('bad base32');
+    bits += i.toString(2).padStart(5, '0');
+  }
+  const bytes: number[] = [];
+  for (let i = 0; i + 8 <= bits.length; i += 8) bytes.push(parseInt(bits.slice(i, i + 8), 2));
+  return Buffer.from(bytes);
+}
+
+/** RFC 6238 TOTP (SHA-1, 30 s, 6 digits), as authenticator apps compute it. */
+export function totp(secret: string, at = Date.now()): string {
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(at / 30_000)));
+  const h = crypto.createHmac('sha1', base32Decode(secret)).update(counter).digest();
+  const o = h[h.length - 1] & 15;
+  return String((h.readUInt32BE(o) & 0x7fffffff) % 1_000_000).padStart(6, '0');
+}
+
+/**
+ * Create a confirmed user, optionally admin, and return a signed-in client.
+ * Admins also set up an authenticator app and pass the second step, as the
+ * owner portal requires (migration 0053); pass secondFactor: false for an
+ * admin who has only entered a password.
+ */
+export async function persona(tag: string, opts: { admin?: boolean; secondFactor?: boolean } = {}): Promise<Persona> {
   const svc = service();
   const email = `redteam-${tag}-${crypto.randomUUID().slice(0, 8)}@example.test`;
   const password = `Rt-${crypto.randomUUID()}`;
@@ -50,10 +85,35 @@ export async function persona(tag: string, opts: { admin?: boolean } = {}): Prom
   const client = createClient(SUPABASE_URL, ANON_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
   const s = await client.auth.signInWithPassword({ email, password });
   if (s.error || !s.data.session) throw new Error(`signIn ${tag}: ${s.error?.message}`);
-  return { id: data.user.id, email, client, session: s.data.session as unknown as Persona['session'] };
+  if (opts.admin && opts.secondFactor !== false) {
+    const e = await client.auth.mfa.enroll({ factorType: 'totp' });
+    if (e.error) throw new Error(`mfa enroll ${tag}: ${e.error.message}`);
+    const v = await client.auth.mfa.challengeAndVerify({ factorId: e.data.id, code: totp(e.data.totp.secret) });
+    if (v.error) throw new Error(`mfa verify ${tag}: ${v.error.message}`);
+    const after = await client.auth.getSession();
+    return { id: data.user.id, email, password, client, session: after.data.session as unknown as Persona['session'], totpSecret: e.data.totp.secret };
+  }
+  return { id: data.user.id, email, password, client, session: s.data.session as unknown as Persona['session'] };
 }
 
-export type Fixture = { categoryId: string; productId: string; variant: (stock: number, price?: number) => Promise<string> };
+/** The cookie @supabase/ssr writes: sb-<host label>-auth-token = "base64-" + base64url(session), chunked. */
+export function sessionCookie(p: Persona): string {
+  const name = `sb-${new URL(SUPABASE_URL).hostname.split('.')[0]}-auth-token`;
+  const value = 'base64-' + Buffer.from(JSON.stringify(p.session)).toString('base64url');
+  if (value.length <= 3000) return `${name}=${value}`;
+  const parts: string[] = [];
+  for (let i = 0, n = 0; i < value.length; i += 3000, n++) parts.push(`${name}.${n}=${value.slice(i, i + 3000)}`);
+  return parts.join('; ');
+}
+
+export type Fixture = {
+  categoryId: string;
+  productId: string;
+  /** Fabric sold by the metre: stock becomes an opening-balance roll (migration 0050). */
+  variant: (stock: number, price?: number) => Promise<string>;
+  /** Item sold by the piece (sarees, stitched goods): plain stock counter. */
+  pcsVariant: (stock: number, price?: number) => Promise<string>;
+};
 
 export async function catalogue(tag: string): Promise<Fixture> {
   const svc = service();
@@ -67,17 +127,31 @@ export async function catalogue(tag: string): Promise<Fixture> {
     .single();
   if (prod.error) throw new Error(`product: ${prod.error.message}`);
   let n = 0;
+  let pcsProduct: string | null = null;
+  const addVariant = async (productId: string, stock: number, price: number) => {
+    const v = await svc
+      .from('product_variants')
+      .insert({ product_id: productId, sku: `RT-${tag}-${suffix}-${n++}`, color: 'Indigo', price, stock_quantity: stock })
+      .select('id')
+      .single();
+    if (v.error) throw new Error(`variant: ${v.error.message}`);
+    return v.data.id as string;
+  };
   return {
     categoryId: cat.data.id,
     productId: prod.data.id,
-    variant: async (stock: number, price = 100) => {
-      const v = await svc
-        .from('product_variants')
-        .insert({ product_id: prod.data.id, sku: `RT-${tag}-${suffix}-${n++}`, color: 'Indigo', price, stock_quantity: stock })
-        .select('id')
-        .single();
-      if (v.error) throw new Error(`variant: ${v.error.message}`);
-      return v.data.id as string;
+    variant: (stock: number, price = 100) => addVariant(prod.data.id, stock, price),
+    pcsVariant: async (stock: number, price = 100) => {
+      if (!pcsProduct) {
+        const p = await svc
+          .from('products')
+          .insert({ category_id: cat.data.id, slug: `rt-pcs-${tag}-${suffix}`, title: `RT ${tag} pieces`, status: 'active', sell_unit: 'PCS' })
+          .select('id')
+          .single();
+        if (p.error) throw new Error(`pcs product: ${p.error.message}`);
+        pcsProduct = p.data.id as string;
+      }
+      return addVariant(pcsProduct, stock, price);
     },
   };
 }
@@ -85,7 +159,7 @@ export async function catalogue(tag: string): Promise<Fixture> {
 export async function stockOf(variantId: string): Promise<number> {
   const { data, error } = await service().from('product_variants').select('stock_quantity').eq('id', variantId).single();
   if (error) throw new Error(error.message);
-  return data.stock_quantity as number;
+  return Number(data.stock_quantity);
 }
 
 export const SHIPPING = {

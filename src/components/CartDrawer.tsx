@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { syncCartVariants } from "@/actions/cart";
+import { asUnit, formatQuantity, lineTotal, stepFor } from "@/lib/meterage";
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -43,7 +44,7 @@ export default function CartDrawer() {
 
   if (!mounted) return null;
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + lineTotal(item.price, item.quantity), 0);
 
   return (
     <AnimatePresence>
@@ -142,21 +143,23 @@ export default function CartDrawer() {
                           
                           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-4">
                             <div className="flex flex-col gap-1">
-                               {item.min_order_quantity > 1 && (
-                                 <span className="text-[9px] uppercase tracking-widest text-[var(--madder-red)] font-bold">MOQ: {item.min_order_quantity}M</span>
+                               {item.min_order_quantity > stepFor(asUnit(item.unit)) && (
+                                 <span className="text-[9px] uppercase tracking-widest text-[var(--madder-red)] font-bold">Minimum {formatQuantity(item.min_order_quantity, asUnit(item.unit))}</span>
                                )}
                                <div className="flex items-center gap-4 bg-[var(--charcoal-ink)]/5 border-2 border-[var(--charcoal-ink)] px-1 py-1 w-fit">
                                  <button
-                                   onClick={() => updateQuantity(item.id, Math.max(item.min_order_quantity || 1, item.quantity - 1))}
+                                   onClick={() => updateQuantity(item.id, item.quantity - stepFor(asUnit(item.unit)))}
+                                   aria-label={'Decrease ' + item.title}
                                    className="w-6 h-6 sm:w-8 sm:h-8 bg-white border border-[var(--charcoal-ink)] flex items-center justify-center hover:bg-[var(--madder-red)] hover:text-white transition-colors"
                                  >
                                    <Minus size={14} strokeWidth={2.5} />
                                  </button>
-                                 <span className="font-sans font-bold text-sm w-4 text-center text-[var(--charcoal-ink)]">
-                                   {item.quantity}
+                                 <span className="font-sans font-bold text-sm min-w-12 text-center tabular-nums text-[var(--charcoal-ink)]">
+                                   {formatQuantity(item.quantity, asUnit(item.unit))}
                                  </span>
                                  <button
-                                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                   onClick={() => updateQuantity(item.id, item.quantity + stepFor(asUnit(item.unit)))}
+                                   aria-label={'Increase ' + item.title}
                                    className="w-6 h-6 sm:w-8 sm:h-8 bg-white border border-[var(--charcoal-ink)] flex items-center justify-center hover:bg-[var(--turmeric)] hover:border-[var(--charcoal-ink)] transition-colors"
                                  >
                                    <Plus size={14} strokeWidth={2.5} />
@@ -164,7 +167,7 @@ export default function CartDrawer() {
                                </div>
                             </div>
                             <p className="font-sans font-bold text-lg text-[var(--charcoal-ink)]">
-                              ₹{(item.price * item.quantity).toLocaleString()}
+                              ₹{lineTotal(item.price, item.quantity).toLocaleString('en-IN')}
                             </p>
                           </div>
                         </div>

@@ -19,6 +19,7 @@ const env = {
   REDTEAM_SERVICE_KEY: status.SERVICE_ROLE_KEY,
   REDTEAM_ANON_KEY: status.ANON_KEY,
   REDTEAM_APP_URL: appUrl,
+  REDTEAM_MAILPIT_URL: status.MAILPIT_URL || status.INBUCKET_URL || '',
 };
 const r = spawnSync('npx', ['playwright', 'test', '-c', 'tests/e2e/playwright.config.ts', ...process.argv.slice(2)], {
   env, stdio: 'inherit', shell: process.platform === 'win32',

@@ -3,6 +3,7 @@ import React from 'react';
 import { render } from '@react-email/components';
 import { OrderConfirmationEmail } from '@/components/emails/OrderConfirmationEmail';
 import { generateInvoiceBuffer } from '@/utils/pdf/generateInvoice';
+import { invoiceContext } from '@/lib/invoice-context';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { escapeHtml } from '@/lib/form-input';
 
@@ -26,6 +27,54 @@ export async function sendSecurityAlertEmail(email: string) {
     });
   } catch (error) {
     console.error('Failed to send security email', error);
+  }
+}
+
+/**
+ * Tells an owner-portal account that its two-step sign-in changed (a method
+ * added or removed), so a change they did not make is noticed. `what` is
+ * fixed text chosen by the caller, never user input.
+ */
+export async function sendTwoStepNoticeEmail(email: string, what: string) {
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: email,
+      subject: 'Security notice: owner portal sign-in changed',
+      html: `
+        <div style="font-family: sans-serif; color: #333; padding: 20px;">
+          <h2 style="color: #990000;">Owner portal sign-in changed</h2>
+          <p>${escapeHtml(what)}</p>
+          <p>If this was not you, change your password now and contact your developer to remove the method.</p>
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error('Failed to send two-step notice email', error);
+  }
+}
+
+/**
+ * Operational alert to the owner inbox (SUPPORT_EMAIL), e.g. "Meta lead
+ * access stopped working". Text is fixed by the caller, never user input.
+ */
+export async function sendOwnerAlertEmail(subject: string, lines: string[]) {
+  const to = process.env.SUPPORT_EMAIL;
+  if (!to) return;
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to,
+      subject: subject.slice(0, 150),
+      html: `
+        <div style="font-family: sans-serif; color: #333; padding: 20px;">
+          <h2 style="color: #990000;">${escapeHtml(subject)}</h2>
+          ${lines.map((l) => `<p>${escapeHtml(l)}</p>`).join('')}
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error('Failed to send owner alert email', error);
   }
 }
 
@@ -87,7 +136,7 @@ async function buildEmail(admin: SupabaseClient, row: any): Promise<Built | null
         totalAmount: Number(order.total_amount),
       })
     );
-    const pdf = await generateInvoiceBuffer(order, order.order_items || []);
+    const pdf = await generateInvoiceBuffer(order, order.order_items || [], await invoiceContext(order.user_id));
     return {
       subject: 'Order Confirmation & Official Invoice',
       html,
@@ -148,6 +197,20 @@ export async function processEmailRow(
 
   try {
     if (!row.recipient) throw new Error('NO_RECIPIENT');
+    // Hard bounce or spam complaint reported by Resend (migration 0055):
+    // stop here, without retries, so the sending domain's reputation holds.
+    const { data: held } = await admin
+      .from('email_suppressions')
+      .select('reason')
+      .eq('email', String(row.recipient).trim().toLowerCase())
+      .maybeSingle();
+    if (held) {
+      await admin
+        .from('pending_emails')
+        .update({ status: 'failed', last_error: `Not sent: address on hold (${held.reason})` })
+        .eq('id', row.id);
+      return 'failed';
+    }
     const built = await buildEmail(admin, row);
     if (!built) throw new Error('ORDER_NOT_FOUND');
 

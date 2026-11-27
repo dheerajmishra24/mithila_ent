@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { enqueueOrderEmail, processEmailRow } from '@/lib/email'
+import { notifyOrderStatus } from '@/lib/orders/notify'
 import { calculateShippingRates, fallbackShippingRate, isValidPinCode } from '@/lib/shipping'
 import { checkApiRateLimit } from '@/lib/ratelimit'
 import { requireAdmin, requireUser } from '@/lib/dal/session'
@@ -12,16 +13,34 @@ import { addressSchema, cartItemsSchema, discountCodeSchema, idempotencyKeySchem
 
 const ORDER_STATUSES = new Set(['pending', 'paid', 'shipped', 'delivered', 'cancelled'])
 
-export async function updateOrderStatus(orderId: string, status: string, trackingNumber?: string) {
+export async function updateOrderStatus(orderId: string, status: string, courierName?: string, awbCode?: string) {
   await requireAdmin()
   orderId = parseOrThrow(uuid, orderId, 'Invalid order')
   if (typeof status !== 'string' || !ORDER_STATUSES.has(status)) throw new Error('Invalid status')
-  const tracking = typeof trackingNumber === 'string' ? trackingNumber.trim().slice(0, 200) : ''
+  const courier = typeof courierName === 'string' ? courierName.replace(/[<>]/g, '').trim().slice(0, 100) : ''
+  const awb = typeof awbCode === 'string' ? awbCode.trim().toUpperCase() : ''
+  if (awb && !/^[A-Z0-9-]{4,40}$/.test(awb)) throw new Error('AWB must be 4-40 letters, digits or dashes')
   const supabase = await createClient()
 
-  const updateData: { status: string; tracking_status?: string } = { status }
-  if (tracking) {
-    updateData.tracking_status = tracking
+  const { data: before } = await supabase.from('orders').select('status').eq('id', orderId).single()
+
+  const updateData: Record<string, string | null> = { status }
+  if (awb) {
+    updateData.awb_code = awb
+    updateData.courier_name = courier || null
+    updateData.tracking_status = `${courier || 'Courier'} · AWB ${awb}`
+    // Courier scans that arrived before the AWB was recorded.
+    const { data: latest } = await supabase
+      .from('shipment_events')
+      .select('status_label, event_at')
+      .eq('awb_code', awb)
+      .order('event_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    if (latest) {
+      updateData.shipment_status = latest.status_label
+      updateData.shipment_status_at = latest.event_at
+    }
   }
 
   const { error } = await supabase
@@ -29,39 +48,14 @@ export async function updateOrderStatus(orderId: string, status: string, trackin
     .update(updateData)
     .eq('id', orderId)
 
-  if (error) throw new Error(error.message)
+  if (error) {
+    if (error.code === '23505') throw new Error('That AWB is already on another order')
+    throw new Error(error.message)
+  }
 
-  // Notify the customer on shipment / delivery (durable queue + instant best-effort).
-  if (status === 'shipped' || status === 'delivered') {
-    try {
-      const admin = createAdminClient()
-      const { data: ord } = await admin
-        .from('orders')
-        .select('id, shipping_address, user_id')
-        .eq('id', orderId)
-        .single()
-      let recipient: string | undefined = (ord?.shipping_address as any)?.email
-      if (!recipient && ord?.user_id) {
-        const { data: u } = await admin.auth.admin.getUserById(ord.user_id)
-        recipient = u?.user?.email || undefined
-      }
-      if (recipient) {
-        const row = await enqueueOrderEmail(admin, {
-          orderId,
-          recipient,
-          kind: status === 'shipped' ? 'order_shipped' : 'order_delivered',
-        })
-        if (row) {
-          try {
-            await processEmailRow(admin, row)
-          } catch (sendErr) {
-            console.error('inline status send failed (will retry via cron):', sendErr)
-          }
-        }
-      }
-    } catch (statusEmailErr) {
-      console.error('Failed to queue status email:', statusEmailErr)
-    }
+  // Notify the customer when the status actually moves to shipped / delivered.
+  if ((status === 'shipped' || status === 'delivered') && before?.status !== status) {
+    await notifyOrderStatus(createAdminClient(), orderId, status)
   }
 
   revalidatePath('/admin/orders')
@@ -69,7 +63,7 @@ export async function updateOrderStatus(orderId: string, status: string, trackin
   return { success: true }
 }
 
-export async function createOrder(cartItems: unknown, shippingAddressInput: unknown, discountCodeInput?: unknown, idempotencyKeyInput?: unknown) {
+export async function createOrder(cartItems: unknown, shippingAddressInput: unknown, discountCodeInput?: unknown, idempotencyKeyInput?: unknown, useSwatchCreditInput?: unknown) {
   let user
   try {
     user = await requireUser()
@@ -96,8 +90,13 @@ export async function createOrder(cartItems: unknown, shippingAddressInput: unkn
   // must be exactly six digits (the orders table enforces the same rule).
   const parsedAddress = addressSchema.safeParse(shippingAddressInput)
   if (!parsedAddress.success) {
-    const pinIssue = parsedAddress.error.issues.some((i) => i.path[0] === 'pinCode')
-    return { success: false, error: pinIssue ? 'Please enter a valid 6-digit PIN code.' : 'Please check your shipping address.' }
+    const field = parsedAddress.error.issues[0]?.path[0]
+    const messages: Record<string, string> = {
+      pinCode: 'Please enter a valid 6-digit PIN code.',
+      state: 'Please choose your state.',
+      gstin: 'Please enter a valid GSTIN, or leave it blank.',
+    }
+    return { success: false, error: messages[String(field)] ?? 'Please check your shipping address.' }
   }
   const shippingAddress = parsedAddress.data
   const pinCode = shippingAddress.pinCode
@@ -143,6 +142,15 @@ export async function createOrder(cartItems: unknown, shippingAddressInput: unkn
 
   if (error || !orderId) {
     const msg = error?.message || ''
+    if (msg.includes('INVALID_STATE')) {
+      return { success: false, error: 'Please choose your state.' }
+    }
+    if (msg.includes('INVALID_GSTIN')) {
+      return { success: false, error: 'Please enter a valid GSTIN, or leave it blank.' }
+    }
+    if (msg.includes('NO_CONTINUOUS_LENGTH')) {
+      return { success: false, error: 'We do not have that length on a single roll. Please choose a shorter length.' }
+    }
     if (msg.includes('INSUFFICIENT_STOCK')) {
       return { success: false, error: 'Sorry, one or more items just went out of stock.' }
     }
@@ -153,7 +161,7 @@ export async function createOrder(cartItems: unknown, shippingAddressInput: unkn
       return { success: false, error: 'One or more items are below the minimum order quantity.' }
     }
     if (msg.includes('INVALID_QUANTITY') || msg.includes('TOO_MANY_ITEMS')) {
-      return { success: false, error: 'Your cart has an invalid item. Please refresh and try again.' }
+      return { success: false, error: 'Your cart has an invalid length. Fabric is sold in 0.5 m steps and other items by the piece.' }
     }
     if (msg.includes('INVALID_SHIPPING')) {
       return { success: false, error: 'We could not calculate shipping for this address.' }
@@ -178,6 +186,14 @@ export async function createOrder(cartItems: unknown, shippingAddressInput: unkn
   }
 
   const orderIdStr = String(orderId)
+
+  // Swatch credit (migration 0052) is applied as part payment before the
+  // payment gateway order exists. Ineligible orders (no metre fabric, no
+  // balance) simply get 0; the order itself stands either way.
+  if (useSwatchCreditInput === true) {
+    const { error: creditErr } = await admin.rpc('apply_swatch_credit', { p_order_id: orderIdStr, p_user_id: user.id })
+    if (creditErr) console.error('apply_swatch_credit failed:', creditErr)
+  }
 
   // Record a payment intent so every order has an entry in the payment log.
   const { error: piErr } = await supabase.rpc('log_payment_intent', { p_order_id: orderIdStr })
@@ -274,6 +290,9 @@ export async function requestCancellation(orderId: string) {
   const res = data as any
   if (error || !res?.ok) {
     const code = res?.error || error?.message || ''
+    if (code.includes('ALREADY_CUT')) {
+      return { success: false, error: 'Your fabric has already been cut to length, so this order can no longer be cancelled.' }
+    }
     if (code.includes('NOT_CANCELLABLE')) {
       return { success: false, error: 'This order can no longer be cancelled.' }
     }

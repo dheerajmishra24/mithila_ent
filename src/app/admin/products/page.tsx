@@ -15,7 +15,7 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     const { data } = await supabase
       .from('products')
-      .select('*, categories(name), product_variants(id, stock_quantity, price, images)')
+      .select('*, categories!products_category_id_fkey(name), product_variants(id, stock_quantity, price, images)')
       .order('created_at', { ascending: false });
     if (data) setProducts(data);
     setLoading(false);

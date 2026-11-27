@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from '@/store/useCart';
+import { asUnit, formatQuantity, lineTotal } from '@/lib/meterage';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -16,7 +17,7 @@ export default function CartFallbackPage() {
 
   if (!mounted) return null;
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + lineTotal(item.price, item.quantity), 0);
 
   return (
     <main className="flex-grow max-w-4xl mx-auto px-4 py-16 w-full">
@@ -38,10 +39,10 @@ export default function CartFallbackPage() {
                 <div>
                   <p className="font-serif font-bold text-xl text-[var(--charcoal-ink)]">{item.title}</p>
                   <p className="font-sans text-xs uppercase tracking-[0.2em] opacity-80 text-[var(--charcoal-ink)] mt-1">
-                    {item.color} <span className="mx-2">|</span> QTY: {item.quantity}
+                    {item.color} <span className="mx-2">|</span> QTY: {formatQuantity(item.quantity, asUnit(item.unit))}
                   </p>
                 </div>
-                <p className="font-sans font-bold text-xl text-[var(--charcoal-ink)]">₹{(item.price * item.quantity).toLocaleString()}</p>
+                <p className="font-sans font-bold text-xl text-[var(--charcoal-ink)]">₹{lineTotal(item.price, item.quantity).toLocaleString('en-IN')}</p>
               </div>
             ))}
           </div>

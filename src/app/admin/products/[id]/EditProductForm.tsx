@@ -27,6 +27,9 @@ export default function EditProductForm({ product, categories, collections, init
     origin: product.origin || '',
     bestSuitedFor: Array.isArray(product.best_suited_for) ? product.best_suited_for.join(', ') : '',
     print: product.print || '',
+    sellUnit: (product.sell_unit === 'PCS' ? 'PCS' : 'MTR') as 'MTR' | 'PCS',
+    remnantThresholdM: Number(product.remnant_threshold_m ?? 2),
+    hsnCode: product.hsn_code || '',
     collectionIds: initialCollectionIds || [],
   });
 
@@ -127,6 +130,9 @@ export default function EditProductForm({ product, categories, collections, init
         origin: form.origin,
         bestSuitedFor: form.bestSuitedFor,
         print: form.print,
+        sellUnit: form.sellUnit,
+        remnantThresholdM: Number(form.remnantThresholdM) || 0,
+        hsnCode: form.hsnCode.trim(),
         collectionIds: form.collectionIds,
       });
 
@@ -298,6 +304,26 @@ export default function EditProductForm({ product, categories, collections, init
             <input className={inputClass} value={form.stretch} onChange={(e) => setField('stretch', e.target.value)} />
           </div>
           <div>
+            <label className={labelClass} htmlFor="sell-unit">Sold by</label>
+            <select id="sell-unit" className={inputClass} value={form.sellUnit} onChange={(e) => setField('sellUnit', e.target.value)}>
+              <option value="MTR">Metre (0.5 m steps, cut from rolls)</option>
+              <option value="PCS">Piece (sarees, stitched items)</option>
+            </select>
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="hsn-code">HSN code</label>
+            <input id="hsn-code" inputMode="numeric" maxLength={8} pattern="[0-9]{4}([0-9]{2}){0,2}" className={`${inputClass} font-mono`} value={form.hsnCode} onChange={(e) => setField('hsnCode', e.target.value.replace(/\D/g, ''))} aria-describedby="hsn-help" />
+            <p id="hsn-help" className="text-xs opacity-80 mt-1">
+              Fabrics (Ch. 50-60) are 5%. Stitched apparel (Ch. 61-62) is 5% up to ₹2,500 a piece, 18% above. Confirm codes with your CA.
+            </p>
+          </div>
+          {form.sellUnit === 'MTR' && (
+            <div>
+              <label className={labelClass} htmlFor="remnant-threshold">Remnant below (m)</label>
+              <input id="remnant-threshold" type="number" step="0.5" min="0" max="100" className={inputClass} value={form.remnantThresholdM} onChange={(e) => setField('remnantThresholdM', e.target.value)} />
+            </div>
+          )}
+          <div>
             <label className={labelClass}>Print / Pattern</label>
             <input className={inputClass} value={form.print} onChange={(e) => setField('print', e.target.value)} />
           </div>
@@ -325,8 +351,8 @@ export default function EditProductForm({ product, categories, collections, init
             <div className="grid grid-cols-4 gap-4 text-[10px] uppercase tracking-widest font-bold opacity-60">
               <span>Color</span>
               <span>Price (INR)</span>
-              <span>Stock</span>
-              <span>MOQ (Meters)</span>
+              <span>{form.sellUnit === 'MTR' ? 'Stock (from rolls)' : 'Stock (pcs)'}</span>
+              <span>{form.sellUnit === 'MTR' ? 'Minimum (m)' : 'Minimum (pcs)'}</span>
             </div>
             {variants.map((v) => (
               <div key={v.id} className="space-y-2 border-b border-[var(--charcoal-ink)]/10 pb-3 last:border-0">
@@ -343,15 +369,26 @@ export default function EditProductForm({ product, categories, collections, init
                     value={v.price}
                     onChange={(e) => setVariantField(v.id, 'price', e.target.value)}
                   />
+                  {form.sellUnit === 'MTR' ? (
+                    <Link href={`/admin/inventory/${v.id}`} className={`${inputClass} tabular-nums underline underline-offset-4`}>
+                      {Number(v.stock_quantity).toFixed(2)} m · Manage rolls
+                    </Link>
+                  ) : (
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      aria-label={`Stock for ${v.color || 'variant'}`}
+                      className={inputClass}
+                      value={v.stock_quantity}
+                      onChange={(e) => setVariantField(v.id, 'stock_quantity', e.target.value)}
+                    />
+                  )}
                   <input
                     type="number"
-                    className={inputClass}
-                    value={v.stock_quantity}
-                    onChange={(e) => setVariantField(v.id, 'stock_quantity', e.target.value)}
-                  />
-                  <input
-                    type="number"
-                    min="1"
+                    min={form.sellUnit === 'MTR' ? '0.5' : '1'}
+                    step={form.sellUnit === 'MTR' ? '0.5' : '1'}
+                    aria-label={`Minimum order for ${v.color || 'variant'}`}
                     className={inputClass}
                     value={v.min_order_quantity}
                     onChange={(e) => setVariantField(v.id, 'min_order_quantity', e.target.value)}
@@ -394,12 +431,12 @@ export default function EditProductForm({ product, categories, collections, init
             <input type="number" step="0.01" className={inputClass} value={newVar.price} onChange={(e) => setNewVar({ ...newVar, price: Number(e.target.value) })} />
           </div>
           <div>
-            <label className={labelClass}>Stock</label>
-            <input type="number" className={inputClass} value={newVar.stock_quantity} onChange={(e) => setNewVar({ ...newVar, stock_quantity: Number(e.target.value) })} />
+            <label className={labelClass}>{form.sellUnit === 'MTR' ? 'Opening stock (m, becomes a roll)' : 'Stock (pcs)'}</label>
+            <input type="number" min="0" step={form.sellUnit === 'MTR' ? '0.5' : '1'} className={inputClass} value={newVar.stock_quantity} onChange={(e) => setNewVar({ ...newVar, stock_quantity: Number(e.target.value) })} />
           </div>
           <div>
-            <label className={labelClass}>MOQ (Meters)</label>
-            <input type="number" min="1" className={inputClass} value={newVar.min_order_quantity} onChange={(e) => setNewVar({ ...newVar, min_order_quantity: Number(e.target.value) })} />
+            <label className={labelClass}>{form.sellUnit === 'MTR' ? 'Minimum (m)' : 'Minimum (pcs)'}</label>
+            <input type="number" min={form.sellUnit === 'MTR' ? '0.5' : '1'} step={form.sellUnit === 'MTR' ? '0.5' : '1'} className={inputClass} value={newVar.min_order_quantity} onChange={(e) => setNewVar({ ...newVar, min_order_quantity: Number(e.target.value) })} />
           </div>
           <Button onClick={handleAddVariant} disabled={addingVariant} className="bg-[var(--indigo-dye)] text-white hover:bg-[var(--charcoal-ink)] uppercase tracking-widest text-xs font-bold">
             {addingVariant ? 'Adding...' : 'Add Variant'}

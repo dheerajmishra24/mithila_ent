@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { APP_URL, appEnabled, catalogue, persona, record, service, SHIPPING, SUPABASE_URL, type Persona } from './harness';
+import { APP_URL, appEnabled, catalogue, persona, record, service, sessionCookie, SHIPPING, type Persona } from './harness';
 
 // Playbook Step 5, HTTP layer: middleware-bypass headers (CVE-2025-29927),
 // invoice IDOR, webhook replay over the real route, and secret-guarded
@@ -14,16 +14,6 @@ const BYPASS = [
   'proxy:proxy:proxy:proxy:proxy',
   'src/proxy:src/proxy:src/proxy:src/proxy:src/proxy',
 ];
-
-/** The cookie @supabase/ssr writes: sb-<host label>-auth-token = "base64-" + base64url(session), chunked. */
-function sessionCookie(p: Persona): string {
-  const name = `sb-${new URL(SUPABASE_URL).hostname.split('.')[0]}-auth-token`;
-  const value = 'base64-' + Buffer.from(JSON.stringify(p.session)).toString('base64url');
-  if (value.length <= 3000) return `${name}=${value}`;
-  const parts: string[] = [];
-  for (let i = 0, n = 0; i < value.length; i += 3000, n++) parts.push(`${name}.${n}=${value.slice(i, i + 3000)}`);
-  return parts.join('; ');
-}
 
 const get = (path: string, headers: Record<string, string> = {}) =>
   fetch(APP_URL + path, { redirect: 'manual', headers });

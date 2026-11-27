@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import AdConsentCheckbox from '@/components/AdConsentCheckbox';
+import { readAttribution } from '@/lib/leads/attribution-client';
 
 export default function ContactClient() {
   const [formState, setFormState] = useState({
@@ -15,6 +17,9 @@ export default function ContactClient() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [adConsent, setAdConsent] = useState(false);
+  // One id per enquiry, so a double click or retry is stored once.
+  const [submissionId] = useState(() => crypto.randomUUID());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +29,7 @@ export default function ContactClient() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formState),
+        body: JSON.stringify({ ...formState, adConsent, submissionId, attribution: readAttribution() }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -151,8 +156,8 @@ export default function ContactClient() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="block font-sans text-[10px] uppercase font-bold text-zinc-800">First Name</label>
-                      <input 
+                      <label htmlFor="contact-first-name" className="block font-sans text-[10px] uppercase font-bold text-zinc-800">First Name</label>
+                      <input id="contact-first-name" 
                         type="text" 
                         required
                         value={formState.firstName}
@@ -162,8 +167,8 @@ export default function ContactClient() {
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="block font-sans text-[10px] uppercase font-bold text-zinc-800">Last Name</label>
-                      <input 
+                      <label htmlFor="contact-last-name" className="block font-sans text-[10px] uppercase font-bold text-zinc-800">Last Name</label>
+                      <input id="contact-last-name" 
                         type="text" 
                         required
                         value={formState.lastName}
@@ -175,8 +180,8 @@ export default function ContactClient() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="block font-sans text-[10px] uppercase font-bold text-zinc-800">Email Address</label>
-                    <input 
+                    <label htmlFor="contact-email" className="block font-sans text-[10px] uppercase font-bold text-zinc-800">Email Address</label>
+                    <input id="contact-email" 
                       type="email" 
                       required
                       value={formState.email}
@@ -187,8 +192,8 @@ export default function ContactClient() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="block font-sans text-[10px] uppercase font-bold text-zinc-800">Location / City</label>
-                    <input 
+                    <label htmlFor="contact-location" className="block font-sans text-[10px] uppercase font-bold text-zinc-800">Location / City</label>
+                    <input id="contact-location" 
                       type="text" 
                       required
                       value={formState.location}
@@ -199,8 +204,8 @@ export default function ContactClient() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="block font-sans text-[10px] uppercase font-bold text-zinc-800">Inquiry Details</label>
-                    <textarea 
+                    <label htmlFor="contact-message" className="block font-sans text-[10px] uppercase font-bold text-zinc-800">Inquiry Details</label>
+                    <textarea id="contact-message" 
                       required
                       rows={3}
                       value={formState.message}
@@ -209,6 +214,8 @@ export default function ContactClient() {
                       placeholder="Details about your fabric customization, weaving specifications, or quantities..."
                     />
                   </div>
+
+                  <AdConsentCheckbox id="contact-ad-consent" checked={adConsent} onChange={setAdConsent} />
 
                   {error && <p className="text-red-500 text-xs font-bold font-sans">{error}</p>}
                   <button type="submit" disabled={isSubmitting} className="sonic-btn-primary w-full text-xs">

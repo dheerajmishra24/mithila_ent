@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { jsonLd } from '@/lib/json-ld';
 import { notFound } from 'next/navigation';
 import ProductBuyBox from './ProductBuyBox';
+import { getSwatchSettings } from '@/lib/dal/swatch-credit';
 import { Metadata } from 'next';
 import BackgroundPattern from '@/components/vectors/BackgroundPattern';
 import { MotionDiv } from '@/components/Motion';
@@ -68,7 +69,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   // Fetch product and its variants
   const { data: dbProduct } = await supabase
     .from('products')
-    .select('*, product_variants(*), categories(name)')
+    .select('*, product_variants(*), categories!products_category_id_fkey(name)')
     .eq('slug', slug)
     .single();
 
@@ -77,6 +78,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   if (!product) {
     notFound();
   }
+  const swatch = await getSwatchSettings();
 
   let subcategoryName = null;
   if (product.subcategory_id) {
@@ -172,7 +174,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <BackgroundPattern className="opacity-40" />
       <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
         {/* Breadcrumb */}
-        <div className="font-sans text-xs opacity-70 mb-12 tracking-widest font-bold text-[var(--madder-red)]">
+        <div className="font-sans text-xs mb-12 tracking-widest font-bold text-[var(--madder-red)]">
           HOME / SHOP / {(product.categories?.name || product.tags?.[0] || 'FABRIC').toUpperCase()} / {product.title.toUpperCase()}
         </div>
 
@@ -215,7 +217,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               {product.title}
             </h1>
             <p className="font-sans text-2xl text-[var(--charcoal-ink)] font-bold mb-8">
-              ₹{defaultVariant.price} <span className="text-sm font-normal opacity-60">/ meter</span>
+              ₹{defaultVariant.price} <span className="text-sm font-normal opacity-80">/ meter</span>
             </p>
 
             <div className="space-y-8 text-[var(--charcoal-ink)] opacity-90 font-sans">
@@ -278,7 +280,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
 
             <div className="mt-8">
-              <ProductBuyBox productId={product.id} title={product.title} variants={product.product_variants} />
+              <ProductBuyBox productId={product.id} title={product.title} variants={product.product_variants} unit={product.sell_unit} swatch={swatch} />
             </div>
 
             {/* Accordion Placeholders for Details */}

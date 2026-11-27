@@ -1,6 +1,16 @@
 {
   "crons": [
-    { "path": "/api/cron/process-emails", "schedule": "0 0 * * *" },
-    { "path": "/api/cron/webhook-retry", "schedule": "30 0 * * *" }
+    {
+      "path": "/api/cron/process-emails",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/webhook-retry",
+      "schedule": "30 0 * * *"
+    },
+    {
+      "path": "/api/cron/leads",
+      "schedule": "0 1 * * *"
+    }
   ]
 }

@@ -85,7 +85,8 @@ describe.skipIf(!dbEnabled)('red-team: concurrency races (local stack)', () => {
   }, 60_000);
 
   it('admin stock adjustments never lose an update or go negative', async () => {
-    const variant = await cat.variant(10);
+    // adjust_stock is for piece goods; metre stock lives on rolls (USE_ROLLS).
+    const variant = await cat.pcsVariant(10);
     const r = await race(N, (i) => service().rpc('adjust_stock', { p_variant_id: variant, p_delta: i % 2 === 0 ? -1 : 2 }));
     const left = await stockOf(variant);
     record('adjust_stock_invariant', { succeeded: r.ok.length, stock_after: left, expected: 10 - 10 + 20 });

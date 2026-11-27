@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 import { Resend } from 'resend';
 import { sendWhatsAppNotification } from '@/lib/whatsapp';
 import { checkApiRateLimit, clientIp } from '@/lib/ratelimit';
 import { isLikelyBot } from '@/lib/bot-check';
 import { LIMITS, cleanEmail, cleanText, escapeHtml, optionalText } from '@/lib/form-input';
+import { captureLead } from '@/lib/leads/capture';
+import { webFormLeadFields } from '@/lib/leads/web-form';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy_key_for_build_only');
 const FROM = process.env.EMAIL_FROM || 'Mithila Enterprises <onboarding@resend.dev>';
@@ -33,23 +34,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please check the form: a field is missing, invalid or too long.' }, { status: 400 });
     }
 
-    const supabase = await createClient();
-
-    // 1. Save to Supabase
-    const { error: dbError } = await supabase
-      .from('contact_inquiries')
-      .insert({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        location: location ?? null,
-        message
-      });
-
-    if (dbError) {
-      console.error('Failed to insert contact inquiry:', dbError.message);
+    // 1. Into the lead pipeline (deduplicated by e-mail; idempotent per submission)
+    const saved = await captureLead({
+      source: 'contact',
+      ...webFormLeadFields(req, body),
+      full_name: `${firstName} ${lastName}`,
+      email,
+      city: location ?? null,
+      message,
+      detail: { form: 'contact', first_name: firstName, last_name: lastName },
+    });
+    if (!saved.ok) {
+      console.error('Failed to save contact inquiry:', saved.error);
       return NextResponse.json({ error: 'Failed to save inquiry' }, { status: 500 });
     }
+    if (saved.duplicate) return NextResponse.json({ success: true });
 
     // 2. Send Email via Resend (all user values escaped)
     const h = {

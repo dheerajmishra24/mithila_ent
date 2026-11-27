@@ -45,11 +45,11 @@ export default function SignupPage() {
 
           <div>
             <label className="block font-sans text-xs font-bold uppercase tracking-widest text-[var(--charcoal-ink)] mb-2" htmlFor="signup-name">Full Name</label>
-            <input id="signup-name" type="text" name="fullName" autoComplete="name" required className="w-full border-2 border-[var(--charcoal-ink)] bg-transparent p-3 font-sans focus:outline-none focus:border-[var(--turmeric)] transition-colors" />
+            <input id="signup-name" defaultValue={(state as { fullName?: string } | undefined)?.fullName ?? ''} type="text" name="fullName" autoComplete="name" required className="w-full border-2 border-[var(--charcoal-ink)] bg-transparent p-3 font-sans focus:outline-none focus:border-[var(--turmeric)] transition-colors" />
           </div>
           <div>
             <label className="block font-sans text-xs font-bold uppercase tracking-widest text-[var(--charcoal-ink)] mb-2" htmlFor="signup-email">Email</label>
-            <input id="signup-email" type="email" name="email" autoComplete="email" required className="w-full border-2 border-[var(--charcoal-ink)] bg-transparent p-3 font-sans focus:outline-none focus:border-[var(--turmeric)] transition-colors" />
+            <input id="signup-email" defaultValue={(state as { email?: string } | undefined)?.email ?? ''} type="email" name="email" autoComplete="email" required className="w-full border-2 border-[var(--charcoal-ink)] bg-transparent p-3 font-sans focus:outline-none focus:border-[var(--turmeric)] transition-colors" />
           </div>
           <div>
             <label className="block font-sans text-xs font-bold uppercase tracking-widest text-[var(--charcoal-ink)] mb-2" htmlFor="signup-password">Password</label>

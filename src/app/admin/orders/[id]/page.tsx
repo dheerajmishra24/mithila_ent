@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { cancelOrder } from '@/actions/orders';
+import { asUnit, formatQuantity, lineTotal } from '@/lib/meterage';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   const { data: order } = await supabase
     .from('orders')
     .select(
-      '*, order_items(quantity, unit_price, product_variants(color, sku, products(title))), discounts(code, type, value)'
+      '*, order_items(id, status, quantity, uqc, dye_lot, unit_price, order_item_cuts(roll_code, status), product_variants(color, sku, products(title))), discounts(code, type, value)'
     )
     .eq('id', id)
     .single();
@@ -161,10 +162,25 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
                         {it.product_variants?.color}
                         {it.product_variants?.sku ? ` · ${it.product_variants.sku}` : ''}
                       </div>
+                      {(() => {
+                        const cut = Array.isArray(it.order_item_cuts) ? it.order_item_cuts[0] : it.order_item_cuts;
+                        if (!cut && !it.dye_lot) return null;
+                        return (
+                          <div className="text-xs opacity-70 font-mono mt-1">
+                            {cut?.roll_code ? `Roll ${cut.roll_code}` : ''}
+                            {it.dye_lot ? ` · Dye lot ${it.dye_lot}` : ''}
+                            {cut?.status ? (
+                              <span className={`ml-2 uppercase tracking-widest text-[9px] font-sans font-bold ${cut.status === 'cut' ? 'text-green-400' : cut.status === 'released' ? 'text-white/50' : 'text-[var(--turmeric)]'}`}>
+                                {cut.status === 'allocated' ? 'to cut' : cut.status}
+                              </span>
+                            ) : null}
+                          </div>
+                        );
+                      })()}
                     </td>
-                    <td className="px-6 py-3 text-center">{it.quantity}</td>
-                    <td className="px-6 py-3 text-right">{money(it.unit_price)}</td>
-                    <td className="px-6 py-3 text-right">{money(it.unit_price * it.quantity)}</td>
+                    <td className="px-6 py-3 text-center tabular-nums">{formatQuantity(Number(it.quantity), asUnit(it.uqc === 'PCS' ? 'PCS' : 'MTR'))}</td>
+                    <td className="px-6 py-3 text-right tabular-nums">{money(it.unit_price)}</td>
+                    <td className="px-6 py-3 text-right tabular-nums">{money(lineTotal(Number(it.unit_price), Number(it.quantity)))}</td>
                     <td className="px-6 py-3 text-right flex justify-end items-center gap-2">
                       {it.status !== 'pending' && it.status !== 'fulfilled' ? (
                         <span className={`text-[9px] uppercase tracking-widest font-bold ${it.status === 'refunded' ? 'text-orange-400' : 'text-red-400'}`}>
@@ -204,9 +220,35 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
                 )}
               </tbody>
             </table>
-            <div className="border-t border-white/10 p-6 space-y-1 text-sm">
+            <div className="border-t border-white/10 p-6 space-y-1 text-sm tabular-nums">
+              {order.order_kind === 'swatch' && (
+                <div className="pb-2 mb-2 border-b border-white/10 text-xs font-bold uppercase tracking-widest text-[var(--turmeric)]">
+                  Swatch kit: no cutting, send sample cards
+                </div>
+              )}
+              {order.invoice_number && (
+                <div className="flex justify-between pb-2 mb-2 border-b border-white/10">
+                  <span className="opacity-80">Tax invoice</span>
+                  <span className="font-mono">{order.invoice_number}</span>
+                </div>
+              )}
+              {(order.place_of_supply || order.buyer_gstin) && (
+                <div className="flex justify-between opacity-80 text-xs">
+                  <span>Place of supply {order.place_of_supply}</span>
+                  {order.buyer_gstin && <span className="font-mono">GSTIN {order.buyer_gstin}</span>}
+                </div>
+              )}
               <div className="flex justify-between opacity-80"><span>Subtotal</span><span>{money(order.subtotal)}</span></div>
-              <div className="flex justify-between opacity-80"><span>Tax</span><span>{money(order.tax_amount)}</span></div>
+              {order.taxable_value != null ? (
+                <>
+                  <div className="flex justify-between opacity-80"><span>Taxable value</span><span>{money(order.taxable_value)}</span></div>
+                  {Number(order.cgst_total) > 0 && <div className="flex justify-between opacity-80"><span>CGST</span><span>{money(order.cgst_total)}</span></div>}
+                  {Number(order.sgst_total) > 0 && <div className="flex justify-between opacity-80"><span>SGST</span><span>{money(order.sgst_total)}</span></div>}
+                  {Number(order.igst_total) > 0 && <div className="flex justify-between opacity-80"><span>IGST</span><span>{money(order.igst_total)}</span></div>}
+                </>
+              ) : (
+                <div className="flex justify-between opacity-80"><span>Tax</span><span>{money(order.tax_amount)}</span></div>
+              )}
               <div className="flex justify-between opacity-80"><span>Shipping</span><span>{money(order.shipping_amount)}</span></div>
               {Number(order.discount_applied) > 0 && (
                 <div className="flex justify-between text-green-500">
@@ -217,6 +259,12 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               <div className="flex justify-between font-bold text-[var(--turmeric)] text-lg pt-2 border-t border-white/10 mt-2">
                 <span>Total</span><span>{money(order.total_amount)}</span>
               </div>
+              {Number(order.credit_applied) > 0 && (
+                <>
+                  <div className="flex justify-between opacity-80"><span>Paid with swatch credit</span><span>{money(order.credit_applied)}</span></div>
+                  <div className="flex justify-between font-bold"><span>Due via gateway</span><span>{money(order.amount_due)}</span></div>
+                </>
+              )}
             </div>
           </section>
         </div>
@@ -231,8 +279,9 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               const { updateOrderStatus } = await import('@/actions/orders');
               await updateOrderStatus(
                 order.id, 
-                formData.get('status') as string, 
-                formData.get('trackingNumber') as string || undefined
+                formData.get('status') as string,
+                (formData.get('courierName') as string) || undefined,
+                (formData.get('awbCode') as string) || undefined
               );
             }} className="space-y-4">
               <div>
@@ -240,16 +289,24 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
                 <select id="order-status" name="status" defaultValue={order.status} className="w-full bg-black border border-white/20 p-2 text-sm focus:outline-none focus:border-[var(--turmeric)]">
                   <option value="pending">Pending</option>
                   <option value="paid">Paid</option>
-                  <option value="processing">Processing</option>
                   <option value="shipped">Shipped</option>
                   <option value="delivered">Delivered</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-[10px] uppercase tracking-widest opacity-60 mb-1">Tracking Number (optional)</label>
-                <input type="text" name="trackingNumber" defaultValue={order.tracking_status || ''} placeholder="e.g. AWB123456789" className="w-full bg-black border border-white/20 p-2 text-sm focus:outline-none focus:border-[var(--turmeric)]" />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label htmlFor="order-courier" className="block text-[10px] uppercase tracking-widest opacity-60 mb-1">Courier</label>
+                  <input id="order-courier" type="text" name="courierName" maxLength={100} defaultValue={order.courier_name || ''} placeholder="e.g. Delhivery" className="w-full bg-black border border-white/20 p-2 text-sm focus:outline-none focus:border-[var(--turmeric)]" />
+                </div>
+                <div>
+                  <label htmlFor="order-awb" className="block text-[10px] uppercase tracking-widest opacity-60 mb-1">AWB number</label>
+                  <input id="order-awb" type="text" name="awbCode" pattern="[A-Za-z0-9\-]{4,40}" defaultValue={order.awb_code || ''} placeholder="e.g. 19041424751540" className="w-full bg-black border border-white/20 p-2 font-mono text-sm focus:outline-none focus:border-[var(--turmeric)]" />
+                </div>
               </div>
+              {order.shipment_status && (
+                <p className="text-xs opacity-80">Courier says: <strong>{order.shipment_status}</strong>{order.shipment_status_at ? ` (${new Date(order.shipment_status_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })})` : ''}</p>
+              )}
               <button type="submit" className="w-full text-[10px] uppercase tracking-widest font-bold bg-[var(--turmeric)] text-black px-3 py-2 hover:bg-white transition-colors">
                 Save Updates
               </button>

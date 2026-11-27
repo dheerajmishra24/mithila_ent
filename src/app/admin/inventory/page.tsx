@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { requireAdminPage } from '@/lib/dal/session';
+import Link from 'next/link'
 import { adjustInventory } from '@/actions/admin'
+import { asUnit, formatQuantity } from '@/lib/meterage'
 
 export default async function AdminInventoryPage() {
   await requireAdminPage();
@@ -15,8 +17,9 @@ export default async function AdminInventoryPage() {
       color,
       price,
       stock_quantity,
+      max_cut_m,
       images,
-      products!inner(title, slug)
+      products!inner(title, slug, sell_unit)
     `)
     .order('stock_quantity', { ascending: true })
 
@@ -30,7 +33,11 @@ export default async function AdminInventoryPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {variants?.map((variant) => (
+        {variants?.map((variant) => {
+          const product = (Array.isArray(variant.products) ? variant.products[0] : variant.products) as { title?: string; sell_unit?: string } | null
+          const unit = asUnit(product?.sell_unit)
+          const stock = Number(variant.stock_quantity)
+          return (
           <div key={variant.id} className="border border-white/20 bg-[#111] p-6 flex flex-col justify-between shadow-[4px_4px_0_var(--turmeric)] group hover:border-[var(--turmeric)]/50 transition-colors">
             
             <div>
@@ -38,8 +45,8 @@ export default async function AdminInventoryPage() {
                 <div className="bg-white/10 text-xs px-2 py-1 font-mono tracking-wider opacity-80 border border-white/10">
                   {variant.sku}
                 </div>
-                <div className={`font-mono text-xl font-bold ${variant.stock_quantity === 0 ? 'text-[var(--madder-red)]' : variant.stock_quantity < 20 ? 'text-[var(--turmeric)]' : 'text-green-500'}`}>
-                  {variant.stock_quantity} <span className="text-[10px] uppercase opacity-50 font-sans tracking-widest ml-1">in stock</span>
+                <div className={`font-mono text-xl font-bold tabular-nums ${stock === 0 ? 'text-red-400' : stock < 20 ? 'text-[var(--turmeric)]' : 'text-green-500'}`}>
+                  {formatQuantity(stock, unit)} <span className="text-[10px] uppercase opacity-80 font-sans tracking-widest ml-1">in stock</span>
                 </div>
               </div>
 
@@ -50,23 +57,31 @@ export default async function AdminInventoryPage() {
                   </div>
                 ) : (
                   <div className="w-16 h-16 rounded border border-white/20 bg-white/5 flex items-center justify-center shrink-0">
-                    <span className="text-[10px] opacity-50 text-center leading-tight">No<br/>img</span>
+                    <span className="text-[10px] opacity-80 text-center leading-tight">No<br/>img</span>
                   </div>
                 )}
                 <div>
                   <h2 className="font-serif text-xl font-bold mb-1 group-hover:text-[var(--turmeric)] transition-colors">
-                    {(variant.products as any)?.title || 'Unknown Product'}
+                    {product?.title || 'Unknown Product'}
                   </h2>
-                  <div className="text-sm font-bold uppercase tracking-widest opacity-60 flex gap-2">
+                  <div className="text-sm font-bold uppercase tracking-widest opacity-80 flex gap-2">
                     <span>{variant.color}</span>
-                    <span className="opacity-50">|</span>
-                    <span>₹{variant.price} / m</span>
+                    <span aria-hidden="true">|</span>
+                    <span className="tabular-nums">₹{Number(variant.price).toLocaleString('en-IN')} / {unit === 'MTR' ? 'm' : 'pc'}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="mt-8 pt-6 border-t border-white/10">
+              {unit === 'MTR' ? (
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs opacity-70 tabular-nums">Longest cut: {formatQuantity(Number(variant.max_cut_m ?? 0), 'MTR')}</span>
+                  <Link href={`/admin/inventory/${variant.id}`} className="bg-white/10 hover:bg-[var(--turmeric)] hover:text-[#111] font-bold text-[10px] uppercase tracking-widest px-4 py-3 transition-colors">
+                    Manage rolls
+                  </Link>
+                </div>
+              ) : (
               <form action={async (formData) => {
                 'use server';
                 const actionType = formData.get('actionType') as string;
@@ -78,6 +93,7 @@ export default async function AdminInventoryPage() {
               }} className="flex items-center gap-2">
                 <input 
                   type="number" 
+                  aria-label={`Quantity to add or deduct for ${variant.sku}`}
                   name="quantity"
                   min="1"
                   defaultValue="1"
@@ -90,10 +106,12 @@ export default async function AdminInventoryPage() {
                   Deduct
                 </button>
               </form>
+              )}
             </div>
 
           </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

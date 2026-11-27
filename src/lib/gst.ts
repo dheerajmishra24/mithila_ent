@@ -93,3 +93,49 @@ export function splitGst(deliveryState: string, baseAmount: number, gstRate: num
   }
   return { igst: totalTax, cgst: 0, sgst: 0, totalTax, placeOfSupply: pos };
 }
+
+/** States and union territories for address pickers: [GST code, display name]. */
+export const INDIAN_STATES: ReadonlyArray<readonly [code: string, name: string]> = STATES
+  .map(([code, names]) => [code, titleCase(names[0])] as const)
+  .sort((a, b) => a[1].localeCompare(b[1]));
+
+function titleCase(s: string): string {
+  return s.replace(/\b([a-z])/g, (m) => m.toUpperCase()).replace(/\bAnd\b/g, 'and');
+}
+
+/**
+ * GST 2.0 rate (effective 22 Sep 2025) for one line, mirroring the database's
+ * gst_rate_for(): Chapters 50-60 (fabrics, sarees, unstitched material) flat
+ * 5%; Chapters 61-62 (stitched apparel) 5% up to Rs 2,500 per piece and 18%
+ * above, judged on the value per piece after discount; otherwise the
+ * product's own rate.
+ */
+export function gstRateFor(hsn: string | null | undefined, unitValue: number, fallback = 5): number {
+  if (!hsn || !/^\d{4}/.test(hsn)) return fallback;
+  const chapter = Number(hsn.slice(0, 2));
+  if (chapter === 61 || chapter === 62) return unitValue <= 2500 ? 5 : 18;
+  if (chapter >= 50 && chapter <= 60) return 5;
+  return fallback;
+}
+
+const GSTIN_RE = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
+const GSTIN_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+/** Format and check-digit validation of a 15-character GSTIN. */
+export function isValidGstin(input: string | null | undefined): boolean {
+  const g = String(input ?? '').trim().toUpperCase();
+  if (!GSTIN_RE.test(g) || !CODES.has(g.slice(0, 2))) return false;
+  let sum = 0;
+  for (let i = 0; i < 14; i++) {
+    const v = GSTIN_CHARS.indexOf(g[i]) * (i % 2 === 0 ? 1 : 2);
+    sum += Math.floor(v / 36) + (v % 36);
+  }
+  const check = GSTIN_CHARS[(36 - (sum % 36)) % 36];
+  return check === g[14];
+}
+
+/** Display name for a 2-digit GST state code ("07" -> "Delhi"). */
+export function stateName(code: string | null | undefined): string | null {
+  if (!code) return null;
+  return INDIAN_STATES.find(([c]) => c === code)?.[1] ?? null;
+}

@@ -2,6 +2,11 @@ import { Button } from '@/components/ui/Button';
 import { requireAdminPage } from '@/lib/dal/session';
 import { createClient } from '@/lib/supabase/server';
 import { updateStoreSettings } from '@/actions/admin';
+import { getSwatchSettings } from '@/lib/dal/swatch-credit';
+import SwatchSettingsForm from './SwatchSettingsForm';
+import TwoStepSettings from './TwoStepSettings';
+import { getTwoStepStatus } from '@/lib/dal/session';
+import { maskPhone, phoneOtpAvailable } from '@/lib/otp';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +23,9 @@ export default async function AdminSettings({
     .select('*')
     .eq('id', true)
     .single();
+  const swatch = await getSwatchSettings();
+  const twoStep = await getTwoStepStatus();
+  const { data: factors } = await supabase.auth.mfa.listFactors();
 
   return (
     <div className="space-y-8 max-w-3xl p-4 md:p-8">
@@ -32,27 +40,30 @@ export default async function AdminSettings({
       <form action={updateStoreSettings} className="bg-white border-2 border-[var(--charcoal-ink)] p-8 space-y-4">
         <h2 className="font-serif text-xl font-bold">General</h2>
         <div>
-          <label className="block text-xs font-bold uppercase tracking-widest mb-1">Store Name</label>
+          <label htmlFor="settings-store_name" className="block text-xs font-bold uppercase tracking-widest mb-1">Store Name</label>
           <input
             type="text"
+            id="settings-store_name"
             name="store_name"
             defaultValue={settings?.store_name ?? 'Mithila Enterprises'}
             className="w-full border-2 border-[var(--charcoal-ink)] p-2 focus:outline-none"
           />
         </div>
         <div>
-          <label className="block text-xs font-bold uppercase tracking-widest mb-1">Support Email</label>
+          <label htmlFor="settings-support_email" className="block text-xs font-bold uppercase tracking-widest mb-1">Support Email</label>
           <input
             type="email"
+            id="settings-support_email"
             name="support_email"
             defaultValue={settings?.support_email ?? ''}
             className="w-full border-2 border-[var(--charcoal-ink)] p-2 focus:outline-none"
           />
         </div>
         <div>
-          <label className="block text-xs font-bold uppercase tracking-widest mb-1">Support Phone</label>
+          <label htmlFor="settings-support_phone" className="block text-xs font-bold uppercase tracking-widest mb-1">Support Phone</label>
           <input
             type="text"
+            id="settings-support_phone"
             name="support_phone"
             defaultValue={settings?.support_phone ?? ''}
             className="w-full border-2 border-[var(--charcoal-ink)] p-2 focus:outline-none"
@@ -60,6 +71,14 @@ export default async function AdminSettings({
         </div>
         <Button type="submit">Save Changes</Button>
       </form>
+
+      <TwoStepSettings
+        authenticators={factors?.totp?.length ?? 0}
+        phone={twoStep.phoneLast4 ? maskPhone(twoStep.phoneLast4) : null}
+        phoneChannels={phoneOtpAvailable()}
+      />
+
+      <SwatchSettingsForm enabled={swatch.enabled} kitPrice={swatch.kitPrice} maxSwatches={swatch.maxSwatches} />
 
       <section className="bg-white border-2 border-[var(--charcoal-ink)] p-8 space-y-2">
         <h2 className="font-serif text-xl font-bold">API Keys &amp; Integrations</h2>

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { calculateShippingRates, calculateGST, isValidPinCode } from '@/lib/shipping';
+import { calculateShippingRates, isValidPinCode } from '@/lib/shipping';
+import { gstRateFor, splitGst } from '@/lib/gst';
 import { checkApiRateLimit } from '@/lib/ratelimit';
 
 // Checkout-only quote endpoint. SEC-05: requires a signed-in user (checkout
@@ -23,6 +24,8 @@ export async function POST(request: Request) {
     const items = body?.items;
     const pinCode = typeof body?.pinCode === 'string' ? body.pinCode.trim() : '';
     const state = typeof body?.state === 'string' ? body.state.trim().slice(0, 64) : '';
+    // Display-only estimate input: the order total is recomputed in the database.
+    const discount = Number.isFinite(Number(body?.discount)) ? Math.max(Number(body.discount), 0) : 0;
 
     if (!Array.isArray(items) || items.length === 0 || items.length > MAX_ITEMS || !state) {
       return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
@@ -42,38 +45,39 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
     }
 
-    // Weight, price and GST rate come from the database, never the client.
+    // Weight, price, HSN and GST rate come from the database, never the client.
+    // Same rules as create_order_atomic / apply_order_gst (migration 0051):
+    // tax on the value after a pro-rata discount, GST 2.0 rate by HSN.
     let totalWeightGrams = 0;
-    let baseAmount = 0;
     const { data: variants } = await supabase
       .from('product_variants')
-      .select('id, weight_grams, price, products(gst_rate)')
+      .select('id, weight_grams, price, products(gst_rate, hsn_code)')
       .in('id', lines.map((l: { id: string }) => l.id));
 
-    let totalGst = 0;
+    const priced = lines.flatMap((item: { id: string; quantity: number }) => {
+      const v = variants?.find((x) => x.id === item.id);
+      if (!v) return [];
+      const p = (Array.isArray(v.products) ? v.products[0] : v.products) as { gst_rate?: number; hsn_code?: string | null } | null;
+      totalWeightGrams += (v.weight_grams || 200) * item.quantity;
+      return [{ quantity: item.quantity, line: Math.round(Number(v.price || 0) * item.quantity * 100) / 100, hsn: p?.hsn_code ?? null, fallback: Number(p?.gst_rate ?? 5) }];
+    });
+    const baseAmount = priced.reduce((t: number, l: { line: number }) => t + l.line, 0);
+    const disc = Math.min(discount, baseAmount);
+
     let totalIgst = 0;
     let totalCgst = 0;
     let totalSgst = 0;
-
-    if (variants) {
-      for (const item of lines) {
-        const variant = variants.find(v => v.id === item.id);
-        if (variant) {
-          totalWeightGrams += (variant.weight_grams || 200) * item.quantity;
-
-          const lineBaseAmount = (variant.price || 0) * item.quantity;
-          baseAmount += lineBaseAmount;
-
-          const gstRate = (variant.products as any)?.gst_rate || 5; // default to 5% if not set
-          const taxInfo = calculateGST(state, lineBaseAmount, Number(gstRate));
-
-          totalGst += taxInfo.totalTax;
-          totalIgst += taxInfo.igst;
-          totalCgst += taxInfo.cgst;
-          totalSgst += taxInfo.sgst;
-        }
-      }
+    for (const l of priced) {
+      const share = baseAmount > 0 ? (l.line * disc) / baseAmount : 0;
+      const taxable = Math.max(l.line - share, 0);
+      const rate = gstRateFor(l.hsn, taxable / l.quantity, l.fallback);
+      const t = splitGst(state, taxable, rate);
+      totalIgst += t.igst;
+      totalCgst += t.cgst;
+      totalSgst += t.sgst;
     }
+    const round2 = (n: number) => Math.round(n * 100) / 100;
+    const totalGst = round2(totalIgst + totalCgst + totalSgst);
 
     const weightKg = totalWeightGrams / 1000;
     const shipRes = await calculateShippingRates(pinCode, weightKg > 0 ? weightKg : 0.2);
@@ -82,9 +86,9 @@ export async function POST(request: Request) {
       shippingAmount: shipRes.rate,
       totalGst,
       breakdown: {
-        igst: totalIgst,
-        cgst: totalCgst,
-        sgst: totalSgst
+        igst: round2(totalIgst),
+        cgst: round2(totalCgst),
+        sgst: round2(totalSgst),
       },
       courierId: shipRes.courierId ?? null,
       baseAmount

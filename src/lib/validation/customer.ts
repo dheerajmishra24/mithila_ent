@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { plainText, uuid } from './common';
+import { gstStateCode, isValidGstin } from '@/lib/gst';
 
 // Input schemas for customer-facing Server Actions (SEC-12).
 
@@ -16,8 +17,17 @@ export const addressSchema = z.object({
   address1: plainText(200, { min: 1 }),
   address2: optionalText(200),
   city: plainText(100, { min: 1 }),
-  state: plainText(100, { min: 1 }),
+  // Place of supply for GST: must be a recognised Indian state or UT.
+  state: plainText(100, { min: 1 }).refine((v) => gstStateCode(v) !== null, 'Please choose your state.'),
   pinCode: z.string().trim().regex(/^[1-9][0-9]{5}$/, 'Please enter a valid 6-digit PIN code.'),
+  // Optional, for business purchases: printed on the tax invoice.
+  gstin: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .refine((v) => v === '' || isValidGstin(v), 'Please enter a valid GSTIN.')
+    .nullish()
+    .transform((v) => v || undefined),
 });
 
 export type Address = z.output<typeof addressSchema>;

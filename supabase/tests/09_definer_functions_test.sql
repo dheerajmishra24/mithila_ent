@@ -12,7 +12,7 @@ SELECT plan(27);
 CREATE FUNCTION pg_temp.act_as(p_role text, p_sub uuid DEFAULT NULL) RETURNS void
 LANGUAGE plpgsql AS $$
 BEGIN
-  PERFORM set_config('request.jwt.claims', json_build_object('sub', p_sub, 'role', p_role)::text, true);
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', p_sub, 'role', p_role, 'aal', 'aal2', 'session_id', gen_random_uuid(), 'amr', json_build_array(json_build_object('method', 'totp', 'timestamp', extract(epoch from now())::bigint)))::text, true);
   PERFORM set_config('role', p_role, true);
 END $$;
 
@@ -69,7 +69,7 @@ SELECT pg_temp.act_as('service_role');
 SELECT public.partial_cancel_order_item('a9000000-0000-4000-8000-000000000001',
                                         'f9000000-0000-4000-8000-000000000002', true, NULL);
 RESET ROLE;
-SELECT is((SELECT stock_quantity FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000002'),
+SELECT is((SELECT stock_quantity::integer FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000002'),
           24, 'partial cancel restocked line 2 (20 -> 24)');
 
 -- Full cancel as service_role (used to return FORBIDDEN).
@@ -77,9 +77,9 @@ SELECT pg_temp.act_as('service_role');
 CREATE TEMP TABLE c1 AS SELECT public.cancel_order_restock('a9000000-0000-4000-8000-000000000001', true, NULL) AS j;
 RESET ROLE;
 SELECT is((SELECT (j->>'ok')::boolean FROM c1), true, 'service_role can cancel with restock (was FORBIDDEN)');
-SELECT is((SELECT stock_quantity FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000001'),
+SELECT is((SELECT stock_quantity::integer FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000001'),
           12, 'active line 1 restocked (10 -> 12)');
-SELECT is((SELECT stock_quantity FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000002'),
+SELECT is((SELECT stock_quantity::integer FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000002'),
           24, 'line 2, already cancelled, is NOT restocked a second time');
 SELECT is((SELECT (j->>'lines_cancelled')::int FROM c1), 1, 'only the one active line was cancelled');
 SELECT is((SELECT status::text FROM public.orders WHERE id = 'a9000000-0000-4000-8000-000000000001'),
@@ -93,7 +93,7 @@ SELECT pg_temp.act_as('service_role');
 CREATE TEMP TABLE c2 AS SELECT public.cancel_order_restock('a9000000-0000-4000-8000-000000000001', true, NULL) AS j;
 RESET ROLE;
 SELECT is((SELECT (j->>'already_cancelled')::boolean FROM c2), true, 'second cancel reports already_cancelled');
-SELECT is((SELECT stock_quantity FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000001'),
+SELECT is((SELECT stock_quantity::integer FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000001'),
           12, 'second cancel does not restock again');
 SELECT is((SELECT count(*)::int FROM public.order_events
             WHERE order_id = 'a9000000-0000-4000-8000-000000000001' AND event = 'order.cancelled'),
@@ -103,7 +103,7 @@ SELECT is((SELECT count(*)::int FROM public.order_events
 SELECT pg_temp.act_as('service_role');
 SELECT public.cancel_order_restock('a9000000-0000-4000-8000-000000000002', false, NULL);
 RESET ROLE;
-SELECT is((SELECT stock_quantity FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000001'),
+SELECT is((SELECT stock_quantity::integer FROM public.product_variants WHERE id = 'e9000000-0000-4000-8000-000000000001'),
           12, 'shrinkage cancel leaves stock unchanged');
 SELECT is((SELECT status FROM public.order_items WHERE id = 'f9000000-0000-4000-8000-000000000003'),
           'cancelled', 'shrinkage cancel cancels the line');

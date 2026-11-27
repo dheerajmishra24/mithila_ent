@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
 import { Resend } from 'resend';
 import { sendWhatsAppNotification } from '@/lib/whatsapp';
 import { checkApiRateLimit, clientIp } from '@/lib/ratelimit';
 import { isLikelyBot } from '@/lib/bot-check';
 import { LIMITS, cleanEmail, cleanText, escapeHtml, optionalText } from '@/lib/form-input';
+import { captureLead } from '@/lib/leads/capture';
+import { normalisePhone } from '@/lib/leads/parse';
+import { webFormLeadFields } from '@/lib/leads/web-form';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy_key_for_build_only');
 const FROM = process.env.EMAIL_FROM || 'Mithila Enterprises <onboarding@resend.dev>';
@@ -34,22 +36,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Please check the form: a field is missing, invalid or too long.' }, { status: 400 });
     }
 
-    const supabase = await createClient();
-
-    // 1. Save to Supabase
-    const { error: dbError } = await supabase
-      .from('wholesale_applications')
-      .insert({
-        business_name: businessName,
-        tax_id: taxId ?? null,
-        email,
-        requirements
-      });
-
-    if (dbError) {
-      console.error('Failed to insert wholesale application:', dbError.message);
+    // 1. Into the lead pipeline (deduplicated by e-mail / phone; idempotent per submission)
+    const saved = await captureLead({
+      source: 'wholesale',
+      ...webFormLeadFields(req, body),
+      company: businessName,
+      email,
+      phone: phone ? normalisePhone(phone) : null,
+      message: requirements,
+      detail: { form: 'wholesale', gstin: taxId ?? null, category: category ?? null, phone_as_typed: phone ?? null },
+    });
+    if (!saved.ok) {
+      console.error('Failed to save wholesale application:', saved.error);
       return NextResponse.json({ error: 'Failed to save application' }, { status: 500 });
     }
+    if (saved.duplicate) return NextResponse.json({ success: true });
 
     // 2. Send Email via Resend (all user values escaped)
     const h = {

@@ -7,7 +7,7 @@ SELECT plan(14);
 CREATE FUNCTION pg_temp.act_as(p_role text, p_sub uuid DEFAULT NULL) RETURNS void
 LANGUAGE plpgsql AS $$
 BEGIN
-  PERFORM set_config('request.jwt.claims', json_build_object('sub', p_sub, 'role', p_role)::text, true);
+  PERFORM set_config('request.jwt.claims', json_build_object('sub', p_sub, 'role', p_role, 'aal', 'aal2', 'session_id', gen_random_uuid(), 'amr', json_build_array(json_build_object('method', 'totp', 'timestamp', extract(epoch from now())::bigint)))::text, true);
   PERFORM set_config('role', p_role, true);
 END $$;
 
@@ -27,17 +27,23 @@ INSERT INTO auth.users (instance_id, id, aud, role, email) VALUES
   ('00000000-0000-0000-0000-000000000000', '33333333-3333-4333-8333-333333333333', 'authenticated', 'authenticated', 'owner@example.test');
 INSERT INTO public.user_roles (user_id, role) VALUES ('33333333-3333-4333-8333-333333333333', 'admin');
 
--- The public forms insert with the visitor's key (src/app/api/contact/route.ts:20-25,
--- src/app/api/wholesale/route.ts:20-25), so anon INSERT is intended today.
+-- Legacy inboxes: since 0054 the forms write through public.lead_capture
+-- (service role), so the public can no longer insert here. Existing rows are
+-- seeded as the table owner for the read checks below.
+INSERT INTO public.contact_inquiries (first_name, last_name, email, message)
+  VALUES ('Lead', 'One', 'lead@example.test', 'pgtap lead');
+INSERT INTO public.wholesale_applications (business_name, email, requirements)
+  VALUES ('pgTAP Boutique', 'b2b@example.test', 'pgtap rolls');
+
 SELECT pg_temp.act_as('anon');
 SELECT is(pg_temp.attempt(
   $$INSERT INTO public.contact_inquiries (first_name, last_name, email, message)
-    VALUES ('Lead', 'One', 'lead@example.test', 'pgtap lead')$$),
-  '1 rows', 'anon can submit the Contact Us form');
+    VALUES ('Spam', 'Bot', 'bot@example.test', 'spam')$$),
+  'denied', 'anon can no longer write the legacy Contact Us inbox');
 SELECT is(pg_temp.attempt(
   $$INSERT INTO public.wholesale_applications (business_name, email, requirements)
-    VALUES ('pgTAP Boutique', 'b2b@example.test', 'pgtap rolls')$$),
-  '1 rows', 'anon can submit a wholesale application');
+    VALUES ('Spam Co', 'bot@example.test', 'spam')$$),
+  'denied', 'anon can no longer write the legacy wholesale inbox');
 SELECT is((SELECT count(*) FROM public.contact_inquiries), 0::bigint, 'anon cannot read leads');
 SELECT is((SELECT count(*) FROM public.wholesale_applications), 0::bigint, 'anon cannot read wholesale applications');
 SELECT ok(pg_temp.attempt($$DELETE FROM public.contact_inquiries$$) IN ('denied', '0 rows'),

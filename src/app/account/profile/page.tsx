@@ -10,7 +10,7 @@ export default async function ProfilePage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('saved_addresses, role')
+    .select('saved_addresses, role, customer_code')
     .eq('id', userData.user.id)
     .single();
 
@@ -22,6 +22,11 @@ export default async function ProfilePage() {
         <h2 className="font-serif text-3xl font-bold text-[var(--charcoal-ink)]">Profile Details</h2>
         
         <div className="mt-8 space-y-6">
+          <dl>
+            <dt className="block font-sans text-xs font-bold uppercase tracking-widest text-[var(--charcoal-ink)] mb-2">Customer ID</dt>
+            <dd className="font-mono text-xl font-bold text-[var(--charcoal-ink)] tabular-nums">{profile?.customer_code}</dd>
+            <dd className="text-xs text-[var(--charcoal-ink)]/80 mt-1">Quote this when you contact us about an order.</dd>
+          </dl>
           <div>
             <label className="block font-sans text-xs font-bold uppercase tracking-widest text-[var(--charcoal-ink)] mb-2" htmlFor="profile-email">Email Address</label>
             <input id="profile-email" type="email" defaultValue={userData.user.email} disabled className="w-full border-2 border-[var(--charcoal-ink)] bg-neutral-100 p-3 font-sans opacity-70 cursor-not-allowed" />

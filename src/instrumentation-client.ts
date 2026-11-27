@@ -1,5 +1,9 @@
 import * as Sentry from '@sentry/nextjs';
 import { initBotId } from 'botid/client/core';
+import { captureAttribution } from '@/lib/leads/attribution-client';
+
+// Campaign tags / ad click ids from the landing URL, for enquiry forms.
+captureAttribution();
 
 // Invisible bot check on the public forms (src/lib/bot-check.ts checks the
 // verdict on the server). Keep this list in step with the routes that call it.

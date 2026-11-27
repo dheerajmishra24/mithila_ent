@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { requireAdminPage } from '@/lib/dal/session';
 import { setUserRole } from '@/actions/admin';
+import CreditAdjustForm from './CreditAdjustForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,10 +13,14 @@ export default async function AdminCustomers() {
 
   const { data: profiles } = await supabase
     .from('profiles')
-    .select('id, full_name, phone, role, created_at')
+    .select('id, customer_code, full_name, phone, role, created_at')
     .order('created_at', { ascending: false });
 
   const { data: orders } = await supabase.from('orders').select('user_id, total_amount, is_paid');
+  // Admins may read every swatch-credit balance (RLS policy, migration 0052).
+  const { data: credits } = await supabase.from('swatch_credit_accounts').select('user_id, balance');
+  const creditOf: Record<string, number> = {};
+  for (const c of credits || []) creditOf[c.user_id] = Number(c.balance || 0);
 
   const stats: Record<string, { count: number; spend: number }> = {};
   for (const o of orders || []) {
@@ -33,6 +38,12 @@ export default async function AdminCustomers() {
         <p className="font-sans text-sm opacity-70 mt-1 uppercase tracking-widest">Registered customers &amp; roles</p>
       </div>
 
+      {profiles && profiles.length > 0 && (
+        <CreditAdjustForm
+          customers={profiles.map((p) => ({ id: p.id, label: `${p.full_name || 'Unnamed'} (${p.customer_code})` }))}
+        />
+      )}
+
       {/* Mobile cards */}
       <div className="md:hidden space-y-4">
         {(!profiles || profiles.length === 0) ? (
@@ -46,12 +57,12 @@ export default async function AdminCustomers() {
                 <div className="flex justify-between items-start gap-3">
                   <div>
                     <div className="font-bold">{p.full_name || 'Unnamed'}</div>
-                    <div className="text-xs opacity-50 font-mono">{p.id.split('-')[0]}</div>
+                    <div className="text-xs opacity-80 font-mono">{p.customer_code}</div>
                   </div>
                   <span className={`shrink-0 px-2 py-1 text-[10px] font-bold uppercase tracking-widest border-2 ${isAdmin ? 'border-[var(--turmeric)] text-[var(--charcoal-ink)] bg-[var(--turmeric)]/20' : 'border-[var(--charcoal-ink)]/20'}`}>{p.role}</span>
                 </div>
                 <div className="flex justify-between items-center mt-3 text-sm">
-                  <span className="opacity-70">{st.count} orders</span>
+                  <span className="opacity-70">{st.count} orders · credit {money(creditOf[p.id] ?? 0)}</span>
                   <span className="font-bold text-[var(--madder-red)]">{money(st.spend)}</span>
                 </div>
                 <div className="text-xs opacity-60 mt-1">Joined {new Date(p.created_at).toLocaleDateString()}</div>
@@ -81,6 +92,7 @@ export default async function AdminCustomers() {
               <th className="pb-3 font-bold">Role</th>
               <th className="pb-3 font-bold text-center">Orders</th>
               <th className="pb-3 font-bold text-right">Total Spent</th>
+              <th className="pb-3 font-bold text-right">Swatch Credit</th>
               <th className="pb-3 font-bold">Joined</th>
               <th className="pb-3 font-bold text-right">Action</th>
             </tr>
@@ -93,15 +105,16 @@ export default async function AdminCustomers() {
                 <tr key={p.id} className="border-b border-[var(--charcoal-ink)]/10 hover:bg-[var(--unbleached-cotton)] transition-colors">
                   <td className="py-4">
                     <div className="font-bold">{p.full_name || 'Unnamed'}</div>
-                    <div className="text-xs opacity-50 font-mono">{p.id.split('-')[0]}</div>
+                    <div className="text-xs opacity-80 font-mono">{p.customer_code}</div>
                   </td>
                   <td className="py-4">
                     <span className={`px-2 py-1 text-[10px] font-bold uppercase tracking-widest border-2 ${isAdmin ? 'border-[var(--turmeric)] text-[var(--charcoal-ink)] bg-[var(--turmeric)]/20' : 'border-[var(--charcoal-ink)]/20'}`}>
                       {p.role}
                     </span>
                   </td>
-                  <td className="py-4 text-center">{st.count}</td>
-                  <td className="py-4 text-right font-bold text-[var(--madder-red)]">{money(st.spend)}</td>
+                  <td className="py-4 text-center tabular-nums">{st.count}</td>
+                  <td className="py-4 text-right font-bold text-[var(--madder-red)] tabular-nums">{money(st.spend)}</td>
+                  <td className="py-4 text-right tabular-nums">{money(creditOf[p.id] ?? 0)}</td>
                   <td className="py-4 text-sm opacity-70">{new Date(p.created_at).toLocaleDateString()}</td>
                   <td className="py-4 text-right">
                     <form
@@ -123,7 +136,7 @@ export default async function AdminCustomers() {
             })}
             {(!profiles || profiles.length === 0) && (
               <tr>
-                <td colSpan={6} className="py-8 text-center opacity-50">No customers yet.</td>
+                <td colSpan={7} className="py-8 text-center opacity-50">No customers yet.</td>
               </tr>
             )}
           </tbody>
